@@ -12,49 +12,49 @@ import javax.swing.*;
 /**
  * Panel réutilisable pour la saisie host/port et le bouton de connexion.
  */
-public class SaisiePanel extends JPanel implements ActionListener
+public class SaisieServeurPanel extends JPanel implements ActionListener
 {
 	/*--------------------------*/
 	/*  Composants              */
 	/*--------------------------*/
 	private ConnectionFrame  frame;
 
-    private JTextField       txtHost;
-    private JTextField       txtPort;
-    private JButton          btnConnect;
+	private JTextField       txtHost;
+	private JTextField       txtPort;
+	private JButton          btnConnect;
 	
 	/*--------------------------*/
 	/*     Constructeur         */
 	/*--------------------------*/
-    public SaisiePanel( ConnectionFrame frame ) 
+	public SaisieServeurPanel( ConnectionFrame frame ) 
 	{
-        this.setLayout(new GridLayout(3, 2));
+		this.setLayout(new GridLayout(4, 2));
 
 		this.frame = frame;
 
 		/*-------------------------------*/
 		/* Création des composants       */
 		/*-------------------------------*/
-        this.txtHost    = new JTextField();
-        this.txtPort    = new JTextField();
-        this.btnConnect = new JButton("Se connecter");
+		this.txtHost    = new JTextField();
+		this.txtPort    = new JTextField();
+		this.btnConnect = new JButton("Se connecter");
 
-        // Valeurs par défaut utiles
-        this.txtHost.setText("localhost");
-        this.txtPort.setText("8080");
+		// Valeurs par défaut utiles
+		this.txtHost.setText("localhost");
+		this.txtPort.setText("8080");
 
 		/*-------------------------------*/
 		/* Ajout des composants          */
 		/*-------------------------------*/
-        this.add(new JLabel("Host:"));
-        this.add(this.txtHost);
+		this.add(new JLabel("Host:"));
+		this.add(this.txtHost);
 
-        this.add(new JLabel("Port:"));
-        this.add(this.txtPort);
+		this.add(new JLabel("Port:"));
+		this.add(this.txtPort);
 
-        // case vide pour alignement + bouton
-        this.add(new JLabel());
-        this.add(this.btnConnect);
+		// case vide pour alignement + bouton
+		this.add(new JLabel());
+		this.add(this.btnConnect);
 
 		/*-------------------------------*/
 		/* Activation des composants     */
