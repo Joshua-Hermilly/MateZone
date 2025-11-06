@@ -1,7 +1,3 @@
-package MateZone.metier.gestionBD;
-
-import MateZone.metier.client.Client;
-
 import java.sql.Connection;          // Pour la connexion à la BD
 import java.sql.PreparedStatement;   // Pour le driver JDBC ( dans /lib )
 import java.sql.ResultSet;           // Pour exécuter des requêtes
@@ -12,14 +8,16 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import server.Client;
+
 /*---------------------------------*/
-/*  Class ClientsBD                */
+/*  Class GestionBD                */
 /*---------------------------------*/
 /**
- * DAO pour la table `clients`.
- * Cette classe gère toutes les opérations de base de données liées aux clients
+ *
+ * Cette classe gère toutes les opérations de base de données
  */
-public class ClientsBD 
+public class Request 
 {
 	/*-------------------------------*/
 	/* Attributs                     */
@@ -34,7 +32,7 @@ public class ClientsBD
 	/**
 	 * Constructeur qui initialise la connexion à la base de données MySQL
 	 */
-	public ClientsBD()
+	public Request()
 	{
 		this.connexionBD = ConnexionBD.getInstance();
 	}
@@ -42,10 +40,40 @@ public class ClientsBD
 	/*-------------------------------*/
 	/* Accesseurs                    */
 	/*-------------------------------*/
+
+	public int getClientId(String pseudo)
+	{
+		String sql = "SELECT id FROM clients where pseudo = ?";
+
+		try 
+		{
+			Connection        conn = this.connexionBD.getConnection();
+			PreparedStatement stmt = conn.prepareStatement( sql );
+			
+			stmt.setString( 1, pseudo ); 
+
+			ResultSet rs = stmt.executeQuery();
+
+			if (rs.next()) return rs.getInt("id");
+
+		} 
+		catch (SQLException e) 
+		{
+			System.err.println( "Erreur lors de la récupération de l'id du client" );
+			e.printStackTrace();
+		}
+		
+		return -1;
+	}
+
+
+
+
 	/**
 	 * Méthode pour récupérer tous les clients de la base de données
 	 * @return liste de tous les clients
 	 */
+	
 	public List<Client> getClients() 
 	{
 		List<Client> clients = new ArrayList<>();
@@ -156,6 +184,51 @@ public class ClientsBD
 		
 		return null;
 	}
+
+
+
+		/** 
+	 * Méthode pour connaitre si 
+	 * @param pseudo le pseudo du client
+	 * @return le client trouvé ou null si non trouvé
+	 */
+	public Boolean getConnexionValideClient( String pseudo, String mdp )
+	{
+		String sql = "SELECT id, pseudo, mdp, created_at FROM clients WHERE pseudo = ? and mdp = ?";
+		
+		try 
+		{
+			Connection        conn = this.connexionBD.getConnection();
+			PreparedStatement stmt = conn.prepareStatement( sql );
+			
+			// Ajout des paramètres
+			stmt.setString ( 1, pseudo );
+			stmt.setString ( 2, mdp );
+
+			ResultSet rs = stmt.executeQuery();
+			
+			if ( rs.next() ) 
+			{
+				Client client = mapRowToClient( rs );
+
+				System.out.println( "Client trouvé : " + client );
+				return true;
+			} 
+			else 
+			{
+				System.out.println( "Aucun client trouvé avec le pseudo et le mdp : " + pseudo );
+				return false;
+			}
+			
+		} 
+		catch (SQLException e) 
+		{
+			System.err.println( "Erreur lors de la recherche du client (pseudo+mdp) : " + pseudo );
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
 	
 	/* ------------------------------ */
 	/*  Ajout/Suppression             */
@@ -205,47 +278,6 @@ public class ClientsBD
 		return false;
 	}
 	
-	/**
-	 * Méthode pour supprimer un client par son ID
-	 * @param id l'identifiant du client à supprimer
-	 * @return true si la suppression a réussi, false sinon
-	 */
-	public boolean supprimerClient( int id ) 
-	{
-		String sql = "DELETE FROM clients WHERE id = ?";
-		
-		try 
-		{
-			Connection        conn = this.connexionBD.getConnection();
-			PreparedStatement stmt = conn.prepareStatement( sql );
-
-			// Ajout de l'ID
-			stmt.setInt( 1, id );
-			
-			int lignesRetour = stmt.executeUpdate();
-			
-			if ( lignesRetour > 0 ) 
-			{
-				System.out.println( "Client supprimé avec succès (ID : " + id + ")" );
-				return true;
-			} 
-			else 
-			{
-				System.out.println( "Aucun client trouvé avec l'ID : " + id );
-			}
-			
-		} 
-		catch (SQLException e) 
-		{
-			System.err.println( "Erreur lors de la suppression du client ID : " + id );
-			e.printStackTrace();
-		}
-		
-		return false;
-	}
-
-
-
 	/* -------------------------------- */
 	/*               MAJ                */
 	/* -------------------------------- */
@@ -297,12 +329,12 @@ public class ClientsBD
 	 * @param mdp le mot de passe
 	 * @return le client si authentifié, null sinon
 	 */
-	public Client authenticate( String pseudo, String mdp ) 
+	public int authenticate( String pseudo, String mdp ) 
 	{
 		Client client = getClientByPseudo( pseudo );
-		if ( client == null ) return null;
-		if ( client.getMdp() != null && client.getMdp().equals( mdp ) ) return client;
-		return null;
+		if ( client == null ) return -1;
+		if ( client.getMdp() != null && client.getMdp().equals( mdp ) ) return getClientid();
+		return -1;
 	}
 
 	/**
@@ -334,7 +366,7 @@ public class ClientsBD
 	 * Méthode de test pour vérifier les liaisons et la connexion à la base
 	 * @return true si tout fonctionne correctement
 	 */
-	public boolean testerLiaisons()
+/*	public boolean testerLiaisons()
 	{
 		try 
 		{
@@ -367,8 +399,8 @@ public class ClientsBD
 				}
 				
 				// Test authentification
-				Client auth = this.authenticate( clientTest.getPseudo(), clientTest.getMdp() );
-				if ( auth != null )
+				Boolean auth = this.authenticate( clientTest.getPseudo(), clientTest.getMdp() );
+				if ( auth = true )
 				{
 					System.out.println( "✓ Authentification OK" );
 				}
@@ -391,14 +423,62 @@ public class ClientsBD
 			return false;
 		}
 	}
+*/
+/*-------------------------------------------------*/
+/*--------------GESTION MESSAGE--------------------*/
+/*-------------------------------------------------*/
+/*
+	public Boolean sendMessage(int idUser,int groupe_id, String message)
+	{
+				String sql = "INSERT INTO messages ( groupe_id,expediteur_id,mdp ) VALUES (?, ?, ?)";
+		
+		try 
+		{
+			Connection        conn = this.connexionBD.getConnection();
+			PreparedStatement stmt = conn.prepareStatement( sql );
+			
+			// Ajout des paramètres
+			stmt.setString ( 1, pseudo );
+
+			ResultSet rs = stmt.executeQuery();
+			
+			if ( rs.next() ) 
+			{
+				Client client = mapRowToClient( rs );
+
+				System.out.println( "Client trouvé : " + client );
+				return client;
+			} 
+			else 
+			{
+				System.out.println( "Aucun client trouvé avec le pseudo : " + pseudo );
+			}
+			
+		} 
+		catch (SQLException e) 
+		{
+			System.err.println( "Erreur lors de la recherche du client pseudo : " + pseudo );
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	}
+
+
+*/
+
+
+
+
+
 
 	/**
 	 * Point d'entrée pour tester les liaisons
 	 */
 	public static void main( String[] args )
 	{
-		ClientsBD dao = new ClientsBD();
+		Request dao = new Request();
 		dao.testerLiaisons();
 	}
-
 }

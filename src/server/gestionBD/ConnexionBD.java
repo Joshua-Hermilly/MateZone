@@ -1,5 +1,3 @@
-package MateZone.metier.gestionBD;
-
 import java.sql.Connection;         // Pour la connexion à la BD
 import java.sql.DriverManager;      // Pour le driver JDBC ( dans /lib )
 import java.sql.SQLException;       // Pour les exceptions SQL
