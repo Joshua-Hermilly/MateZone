@@ -38,8 +38,10 @@ public class Controleur implements INotificateur
 	public void connexionAuClient(String nom, String mdp)  { this.metier.connexionAuClient(nom, mdp); }
 	public void enregistrerClient(String nom, String mdp)  { this.metier.creerClient      (nom, mdp); }
 
+	public void envoyerMessage(String message)  { this.metier.envoyerMessage( message );   }
+
 	/*--------------------------*/
-	/* Serveur */
+	/* Serveur                  */
 	/*--------------------------*/
 	private void lancerFrameConnexionServeur() 
 	{
@@ -64,7 +66,17 @@ public class Controleur implements INotificateur
 
 	public void notifierMessage(String message) 
 	{
+		this.ihmGui.afficherNvMessage(message);
 		System.out.println("Contrôleur - Message reçu : " + message);
+	}
+
+	public void notifierLstMessages(String lstMessages) 
+	{
+		if (lstMessages != null && !lstMessages.isEmpty()) 
+		{
+			this.ihmGui.afficherLstMessages(lstMessages);
+		}
+		//System.out.println("Contrôleur - Liste des messages reçue : " + lstMessages);
 	}
 
 	public void notifierConnexionServeur(boolean etat)

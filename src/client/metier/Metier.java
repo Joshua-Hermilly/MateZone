@@ -35,6 +35,11 @@ public class Metier
 		Metier.client.envoyerMessage("REGISTER:" + pseudo + ":" + mdp);
 	}
 
+	public void envoyerMessage(String message) 
+	{
+		Metier.client.envoyerMessage("NEWMESSAGE:1:" + this.client.getIdClient() + message);
+	}
+
 
 	/*--------------------------*/
 	/*     Serveur              */
