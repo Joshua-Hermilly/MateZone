@@ -1,18 +1,30 @@
+package server;
+
 import org.java_websocket.server.WebSocketServer;
+
+import server.gestionBD.ConnexionBD;
+import server.gestionBD.Request;
+
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 
 import java.net.InetSocketAddress;
 
-
+/*---------------------------------*/
+/*  Class ServeurMateZone          */
+/*---------------------------------*/
 public class ServeurMateZone extends WebSocketServer 
 {
+	private static Request bd;
+
+
 	/*-------------------------------*/
 	/* Constructeur                  */
 	/*-------------------------------*/
 	public ServeurMateZone( int port ) 
 	{
 		super( new InetSocketAddress( port ) );
+		ServeurMateZone.bd = new Request();
 	}
 
 
@@ -31,13 +43,57 @@ public class ServeurMateZone extends WebSocketServer
 	@Override
 	public void onMessage(WebSocket client, String message) 
 	{
-		System.out.println( "Message reçu : " + message );
+		System.out.println("Message reçu : " + message);
 
-		// Diffusion du message à tous les clients connectés (broadcast)
+		if ( message != null)
+		{
+		// Si le message est une annonce de nom+mdp : "LOGIN:pseudo:mdp"
+		if ( message.startsWith("LOGIN:") ) 
+		{
+			String[] parties = message.split(":");
+			
+			if (parties.length == 3) 
+			{
+				client.send("CONNECT:" + ServeurMateZone.bd.authenticate(parties[1],parties[2]));
+			}
+		}
+
+		// Si le message est une annonce: "REGISTER:pseudo:mdp"
+		if ( message.startsWith("REGISTER:") ) 
+		{
+			String[] parties = message.split(":");
+			
+			
+			if (parties.length == 3) 
+			{
+				Client user = new Client(parties[1],parties[2]);
+				client.send("REGISTERED:" + ServeurMateZone.bd.createClient(user));
+			}
+		}
+
+		// Si le message est une annonce: "NEWMESSAGE:idchannel:leMessage"
+		if ( message.startsWith("NEWMESSAGE:") ) 
+		{
+			String[] parties = message.split(":", 4); // Limite à 3 parties maximum
+			
+			if (parties.length == 3) 
+			{
+				int idClient = Integer.parseInt(parties[1]);
+				int idChannel = Integer.parseInt(parties[2]);
+				String nMessage = parties[3]; // Contient tout le reste, même avec des ":"
+				
+				//client.send("MESSAGE_SENT:" + ServeurMateZone.bd.sendMessage(idClient, idChannel, nMessage));
+			}
+		}
+
+
+		}		
+		/*	// Diffusion du message à tous les clients connectés (broadcast)
 		for ( WebSocket clientCo : this.getConnections() ) 
 		{
+			
 			clientCo.send( "Serveur → " + message );
-		}
+		}*/
 	}
 
 	// Client Déconnécté
@@ -59,6 +115,7 @@ public class ServeurMateZone extends WebSocketServer
 	{
 		System.out.println("Serveur WebSocket démarré !");
 	}
+	
 
 	// Point d'entrée du serveur
 	public static void main(String[] args) 

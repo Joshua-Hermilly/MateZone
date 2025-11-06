@@ -78,5 +78,7 @@ public class SaisieClientPanel extends JPanel implements ActionListener
 
 		if      ( e.getSource() == this.btnConnect    ) { this.frame.connexionAuClient( nom, mdp); }
 		else if ( e.getSource() == this.btnEnregister ) { this.frame.enregistrerClient( nom, mdp); }
+
+		System.out.println("Action performed: " + e.getActionCommand() );
 	}
 }
