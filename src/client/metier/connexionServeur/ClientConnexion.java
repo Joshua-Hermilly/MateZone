@@ -83,16 +83,13 @@ public class ClientConnexion extends WebSocketClient
 	/*-------------------------------*/
 	public void traiterMessage(String message) 
 	{
-		if ( message.startsWith("CONNECT:"      ) ) { this.estConnectee  (message);	return; }
-		if ( message.startsWith("REGISTERED:"   ) ) { this.estEnregistre (message); return; }
-		if ( message.startsWith("MESSAGES:"     ) ) { this.estMessageList(message); return; }
-		if ( message.startsWith("NEW_MESSAGE:"  ) ) { this.estMessage    (message); return; }
+		if ( message.startsWith("CONNECT:"       ) ) { this.estConnectee  (message); return; }
+		if ( message.startsWith("REGISTERED:"    ) ) { this.estEnregistre (message); return; }
+		if ( message.startsWith("MESSAGES_LIST:" ) ) { this.estMessageList(message); return; }
+		if ( message.startsWith("NEWMESSAGE:"    ) ) { this.estMessage    (message); return; }
 
 
 		//System.out.println("Message reçu du serveur : " + message);
-
-		// Notifie message reçu
-		this.notifierMessage(message);
 	}
 
 	/*-------------------------------*/
@@ -108,6 +105,8 @@ public class ClientConnexion extends WebSocketClient
 			{
 				this.idClient     = Integer.parseInt(message.split(":")[1]);
 				this.pseudoClient = message.split(":")[2];
+
+				System.out.println("ID Client : " + this.idClient + " | Pseudo : " + this.pseudoClient);
 
 			} catch (Exception e) { System.err.println("Erreur l178 : " + e.getMessage()); }
 		}
@@ -138,7 +137,7 @@ public class ClientConnexion extends WebSocketClient
 	{
 		String nvMessage = message.substring("NEW_MESSAGE:".length());
 
-		this.notifierMessage(nvMessage); 
+		this.notifierMessage(nvMessage);
 	}
 
 	/*-------------------------------*/
