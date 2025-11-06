@@ -60,7 +60,7 @@ public class ServeurMateZone extends WebSocketServer
 				// Convertir la HashMap en JSON avec Gson
 				HashMap<Integer, String[]> messages = hsmessages(1);
 				String messagesJson = gson.toJson(messages);
-				client.send("MESSAGES:" + messagesJson);
+				client.send("MESSAGES_LIST:" + messagesJson);
 			}
 		}
 
