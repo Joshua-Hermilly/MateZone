@@ -153,18 +153,22 @@ public class Request
 	 */
 	public Client getClientByPseudo( String pseudo )
 	{
-		String sql = "SELECT id, pseudo, mdp, created_at FROM clients WHERE pseudo = ?";
-		
+		String sql = "SELECT id, pseudo, mdp, created_at FROM clients WHERE pseudo = ?;";
+
 		try 
 		{
+
 			Connection        conn = this.connexionBD.getConnection();
 			PreparedStatement stmt = conn.prepareStatement( sql );
-			
+
 			// Ajout des paramètres
 			stmt.setString ( 1, pseudo );
 
+			System.out.println("requete totale: " + stmt.toString());
+
 			ResultSet rs = stmt.executeQuery();
 			
+
 			if ( rs.next() ) 
 			{
 				Client client = mapRowToClient( rs );
@@ -335,7 +339,7 @@ public class Request
 	{
 		Client client = getClientByPseudo( pseudo );
 		if ( client == null ) return -1;
-		if ( client.getMdp() != null && client.getMdp().equals( mdp ) ) return getClientId( pseudo);
+		if ( client.getMdp() != null && client.getMdp().equals( mdp ) ) return getClientId( pseudo );
 		return -1;
 	}
 

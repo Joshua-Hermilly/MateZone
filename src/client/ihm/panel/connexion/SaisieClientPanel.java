@@ -21,7 +21,7 @@ public class SaisieClientPanel extends JPanel implements ActionListener
 	private ConnectionFrame  frame;
 
 	private JTextField     txtNom;
-	private JPasswordField txtMdp;
+	private JTextField txtMdp;
 	private JButton        btnConnect;
 	private JButton        btnEnregister;
 	
@@ -38,7 +38,7 @@ public class SaisieClientPanel extends JPanel implements ActionListener
 		/* Création des composants       */
 		/*-------------------------------*/
 		this.txtNom        = new JTextField();
-		this.txtMdp        = new JPasswordField();
+		this.txtMdp        = new JTextField();
 		this.btnConnect    = new JButton("Se connecter");
 		this.btnEnregister = new JButton("S'enregistrer");
 
@@ -67,7 +67,7 @@ public class SaisieClientPanel extends JPanel implements ActionListener
 	public void actionPerformed(ActionEvent e)
 	{
 		String nom = this.txtNom.getText();
-		String mdp = new String( this.txtMdp.getPassword() );
+		String mdp = this.txtMdp.getText();
 
 		// Vérification des informations de connexion
 		if ( nom.isEmpty() || mdp.isEmpty() )
