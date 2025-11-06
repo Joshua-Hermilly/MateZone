@@ -24,7 +24,7 @@ public class ConnexionBD
 	
 	/** Paramètres de connexion à la base de données */
 	/** Configuration pour la base MySQL hébergée sur AlwaysData */
-		private static final String URL       = "jdbc:mysql://mysql-dono0530.alwaysdata.net/";
+		private static final String URL       = "jdbc:mysql://mysql-dono0530.alwaysdata.net/dono0530_matezone";
 		private static final String USERNAME  = "dono0530_mate";
 		private static final String PASSWORD  = "GentleMates > KaCa !";
 
