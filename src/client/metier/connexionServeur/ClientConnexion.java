@@ -5,12 +5,19 @@ import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
 
+import client.Controleur;
+
+/*---------------------------------*/
+/*  Class ClientConnexion          */
+/*---------------------------------*/
+
 public class ClientConnexion extends WebSocketClient
 {
 	/*-------------------------------*/
 	/*     Attributs                 */
 	/*-------------------------------*/
-	private boolean connectee;
+	private boolean    connectee;
+	private int        idClient;
 
 	/*-------------------------------*/
 	/*     Constructeurs             */
@@ -18,7 +25,8 @@ public class ClientConnexion extends WebSocketClient
 	public ClientConnexion() throws Exception
 	{
 		super( new URI( "ws://localhost:8080" ) );
-		this.connectee = false;
+
+		this.connectee  = false;
 	}
 
 	/**
@@ -47,8 +55,10 @@ public class ClientConnexion extends WebSocketClient
 	/*-------------------------------*/
 	public void traiterMessage( String message ) 
 	{
-		if ( message.equals("CONNECT:") ) { this.estConnectee( message ); };
-
+		if ( message.startsWith("LOGIN:"   ) ) { this.estConnectee( message ); };
+		if ( message.startsWith("REGISTERED:") ) { this.estEnregistre( message ); }
+	
+		System.out.println("Message reçu du serveur : " + message);
 	}
 
 
@@ -59,8 +69,20 @@ public class ClientConnexion extends WebSocketClient
 	{
 		// modifier !
 		
-		if ( message.equals("CONNECT:true") ) { this.connectee = true;  } 
-		else                                           { this.connectee = false; }
+		if ( ! message.equals("LOGIN:-1") ) { this.connectee = false; } 
+		else 
+		{ 
+			this.connectee = true; 
+			try { this.idClient = Integer.parseInt( message.split(":")[1] ); } catch (Exception e) {}
+		}
+
+		System.out.println( this.connectee ? "Connexion réussie !" : "Échec de la connexion." );
+	}
+
+	private void estEnregistre(String message) 
+	{		
+		if ( message.equals("REGISTERED:true") ) { System.out.println("Enregistrement réussi !"); } 
+		else                                    { System.out.println("Échec de l'enregistrement."); }
 	}
 
 
