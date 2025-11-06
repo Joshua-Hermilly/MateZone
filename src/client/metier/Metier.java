@@ -1,7 +1,5 @@
 package client.metier;
 
-import java.util.ResourceBundle.Control;
-
 import client.metier.connexionServeur.ClientConnexion;
 
 public class Metier 
