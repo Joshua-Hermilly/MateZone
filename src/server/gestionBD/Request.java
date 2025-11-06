@@ -1,3 +1,5 @@
+package server.gestionBD;
+
 import java.sql.Connection;          // Pour la connexion à la BD
 import java.sql.PreparedStatement;   // Pour le driver JDBC ( dans /lib )
 import java.sql.ResultSet;           // Pour exécuter des requêtes
@@ -6,6 +8,7 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import server.Client;
@@ -333,7 +336,7 @@ public class Request
 	{
 		Client client = getClientByPseudo( pseudo );
 		if ( client == null ) return -1;
-		if ( client.getMdp() != null && client.getMdp().equals( mdp ) ) return getClientid();
+		if ( client.getMdp() != null && client.getMdp().equals( mdp ) ) return getClientId(pseudo);
 		return -1;
 	}
 
@@ -399,8 +402,8 @@ public class Request
 				}
 				
 				// Test authentification
-				Boolean auth = this.authenticate( clientTest.getPseudo(), clientTest.getMdp() );
-				if ( auth = true )
+				int auth = this.authenticate( clientTest.getPseudo(), clientTest.getMdp() );
+				if ( auth != -1 )
 				{
 					System.out.println( "✓ Authentification OK" );
 				}
@@ -427,10 +430,10 @@ public class Request
 /*-------------------------------------------------*/
 /*--------------GESTION MESSAGE--------------------*/
 /*-------------------------------------------------*/
-/*
+
 	public Boolean sendMessage(int idUser,int groupe_id, String message)
 	{
-				String sql = "INSERT INTO messages ( groupe_id,expediteur_id,mdp ) VALUES (?, ?, ?)";
+				String sql = "INSERT INTO messages ( groupe_id,expediteur_id,contenu ) VALUES (?, ?, ?)";
 		
 		try 
 		{
@@ -438,47 +441,67 @@ public class Request
 			PreparedStatement stmt = conn.prepareStatement( sql );
 			
 			// Ajout des paramètres
-			stmt.setString ( 1, pseudo );
+			stmt.setInt    ( 1, groupe_id );
+			stmt.setInt    ( 1, idUser );
+			stmt.setString ( 1, message );
 
-			ResultSet rs = stmt.executeQuery();
-			
-			if ( rs.next() ) 
-			{
-				Client client = mapRowToClient( rs );
+			// Exécution de la requête INSERT
+			int lignesAffectees = stmt.executeUpdate();
 
-				System.out.println( "Client trouvé : " + client );
-				return client;
-			} 
-			else 
+			// Vérifier si l'insertion a réussi
+			if (lignesAffectees > 0) 
 			{
-				System.out.println( "Aucun client trouvé avec le pseudo : " + pseudo );
+				System.out.println("Message envoyé avec succès");
+				return true;
 			}
+			else
+			{
+				System.out.println("Échec de l'envoi du message");
+				return false;
+			}
+			
+
 			
 		} 
 		catch (SQLException e) 
 		{
-			System.err.println( "Erreur lors de la recherche du client pseudo : " + pseudo );
+			System.err.println( "Erreur envoie du message: " + message);
 			e.printStackTrace();
 		}
 		
 		return null;
 	}
-	}
 
 
-*/
-
-
-
+	/*public HashMap<> getMessages()
+	{
+		String sql = "Select * From message order by id asc";
+		
+		try 
+		{
+			Connection        conn = this.connexionBD.getConnection();
+			PreparedStatement stmt = conn.prepareStatement( sql );
+			
+			
+			
+		} 
+		catch (SQLException e) 
+		{
+			System.err.println( "Erreur envoie du message: " + message);
+			e.printStackTrace();
+		}
+		
+		return null;
+	}*/
 
 
 
 	/**
 	 * Point d'entrée pour tester les liaisons
 	 */
-	public static void main( String[] args )
+/*	public static void main( String[] args )
 	{
 		Request dao = new Request();
 		dao.testerLiaisons();
-	}
+	}*/
 }
