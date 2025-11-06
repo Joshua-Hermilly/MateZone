@@ -98,7 +98,9 @@ public class ChatPanel extends JPanel
 		{
 			try 
 			{
-				messages = messages.substring("MESSAGES:".length());
+				messages = messages.substring("MESSAGES_LIST:".length());
+
+				System.out.println("Messages reçus : " + messages);
 
 				// JSON message -> HashMap< Integer, String >
 				Gson gson                                = new Gson();
@@ -107,7 +109,7 @@ public class ChatPanel extends JPanel
 
 				for (String[] messageData : mapMessages.values()) 
 				{
-					if (messageData.length >= 3) { this.ajouterMessage(messageData[0], messageData[1], messageData[2]); } 
+					if (messageData.length >= 3) { this.ajouterMessage(messageData[0], messageData[2], messageData[1]); } 
 					else                         { this.ajouterMessage(messageData[0], "MTN", messageData[1]); }
 				}
 

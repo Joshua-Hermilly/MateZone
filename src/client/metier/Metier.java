@@ -37,7 +37,7 @@ public class Metier
 
 	public void envoyerMessage(String message) 
 	{
-		Metier.client.envoyerMessage("NEWMESSAGE:1:" + this.client.getIdClient() + message);
+		Metier.client.envoyerMessage("NEWMESSAGE:1:" + Metier.client.getIdClient() + ":" + message);
 	}
 
 
