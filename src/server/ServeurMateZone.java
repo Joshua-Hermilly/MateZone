@@ -1,6 +1,7 @@
+package server;
+
 import org.java_websocket.server.WebSocketServer;
 
-import server.gestionBD.ConnexionBD;
 import server.gestionBD.Request;
 
 import org.java_websocket.WebSocket;
@@ -78,19 +79,26 @@ public class ServeurMateZone extends WebSocketServer
 				int idChannel = Integer.parseInt(parties[2]);
 				String nMessage = parties[3]; // Contient tout le reste, même avec des ":"
 				
-				client.send("MESSAGE_SENT:" + ServeurMateZone.bd.sendMessage(idClient, idChannel, nMessage));
+				if(ServeurMateZone.bd.sendMessage(idClient, idChannel, nMessage))
+				{
+					this.broadcast();
+				}
 			}
 		}
 
 
 		}		
-		/*	// Diffusion du message à tous les clients connectés (broadcast)
+
+	}
+
+	private void broadcast()
+	{
 		for ( WebSocket clientCo : this.getConnections() ) 
 		{
-			
-			clientCo.send( "Serveur → " + message );
-		}*/
+			//clientCo.send();
+		}
 	}
+
 
 	// Client Déconnécté
 	@Override
