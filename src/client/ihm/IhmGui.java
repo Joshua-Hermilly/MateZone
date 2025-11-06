@@ -40,4 +40,15 @@ public class IhmGui
 	{
 		return this.controleur.testerConnexionAuServeur(host, port);
 	}
+
+	public void connexionAuClient( String nom, String mdp ) 
+	{
+		this.controleur.connexionAuClient(nom, mdp);
+	}
+
+	public void enregistrerClient( String nom, String mdp ) 
+	{
+		this.controleur.enregistrerClient(nom, mdp);
+	}
+
 }

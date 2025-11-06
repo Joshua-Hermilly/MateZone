@@ -11,32 +11,32 @@ public class SortiePanel extends JPanel
 	/*--------------------------*/
 	/*  Composants              */
 	/*--------------------------*/
-    private JTextArea txtOutput;
+	private JTextArea txtOutput;
 
 	/*--------------------------*/
 	/*     Constructeur         */
 	/*--------------------------*/
-    public SortiePanel() 
+	public SortiePanel() 
 	{
-        this.setLayout( new BorderLayout() );
+		this.setLayout( new BorderLayout() );
 
 		/*-------------------------------*/
 		/* Création des composants       */
 		/*-------------------------------*/
-        this.txtOutput = new JTextArea();
-        this.txtOutput.setEditable(false);
+		this.txtOutput = new JTextArea();
+		this.txtOutput.setEditable(false);
 
 		/*-------------------------------*/
 		/* Ajout des composants          */
 		/*-------------------------------*/
-        this.add( new JScrollPane(this.txtOutput), BorderLayout.CENTER );
-    }
+		this.add( new JScrollPane(this.txtOutput), BorderLayout.CENTER );
+	}
 
 	/*--------------------------*/
 	/*  Méthodes                */
 	/*--------------------------*/
-    public void append(String text) 
+	public void append(String text) 
 	{
-        this.txtOutput.append(text);
-    }
+		this.txtOutput.append(text);
+	}
 }
