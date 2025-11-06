@@ -377,7 +377,7 @@ public class Request
 	 * @param message le contenu du message
 	 * @return true si l'envoi a réussi, false sinon, null en cas d'erreur
 	 */
-	public Boolean sendMessage(int idUser, int groupe_id, String message)
+	public Boolean sendMessage(int groupe_id, int idUser, String message)
 	{
 		String sql = "INSERT INTO messages (groupe_id, expediteur_id, contenu) VALUES (?, ?, ?)";
 		
