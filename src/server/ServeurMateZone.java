@@ -34,6 +34,87 @@ public class ServeurMateZone extends WebSocketServer
 	/* Autres Méthodes               */
 	/*-------------------------------*/
 
+	private void broadcast()
+	{
+		for ( WebSocket clientCo : this.getConnections() ) {clientCo.send("Broadcast");}
+	}
+
+	public HashMap<Integer, String[]>  hsmessages(int idChannel) { return ServeurMateZone.bd.getMessages(idChannel); }
+
+	/*-------------------------------*/
+	/* GESTION CLIENT                */
+	/*-------------------------------*/
+
+	/**
+	 * Gère la connexion d'un client
+	 * Format attendu: "LOGIN:pseudo:mdp"
+	 */
+	private void handleLogin(WebSocket client, String message)
+	{
+		String[] parties = message.split(":");
+		
+		if (parties.length == 3) 
+		{
+			String pseudo = parties[1];
+			String mdp = parties[2];
+			
+			int idClient = ServeurMateZone.bd.authenticate(pseudo, mdp);
+			client.send("CONNECT:" + idClient + ":" + ServeurMateZone.bd.getClientById(idClient).getPseudo());
+			
+			// Convertir la HashMap en JSON avec Gson
+			HashMap<Integer, String[]> messages = hsmessages(1);
+			String messagesJson = gson.toJson(messages);
+			client.send("MESSAGES_LIST:" + messagesJson);
+		}
+	}
+
+	/**
+	 * Gère l'inscription d'un nouveau client
+	 * Format attendu: "REGISTER:pseudo:mdp"
+	 */
+	private void handleRegister(WebSocket client, String message)
+	{
+		String[] parties = message.split(":");
+		
+		if (parties.length == 3) 
+		{
+			String pseudo = parties[1];
+			String mdp = parties[2];
+			
+			Client user = new Client(pseudo, mdp);
+			client.send("REGISTERED:" + ServeurMateZone.bd.createClient(user));
+		}
+	}
+
+	/**
+	 * Gère l'envoi d'un nouveau message
+	 * Format attendu: "NEWMESSAGE:idClient:idChannel:leMessage"
+	 */
+	private void handleNewMessage(WebSocket client, String message)
+	{
+		String[] parties = message.split(":", 4); // Limite à 4 parties maximum
+		
+		if (parties.length == 4) 
+		{
+			int idClient = Integer.parseInt(parties[1]);
+			int idChannel = Integer.parseInt(parties[2]);
+			String nMessage = parties[3]; // Contient tout le reste, même avec des ":"
+			
+			if (ServeurMateZone.bd.sendMessage(idClient, idChannel, nMessage))
+			{
+				this.broadcast();
+			}
+		}
+	}
+
+
+
+
+	/*-------------------------------*/
+	/* @Override                     */
+	/*-------------------------------*/
+
+
 	// Client Connécté
 	@Override
 	public void onOpen(WebSocket client, ClientHandshake handshake) 
@@ -45,75 +126,13 @@ public class ServeurMateZone extends WebSocketServer
 	@Override
 	public void onMessage(WebSocket client, String message) 
 	{
-		if ( message != null)
-		{
-		// Si le message est une annonce de nom+mdp : "LOGIN:pseudo:mdp"
-		if ( message.startsWith("LOGIN:") ) 
-		{
-			String[] parties = message.split(":");
-			
-			if (parties.length == 3) 
-			{
-				int idClient = ServeurMateZone.bd.authenticate(parties[1],parties[2]);
-				client.send("CONNECT:" + idClient + ":" + ServeurMateZone.bd.getClientById(idClient).getPseudo());
-				
-				// Convertir la HashMap en JSON avec Gson
-				HashMap<Integer, String[]> messages = hsmessages(1);
-				String messagesJson = gson.toJson(messages);
-				client.send("MESSAGES_LIST:" + messagesJson);
-			}
-		}
+		if ( message == null ) return;
 
-		// Si le message est une annonce: "REGISTER:pseudo:mdp"
-		if ( message.startsWith("REGISTER:") ) 
-		{
-			String[] parties = message.split(":");
-			
-			
-			if (parties.length == 3) 
-			{
-				Client user = new Client(parties[1],parties[2]);
-				client.send("REGISTERED:" + ServeurMateZone.bd.createClient(user));
-			}
-		}
-
-		// Si le message est une annonce: "NEWMESSAGE:idchannel:leMessage"
-		if ( message.startsWith("NEWMESSAGE:") ) 
-		{
-			String[] parties = message.split(":", 4); // Limite à 3 parties maximum
-			
-			if (parties.length == 3) 
-			{
-				int idClient = Integer.parseInt(parties[1]);
-				int idChannel = Integer.parseInt(parties[2]);
-				String nMessage = parties[3]; // Contient tout le reste, même avec des ":"
-				
-				if(ServeurMateZone.bd.sendMessage(idClient, idChannel, nMessage))
-				{
-					this.broadcast();
-				}
-			}
-		}
-
-
-		}		
-
+		// Traitement des différents types de messages
+		if ( message.startsWith("LOGIN:"     ) ) { handleLogin(client, message);     }
+		if ( message.startsWith("REGISTER:"  ) ) { handleRegister(client, message);  }
+		if ( message.startsWith("NEWMESSAGE:") ) { handleNewMessage(client, message);}
 	}
-
-	private void broadcast()
-	{
-		for ( WebSocket clientCo : this.getConnections() ) 
-		{
-			//clientCo.send();
-		}
-	}
-
-
-	public HashMap<Integer, String[]>  hsmessages(int idChannel)
-	{
-		return ServeurMateZone.bd.getMessages(idChannel);
-	}
-
 
 	// Client Déconnécté
 	@Override
@@ -135,6 +154,10 @@ public class ServeurMateZone extends WebSocketServer
 		System.out.println("Serveur WebSocket démarré !");
 	}
 	
+
+	/*-------------------------------*/
+	/* Main                          */
+	/*-------------------------------*/
 
 	// Point d'entrée du serveur
 	public static void main(String[] args) 
