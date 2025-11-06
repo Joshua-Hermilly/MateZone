@@ -8,6 +8,8 @@ import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 
 import java.net.InetSocketAddress;
+import java.util.HashMap;
+import com.google.gson.Gson;
 
 
 
@@ -15,6 +17,7 @@ import java.net.InetSocketAddress;
 public class ServeurMateZone extends WebSocketServer 
 {
 	private static Request bd;
+	private static Gson gson = new Gson();
 
 
 	/*-------------------------------*/
@@ -51,7 +54,13 @@ public class ServeurMateZone extends WebSocketServer
 			
 			if (parties.length == 3) 
 			{
-				client.send("CONNECT:" + ServeurMateZone.bd.authenticate(parties[1],parties[2]));
+				int idClient = ServeurMateZone.bd.authenticate(parties[1],parties[2]);
+				client.send("CONNECT:" + idClient + ":" + ServeurMateZone.bd.getClientById(idClient).getPseudo());
+				
+				// Convertir la HashMap en JSON avec Gson
+				HashMap<Integer, String[]> messages = hsmessages(1);
+				String messagesJson = gson.toJson(messages);
+				client.send("MESSAGES:" + messagesJson);
 			}
 		}
 
@@ -97,6 +106,12 @@ public class ServeurMateZone extends WebSocketServer
 		{
 			//clientCo.send();
 		}
+	}
+
+
+	public HashMap<Integer, String[]>  hsmessages(int idChannel)
+	{
+		return ServeurMateZone.bd.getMessages(idChannel);
 	}
 
 
