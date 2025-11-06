@@ -1,4 +1,4 @@
-package MateZone.metier.client;
+package server;
 
 import java.sql.Timestamp;
 
