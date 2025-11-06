@@ -473,26 +473,46 @@ public class Request
 	}
 
 
-	/*public HashMap<> getMessages()
+	public HashMap<Integer, String[]> getMessages(int idchannel)
 	{
-		String sql = "Select * From message order by id asc";
+		HashMap<Integer, String[]> hsMapMessage = new HashMap<>();
+		String sql = "SELECT s.id, c.pseudo, s.contenu FROM messages s INNER JOIN clients c ON c.id = s.expediteur_id WHERE groupe_id = ? ORDER BY s.id ASC";
 		
 		try 
 		{
 			Connection        conn = this.connexionBD.getConnection();
 			PreparedStatement stmt = conn.prepareStatement( sql );
 			
+			// Ajout du paramètre
+			stmt.setInt(1, idchannel);
 			
+			ResultSet rs = stmt.executeQuery();
+			
+			// Parcours de tous les résultats
+			while (rs.next()) 
+			{
+				int id = rs.getInt("id");
+				String pseudo = rs.getString("pseudo");
+				String contenu = rs.getString("contenu");
+				
+				// Stocker le pseudo et le contenu dans un tableau
+				String[] messageData = {pseudo, contenu};
+				hsMapMessage.put(id, messageData);
+			}
+			
+			System.out.println("Nb messages récupérés : " + hsMapMessage.size());
+
+			return hsMapMessage;
 			
 		} 
 		catch (SQLException e) 
 		{
-			System.err.println( "Erreur envoie du message: " + message);
+			System.err.println("Erreur récupération des messages pour le channel: " + idchannel);
 			e.printStackTrace();
 		}
 		
 		return null;
-	}*/
+	}
 
 
 
