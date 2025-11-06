@@ -38,24 +38,31 @@ public class IhmGui
 		this.frameConnexion.dispose();
 		this.frameHome = new HomeFrame( this, pseudo );
 	}
-	
+
+	public void afficherLstMessages( String lstMessages ) 
+	{
+		if ( this.frameHome != null ) 
+		{
+			this.frameHome.mettreAJourLstMessages( lstMessages );
+		}
+	}
+
+	public void afficherNvMessage( String message ) 
+	{
+		if ( this.frameHome != null ) 
+		{
+			this.frameHome.ajouterNvMessage( message );
+		}
+	}
 
 	/*--------------------------*/
 	/*  Méthodes Contrôleur     */
 	/*--------------------------*/
-	public boolean testerConnexionAuServeur( String host, int port ) 
-	{
-		return this.controleur.testerConnexionAuServeur(host, port);
-	}
+	public boolean testerConnexionAuServeur( String host, int port )  { return this.controleur.testerConnexionAuServeur(host, port); }
 
-	public void connexionAuClient( String nom, String mdp ) 
-	{
-		this.controleur.connexionAuClient(nom, mdp);
-	}
+	public void connexionAuClient ( String nom, String mdp )  { this.controleur.connexionAuClient(nom, mdp); }
+	public void enregistrerClient ( String nom, String mdp )  { this.controleur.enregistrerClient(nom, mdp); }
 
-	public void enregistrerClient( String nom, String mdp ) 
-	{
-		this.controleur.enregistrerClient(nom, mdp);
-	}
+	public void envoyerMessage( String message )  { this.controleur.envoyerMessage( message ); }
 
 }

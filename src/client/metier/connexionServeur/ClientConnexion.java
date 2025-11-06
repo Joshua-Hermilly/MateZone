@@ -45,6 +45,11 @@ public class ClientConnexion extends WebSocketClient
 		if (this.notificateur != null) { this.notificateur.notifierMessage(message); }
 	}
 
+	private void notifierLstMessages(String lstMessages) 
+	{
+		if (this.notificateur != null) { this.notificateur.notifierLstMessages(lstMessages); }
+	}
+
 	private void notifierConnexionServeur(boolean etat) 
 	{
 		if (this.notificateur != null) { this.notificateur.notifierConnexionServeur(etat); }
@@ -68,6 +73,9 @@ public class ClientConnexion extends WebSocketClient
 	{
 		if (this.isOpen()) { this.send(message);                                        } 
 		else               { System.out.println("Impossible d'envoyer le message."); }
+
+		System.out.println("Message envoyé : " + message);
+		this.notifierMessage(message);
 	}
 
 	/*-------------------------------*/
@@ -75,10 +83,13 @@ public class ClientConnexion extends WebSocketClient
 	/*-------------------------------*/
 	public void traiterMessage(String message) 
 	{
-		if ( message.startsWith("CONNECT:"   ) ) { this.estConnectee (message);	}
-		if ( message.startsWith("REGISTERED:") ) { this.estEnregistre(message); }
+		if ( message.startsWith("CONNECT:"      ) ) { this.estConnectee  (message);	return; }
+		if ( message.startsWith("REGISTERED:"   ) ) { this.estEnregistre (message); return; }
+		if ( message.startsWith("MESSAGES:"     ) ) { this.estMessageList(message); return; }
+		if ( message.startsWith("NEW_MESSAGE:"  ) ) { this.estMessage    (message); return; }
 
-		System.out.println("Message reçu du serveur : " + message);
+
+		//System.out.println("Message reçu du serveur : " + message);
 
 		// Notifie message reçu
 		this.notifierMessage(message);
@@ -118,10 +129,24 @@ public class ClientConnexion extends WebSocketClient
 		this.notifierEnregistrement(succes);
 	}
 
+	private void estMessageList(String message) 
+	{
+		this.notifierLstMessages(message); 
+	}
+
+	private void estMessage(String message) 
+	{
+		String nvMessage = message.substring("NEW_MESSAGE:".length());
+
+		this.notifierMessage(nvMessage); 
+	}
+
 	/*-------------------------------*/
 	/* Getters                       */
 	/*-------------------------------*/
-	public boolean estConnectee() { return connectee; }
+	public boolean estConnectee() { return connectee;    }
+	public int     getIdClient () { return idClient;     }
+	public String  getPseudo   () { return pseudoClient; }
 
 	/*-------------------------------*/
 	/* Méthodes Override             */
