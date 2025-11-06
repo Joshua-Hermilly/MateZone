@@ -25,14 +25,14 @@ public class Metier
 	/*--------------------------*/
 	/*     Client               */
 	/*--------------------------*/
-	public void connecterAuClient(String pseudo, String mdp) 
+	public void connexionAuClient(String pseudo, String mdp) 
 	{
 		Metier.client.envoyerMessage("LOGIN:" + pseudo + ":" + mdp);
 	}
 
 	public void creerClient(String pseudo, String mdp) 
 	{
-		Metier.client.envoyerMessage("SIGNUP:" + pseudo + ":" + mdp);
+		Metier.client.envoyerMessage("REGISTER:" + pseudo + ":" + mdp);
 	}
 
 
@@ -45,10 +45,13 @@ public class Metier
 		{
 			Metier.client = new ClientConnexion(host, port);
 			Metier.client.connectBlocking();
+
+			Metier.host = host;
+			Metier.port = port;
+
+			return Metier.client.isOpen();
 		
 		} catch (Exception e)  { e.printStackTrace(); return false; }
-
-		return true;
 	}
 
 	public void deconnecterDuServeur() 

@@ -3,7 +3,8 @@ package client.ihm.frame.connexion;
 import javax.swing.*;
 
 import client.ihm.IhmGui;
-import client.ihm.panel.connexion.SaisiePanel;
+import client.ihm.panel.connexion.SaisieServeurPanel;
+import client.ihm.panel.connexion.SaisieClientPanel;
 import client.ihm.panel.connexion.SortiePanel;
 
 import java.awt.*;
@@ -23,8 +24,9 @@ public class ConnectionFrame extends JFrame
 	/*--------------------------*/
 	private IhmGui ihmGui;
 
-	private SaisiePanel saisiePanel;
-	private SortiePanel sortiePanel;
+	private SaisieServeurPanel saisieServeurPanel;
+	private SaisieClientPanel  saisieClientPanel;
+	private SortiePanel        sortiePanel;
 
 	/*--------------------------*/
 	/*     Constructeur         */
@@ -33,17 +35,17 @@ public class ConnectionFrame extends JFrame
 	{
 		this.ihmGui = ihmGui;
 
-		setTitle("Connection Frame");
-		setSize(400, 300);
-		setLayout(new BorderLayout());
+		this.setTitle("Connection Frame");
+		this.setSize(400, 300);
+		this.setLayout(new BorderLayout());
 
 		/*-------------------------------*/
 		/* Création des composants       */
 		/*-------------------------------*/
-		this.saisiePanel = new SaisiePanel( this );
-		this.sortiePanel = new SortiePanel();
+		this.saisieServeurPanel = new SaisieServeurPanel( this );
+		this.sortiePanel        = new SortiePanel();
 
-		this.add(this.saisiePanel, BorderLayout.NORTH);
+		this.add(this.saisieServeurPanel, BorderLayout.NORTH);
 		this.add(this.sortiePanel, BorderLayout.CENTER);
 
 
@@ -59,7 +61,32 @@ public class ConnectionFrame extends JFrame
 
 	public boolean testerConnexionAuServeur(String host, int port)
 	{
-		return this.ihmGui.testerConnexionAuServeur(host, port);
+		boolean resultat;
+
+		resultat = this.ihmGui.testerConnexionAuServeur(host, port);
+		
+		//Passage ne mode Client
+		if (resultat)
+		{
+			this.remove(this.saisieServeurPanel);
+			this.saisieClientPanel = new SaisieClientPanel( this );
+			this.add(this.saisieClientPanel, BorderLayout.NORTH);
+
+			this.revalidate();
+			this.repaint();
+		}
+
+		return resultat;
+	}
+
+	public void connexionAuClient(String nom, String mdp)
+	{
+		this.ihmGui.connexionAuClient(nom, mdp);
+	}
+
+	public void enregistrerClient(String nom, String mdp)
+	{
+		this.ihmGui.enregistrerClient(nom, mdp);
 	}
 
 

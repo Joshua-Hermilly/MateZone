@@ -43,6 +43,16 @@ public class Controleur
 	/*--------------------------*/
 	/*     Client               */
 	/*--------------------------*/
+	public void connexionAuClient( String nom, String mdp ) 
+	{
+		this.metier.connexionAuClient(nom, mdp);
+	}
+
+	public void enregistrerClient( String nom, String mdp ) 
+	{
+		this.metier.creerClient(nom, mdp);
+	}
+
 
 	/*--------------------------*/
 	/*     Serveur              */
