@@ -1,8 +1,18 @@
 -- MateZone
--- Programmeur  : Yuriko
+-- Programmeur  : MateGROUP
 -- Date         : 05/10/2025
--- Version      : 1.0
+-- Version      : 1.1
 -- Description  : Création de la BD pour MateZone
+
+-- +-----------------------+
+-- +  SUPPRESSION TABLES   +
+-- +-----------------------+
+
+-- Suppression des tables dans l'ordre inverse (à cause des clés étrangères)
+DROP TABLE IF EXISTS messages;
+DROP TABLE IF EXISTS membres_groupes;
+DROP TABLE IF EXISTS groupes;
+DROP TABLE IF EXISTS clients;
 
 -- +-----------------------+
 -- +  CREATION DES TABLES  +
