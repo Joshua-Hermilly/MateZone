@@ -45,10 +45,8 @@ public class Controleur
 	/*--------------------------*/
 	/* Affichage                */
 	/*--------------------------*/
-	public void lancerApp()
-	{
-		this.ihmGui.lancerApp();
-	}
+	public void lancerApp          () { this.ihmGui.lancerConnexionFrame(); }
+	public void lancerMateZoneFrame() { this.ihmGui.lancerMateZoneFrame (); }
 
 	/*-----------------------------------*/
 	/*              METIER               */
@@ -107,6 +105,8 @@ public class Controleur
 			return false;
 		}
 
+		this.lancerMateZoneFrame();
+		
 		return true;
 	}
 

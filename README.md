@@ -58,6 +58,7 @@ MateZone/
 
 # Développeurs :
 ## Serveur
--	DNB_DONO0530
+-	DNB_Dono530
 ## Client
 - Yuriko
+
