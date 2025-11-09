@@ -1,9 +1,13 @@
 package common.dto;
 
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.w3c.dom.events.Event;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import common.protocol.EventEnum;
 
@@ -55,11 +59,27 @@ public class ChatEventDTO
 	}
 
 	/*--------------------------*/
+	/*   Transformer Json       */
+	/*--------------------------*/
+	public static ChatEventDTO jsonToEventDTO(String json) 
+	{
+		Gson gson = new Gson();
+		return gson.fromJson(json, ChatEventDTO.class);
+	}
+
+	public String toJson() 
+	{
+		Gson gson = new Gson();
+		return gson.toJson(this);
+	}
+
+	/*--------------------------*/
 	/*   toString               */
 	/*--------------------------*/
 	@Override
 	public String toString() 
 	{ 
+		System.out.println("sdqsdqsd");
 		return "ChatEventDTO{type='" + type + "', data=" + data + "}"; 
 	}
 }

@@ -15,10 +15,10 @@ public enum EventEnum
 	/*       Constantes         */
 	/*--------------------------*/
 	LOGIN   ( List.of( "pseudo", "mdp"     ) ),
-    SIGNUP  ( List.of( "pseudo", "mdp"     ) ),
-    MESSAGE ( List.of( "pseudo", "contenu" ) ),
-    ERROR   ( List.of("message"        ) ),
-    SUCCESS ( List.of("message"        ) );
+	SIGNUP  ( List.of( "pseudo", "mdp"     ) ),
+	MESSAGE ( List.of( "pseudo", "contenu" ) ),
+	ERROR   ( List.of("message"        ) ),
+	SUCCESS ( List.of("message"        ) );
 
 	/*--------------------------*/
 	/*        Attribut          */
@@ -28,13 +28,13 @@ public enum EventEnum
 	/*--------------------------*/
 	/*      Constructeur        */
 	/*--------------------------*/
-    EventEnum( List<String> composants ) 
+	EventEnum( List<String> composants ) 
 	{
-        this.composants = composants;
-    }
+		this.composants = composants;
+	}
 
 	/*--------------------------*/
 	/*        Getter            */
 	/*--------------------------*/
-    public List<String> getRequiredKeys() { return this.composants; }
+	public List<String> getRequiredKeys() { return this.composants; }
 }
