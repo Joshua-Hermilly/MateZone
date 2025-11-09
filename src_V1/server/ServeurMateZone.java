@@ -129,10 +129,9 @@ public class ServeurMateZone extends WebSocketServer
 		if ( message == null ) return;
 
 		// Traitement des différents types de messages
-		if ( message.startsWith("LOGIN"     ) ) { handleLogin(client, message);     }
-		if ( message.startsWith("REGISTER"  ) ) { handleRegister(client, message);  }
-		if ( message.startsWith("NEW_MESSAGE") ) { handleNewMessage(client, message);}
-		System.out.println( "message : " + message);
+		if ( message.startsWith("LOGIN:"     ) ) { handleLogin(client, message);     }
+		if ( message.startsWith("REGISTER:"  ) ) { handleRegister(client, message);  }
+		if ( message.startsWith("NEWMESSAGE:") ) { handleNewMessage(client, message);}
 	}
 
 	// Client Déconnécté
