@@ -3,6 +3,7 @@ package client.ihm;
 import javax.swing.JOptionPane;
 
 import client.controleur.Controleur;
+import client.ihm.frame.affichage.MateZoneFrame;
 import client.ihm.frame.connexion.ConnexionFrame;
 
 /*-------------------------------*/
@@ -20,6 +21,7 @@ public class IhmGui
 	private Controleur controleur;
 
 	private ConnexionFrame connexionFrame;
+	private MateZoneFrame  mateZoneFrame;
 
 	/*--------------------------*/
 	/*     Constructeur         */
@@ -30,10 +32,17 @@ public class IhmGui
 		this.connexionFrame  = null;
 	}
 
-	public void lancerApp()
+	public void lancerConnexionFrame()
 	{
 		this.connexionFrame = new ConnexionFrame( this.controleur );
 		this.connexionFrame.setVisible(true);
+	}
+
+	public void lancerMateZoneFrame()
+	{
+		this.mateZoneFrame = new MateZoneFrame( this.controleur );
+		this.mateZoneFrame.setVisible( true );
+		this.connexionFrame.dispose();;
 	}
 
 
