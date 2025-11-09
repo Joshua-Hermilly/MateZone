@@ -1,85 +1,83 @@
 package client.metier;
 
-import client.metier.connexionServeur.ClientConnexion;
+import client.metier.ports.IChatPort;
+import common.dto.ChatEventDTO;
+import common.protocol.EventEnum;
 
+/*-------------------------------*/
+/* Classe Metier                 */
+/*-------------------------------*/
+/**
+ * Classe Metier - Gère la logique métier de l'application de chat
+ * Fait le lien entre l'ihm et ports.
+ * La passerelle est vers le serveur est fait grâce à client/metier/ports/IChatPort.
+ */
 public class Metier 
 {
 	/*--------------------------*/
-	/*        Attributs         */
+	/* Attributs                */
 	/*--------------------------*/
-	private static String host;
-	private static int    port;
-
-	private static ClientConnexion client;
+	private final IChatPort chatPort;
 
 	/*--------------------------*/
-	/*     Constructeur         */
+	/* Constructeur             */
 	/*--------------------------*/
-	public Metier() 
+	public Metier( IChatPort chatPort )
 	{
-		Metier.host      = null;
-		Metier.port      = -1;
-		Metier.client    = null;
+		this.chatPort = chatPort;
 	}
 
+	/*---------------------------*/
+	/* Getters                   */
+	/*---------------------------*/
+	public IChatPort getChatPort()  { return chatPort; }
+
+
+	/*-----------------------------------*/
+	/*              METIER               */
+	/*-----------------------------------*/
 	/*--------------------------*/
-	/*     Client               */
+	/* Client                   */
 	/*--------------------------*/
-	public void connexionAuClient(String pseudo, String mdp) 
+
+	/*-----------------------*/
+	/* Connexion/Inscription */
+	/*-----------------------*/
+	// public void connecterAuServeur(String host, int port) 
+	// {
+
+	// }
+
+	public void connecterAuClient( String pseudo, String mdp ) 
 	{
-		Metier.client.envoyerMessage("LOGIN:" + pseudo + ":" + mdp);
+		//Création du message eventDTO
+		ChatEventDTO event = new ChatEventDTO( EventEnum.LOGIN )
+				.add( "pseudo", pseudo )
+				.add( "mdp"   , mdp    );
+
+		this.chatPort.envoyer( event );
 	}
 
-	public void creerClient(String pseudo, String mdp) 
+	public void enregistrerUtilisateur( String pseudo, String mdp ) 
 	{
-		Metier.client.envoyerMessage("REGISTER:" + pseudo + ":" + mdp);
+		//Création du message eventDTO
+		ChatEventDTO event = new ChatEventDTO( EventEnum.SIGNUP )
+				.add( "pseudo", pseudo )
+				.add( "mdp"   , mdp    );
+
+		this.chatPort.envoyer (event );
 	}
 
-	public void envoyerMessage(String message) 
+	/*-----------------------*/
+	/*    Envoyer Message    */
+	/*-----------------------*/
+
+	public void envoyerMessage(String texte) 
 	{
-		Metier.client.envoyerMessage("NEWMESSAGE:1:" + Metier.client.getIdClient() + ":" + message);
-	}
-
-
-	/*--------------------------*/
-	/*     Serveur              */
-	/*--------------------------*/
-	public boolean testerConnexionAuServeur(String host, int port) 
-	{
-		try 
-		{
-			Metier.client = new ClientConnexion(host, port);
-			Metier.client.connectBlocking();
-
-			Metier.host = host;
-			Metier.port = port;
-
-			return Metier.client.isOpen();
+		//Création du message eventDTO
+		ChatEventDTO event = new ChatEventDTO( EventEnum.MESSAGE )
+				.add( "message", texte );
 		
-		} catch (Exception e)  { e.printStackTrace(); return false; }
+		this.chatPort.envoyer( event );
 	}
-
-	public void deconnecterDuServeur() 
-	{
-		try 
-		{
-			if ( Metier.client != null && Metier.client.isOpen() ) 
-			{
-				Metier.client.closeBlocking();
-			}
-		
-		} catch (Exception e) { e.printStackTrace(); }
-	}
-
-
-	/*--------------------------*/
-	/*   Getters et Setters     */
-	/*--------------------------*/
-	public static String          getHost     () { return Metier.host;                  }
-	public static int             getPort     () { return Metier.port;                  }
-	public static ClientConnexion getClient   () { return Metier.client;                }
-	public static boolean         estConnectee() { return Metier.client.estConnectee(); }
-
-	public static void   setHost(String host) { Metier.host = host; }
-	public static void   setPort(int port   ) { Metier.port = port; }
 }

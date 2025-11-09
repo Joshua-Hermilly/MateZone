@@ -1,15 +1,18 @@
 {
     "java.project.sourcePaths": [
+        // "src_V1",
         "src",
-        "serveur/src"
     ],
     "java.project.outputPath": "bin",
-    "java.project.referencedLibraries": [
-        "lib/**/*.jar"
-    ]
-
+    "java.project.referencedLibraries": {
+        "include": [
+            "lib/**/*.jar"
+        ],
+        //"exclude": [ "lib/Java-WebSocket-1.6.0.jar"  ]
+    }
     // Configure workspace to use JDK 25 (installed at C:\\Program Files\\Java\\jdk-25)
-    ,"java.configuration.runtimes": [
+    ,
+    "java.configuration.runtimes": [
         {
             "name": "JavaSE-25",
             "path": "C:\\Program Files\\Java\\jdk-25",
