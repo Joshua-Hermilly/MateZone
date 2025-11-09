@@ -12,6 +12,7 @@ import java.util.HashMap;
 import com.google.gson.Gson;
 
 
+import common.dto.ChatEventDTO;
 
 
 public class ServeurMateZone extends WebSocketServer 
@@ -128,11 +129,17 @@ public class ServeurMateZone extends WebSocketServer
 	{
 		if ( message == null ) return;
 
+		System.out.println( message );
+		System.out.println( ChatEventDTO.jsonToEventDTO( message ) );
+		System.out.println( ChatEventDTO.jsonToEventDTO( message ).getType() );
+		System.out.println( ChatEventDTO.jsonToEventDTO( message ).getData() );
+
+
 		// Traitement des différents types de messages
 		if ( message.startsWith("LOGIN"     ) ) { handleLogin(client, message);     }
 		if ( message.startsWith("REGISTER"  ) ) { handleRegister(client, message);  }
 		if ( message.startsWith("NEW_MESSAGE") ) { handleNewMessage(client, message);}
-		System.out.println( "message : " + message);
+		//System.out.println( "message : " + message);
 	}
 
 	// Client Déconnécté
