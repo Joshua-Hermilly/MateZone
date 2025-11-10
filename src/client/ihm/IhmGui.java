@@ -1,68 +1,90 @@
 package client.ihm;
 
-import client.Controleur;
-import client.ihm.frame.connexion.ConnectionFrame;
-import client.ihm.frame.affichage.HomeFrame;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 
+import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
+
+import client.controleur.Controleur;
+import client.ihm.frame.affichage.MateZoneFrame;
+import client.ihm.frame.connexion.ConnexionFrame;
+
+/*-------------------------------*/
+/* Classe IhmGui                 */
+/*-------------------------------*/
+/**
+ * Classe IhmGui - Gère le lacnement et fermeture des difféentes frames.
+ * Fait le lien entre Controleur -> ihm affin d'alléger le controleur.
+ */
 public class IhmGui 
 {
 	/*--------------------------*/
-	/*     Attributs            */
+	/* Attributs                */
 	/*--------------------------*/
 	private Controleur controleur;
 
-	private ConnectionFrame frameConnexion;
-	private HomeFrame       frameHome;
+	private ConnexionFrame connexionFrame;
+	private MateZoneFrame mateZoneFrame;
 
 	/*--------------------------*/
-	/*     Constructeur         */
+	/* Constructeur             */
 	/*--------------------------*/
-	public IhmGui( Controleur controleur ) 
+	public IhmGui(Controleur controleur) 
 	{
-		this.controleur      = controleur;
+		this.controleur    = controleur;
+		this.connexionFrame = null;
+	}
 
-		this.frameConnexion  = null;
-		this.frameHome       = null;
+	public void lancerConnexionFrame()
+	{
+		this.connexionFrame = new ConnexionFrame(this.controleur);
+		this.connexionFrame.setVisible(true);
+	}
+
+	public void lancerMateZoneFrame(String pseudo) 
+	{
+		this.mateZoneFrame = new MateZoneFrame(this.controleur);
+		this.mateZoneFrame.setVisible(true);
+		this.connexionFrame.dispose();
 	}
 
 	/*--------------------------*/
-	/*  Méthodes Affichage      */
+	/* Affichage                */
 	/*--------------------------*/
-	public void afficherFrameConnexionServeur() 
+	public void afficherErreur(String message) 
 	{
-		this.frameConnexion  = new ConnectionFrame( this );
+		JOptionPane.showMessageDialog(this.connexionFrame, message, "Erreur", JOptionPane.ERROR_MESSAGE);
 	}
 
-	public void afficherHome( String pseudo ) 
+	public void afficherImg(byte[] bytes)
 	{
-		this.frameConnexion.dispose();
-		this.frameHome = new HomeFrame( this, pseudo );
-	}
-
-	public void afficherLstMessages( String lstMessages ) 
-	{
-		if ( this.frameHome != null ) 
+		try 
 		{
-			this.frameHome.mettreAJourLstMessages( lstMessages );
-		}
+			if (bytes == null) 
+			{
+				this.afficherErreur("Image introuvable ou lecture impossible.");
+				return;
+			}
+			
+			// convert byte[] back to a BufferedImage
+			InputStream is     = new ByteArrayInputStream(bytes);
+			BufferedImage newBi = ImageIO.read(is);
+
+			if (newBi == null) 
+			{
+				// ImageIO.read returns null when the input is not a known image format
+				this.afficherErreur("Format d'image non reconnu ou données corrompues.");
+				return;
+			}
+
+			// Save the image to disk
+			java.io.File imageDir = new java.io.File("./image/");
+			if (!imageDir.exists()) { imageDir.mkdirs(); } //create folder
+			java.io.File outputFile = new java.io.File("./image/image_" + System.currentTimeMillis() + ".png");
+			ImageIO.write(newBi, "png", outputFile);
+
+		} catch (Exception e) { e.printStackTrace(); }
 	}
-
-	public void afficherNvMessage( String message ) 
-	{
-		if ( this.frameHome != null ) 
-		{
-			this.frameHome.ajouterNvMessage( message );
-		}
-	}
-
-	/*--------------------------*/
-	/*  Méthodes Contrôleur     */
-	/*--------------------------*/
-	public boolean testerConnexionAuServeur( String host, int port )  { return this.controleur.testerConnexionAuServeur(host, port); }
-
-	public void connexionAuClient ( String nom, String mdp )  { this.controleur.connexionAuClient(nom, mdp); }
-	public void enregistrerClient ( String nom, String mdp )  { this.controleur.enregistrerClient(nom, mdp); }
-
-	public void envoyerMessage( String message )  { this.controleur.envoyerMessage( message ); }
-
 }
