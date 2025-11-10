@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 
 import client.controleur.Controleur;
 
@@ -120,14 +122,32 @@ public class SaisieMessagePanel extends JPanel implements ActionListener
 		
 			if (!message.isEmpty()) 
 			{
-				// this.controleur.envoyerMessage(message);
-				this.txtMessage.setText(""); // Vider le champ après envoi
+				this.controleur.envoyerMessage(message);
+				this.txtMessage.setText("");
 			}
 		}
 
 		if (e.getSource() == this.btnPieceJointe) 
 		{
-			// this.controleur.ajouterPieceJointe();
+			//créer la boite de selection
+			JFileChooser jFileChooser = new JFileChooser();
+			jFileChooser.setDialogTitle( "Choisir une image");
+			jFileChooser.setCurrentDirectory( new File(".") ); //Si on veut qu'il s'ouvre dans le rep current sn on enlève et c la racine
+
+			//si fichier selectionnee
+			int returnValue = jFileChooser.showOpenDialog(this);
+
+			//look si le int correspont au num de fichier selectionne
+			if ( returnValue == JFileChooser.APPROVE_OPTION ) 
+			{
+				//fichier selectionné
+				File   selectedFile = jFileChooser.getSelectedFile();
+				String cheminFic    = selectedFile.getAbsolutePath();
+				
+				this.controleur.envoyerPieceJoint(cheminFic);
+
+				System.out.println(cheminFic);
+			}
 		}
 	}
 }

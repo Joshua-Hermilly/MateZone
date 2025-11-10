@@ -1,8 +1,10 @@
 package client.infrastructure.websocket;
 
-import client.metier.ports.IChatPort;
 import common.dto.ChatEventDTO;
 import com.google.gson.Gson;
+
+import client.metier.interfaces.IEnvoyeur;
+import client.metier.interfaces.INotifieur;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
@@ -16,19 +18,21 @@ import java.net.URI;
  * Classe principale de la relation avec le serveur.
  * Gère la connexion, envoie reception des messages du serveur.
  */
-public class WebSocketChatAdapter extends WebSocketClient implements IChatPort 
+public class WebSocketChatAdapter extends WebSocketClient implements IEnvoyeur 
 {
 	/*-------------------------------*/
 	/* Attributs                     */
 	/*-------------------------------*/
+	private final INotifieur iNotifieur;
 	private Gson gson = new Gson();
 
 	/*-------------------------------*/
 	/* Constructeur                  */
 	/*-------------------------------*/
-	public WebSocketChatAdapter( String serverUri ) throws Exception 
+	public WebSocketChatAdapter( String serverUri, INotifieur iNotifieur ) throws Exception 
 	{
 		super( new URI( serverUri ) );
+		this.iNotifieur = iNotifieur;
 	}
 
 
@@ -70,6 +74,9 @@ public class WebSocketChatAdapter extends WebSocketClient implements IChatPort
 	public void onMessage( String message )
 	{
 		System.out.println( "Message reçu : " + message );
+
+		ChatEventDTO event = ChatEventDTO.jsonToEventDTO(message);
+		this.iNotifieur.notifierMessage( event );
 	}
 
 	@Override

@@ -14,11 +14,21 @@ public enum EventEnum
 	/*--------------------------*/
 	/*       Constantes         */
 	/*--------------------------*/
-	LOGIN   ( List.of( "pseudo", "mdp"     ) ),
-	SIGNUP  ( List.of( "pseudo", "mdp"     ) ),
-	MESSAGE ( List.of( "pseudo", "contenu" ) ),
-	ERROR   ( List.of("message"        ) ),
-	SUCCESS ( List.of("message"        ) );
+
+	// CONNEXION :
+	LOGIN          ( List.of( "pseudo", "mdp"      ) ),
+	SIGNUP         ( List.of( "pseudo", "mdp"      ) ),
+	SUCCESS_LOGIN  ( List.of( "id"    ,"pseudo"    ) ),
+	SUCCESS_SIGNUP ( List.of( "id"    , "mdp"      ) ),
+
+	// MESSAGE
+	MESSAGE         ( List.of( "pseudo"   , "contenu", "date", "img"  ) ),
+	NEW_MESSAGE_IMG ( List.of( "IdGroupe" , "idCliet", "byte" ) ),
+	NEW_MESSAGE     ( List.of( "pseudo" , "contenu" ) ),
+
+	// Autres
+	SUCCESS        ( List.of( "message"            ) ),
+	ERROR          ( List.of( "message"            ) );
 
 	/*--------------------------*/
 	/*        Attribut          */
@@ -37,4 +47,10 @@ public enum EventEnum
 	/*        Getter            */
 	/*--------------------------*/
 	public List<String> getRequiredKeys() { return this.composants; }
+	
+	public String getKeyInedx ( int index )
+	{
+		if ( index >= this.getRequiredKeys().size() ) return null;
+		return this.getRequiredKeys().get(index);
+	}
 }
