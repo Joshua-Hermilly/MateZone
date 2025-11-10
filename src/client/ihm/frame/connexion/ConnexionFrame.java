@@ -1,5 +1,6 @@
 package client.ihm.frame.connexion;
 
+import java.awt.Toolkit;
 import javax.swing.JFrame;
 
 import client.controleur.Controleur;
@@ -25,9 +26,10 @@ public class ConnexionFrame extends JFrame
 	public ConnexionFrame( Controleur controleur )
 	{
 		this.setTitle("Connexion");
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setResizable(false);
-		
+		this.setIconImage(Toolkit.getDefaultToolkit().getImage("./image/image_1762797388911.png"));
+
+		/*-------------------------------*/
 		/*-------------------------------*/
 		/* Création des composants       */
 		/*-------------------------------*/
