@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 
 import client.controleur.Controleur;
 import client.ihm.panel.affichage.SaisieMessagePanel;
+import client.ihm.panel.affichage.SalonPanel;
 
 /*-------------------------------*/
 /* Class MateZoneFrame           */
@@ -20,6 +21,7 @@ public class MateZoneFrame extends JFrame
 	/*   Attributs              */
 	/*--------------------------*/
 	private SaisieMessagePanel saisieMessagePanel;
+	private SalonPanel         salonPanel;
 	
 	/*--------------------------*/
 	/*   Constructeur           */
@@ -28,19 +30,21 @@ public class MateZoneFrame extends JFrame
 	{
 		this.setTitle("MateZone");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setResizable(false);
+		this.setResizable(true);
+		this.setSize(800, 600);
 		
 		/*-------------------------------*/
 		/* Création des composants       */
 		/*-------------------------------*/
 		this.saisieMessagePanel = new SaisieMessagePanel( controleur );
+		this.salonPanel         = new SalonPanel        ( "#TEMP14>" );
 
 		/*-------------------------------*/
 		/* Positionnement des composants */
 		/*-------------------------------*/
-		this.add(this.saisieMessagePanel, BorderLayout.SOUTH );
+		this.add(this.salonPanel        , BorderLayout.CENTER );
+		this.add(this.saisieMessagePanel, BorderLayout.SOUTH  );
 		
-		this.pack();
 		this.setLocationRelativeTo(null);
 	}
 }

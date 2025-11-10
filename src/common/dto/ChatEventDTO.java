@@ -1,13 +1,9 @@
 package common.dto;
 
-import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.w3c.dom.events.Event;
-
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import common.protocol.EventEnum;
 
@@ -33,7 +29,9 @@ public class ChatEventDTO
 	{
 		this.data = new HashMap<>();
 	}
-
+	/*--------------------------*/
+	/*     Constructeurs        */
+	/*--------------------------*/
 	public ChatEventDTO( EventEnum type ) 
 	{
 		this();
@@ -48,6 +46,14 @@ public class ChatEventDTO
 
 	public Map<String, Object> getData ()                         { return data;      }
 	public void                setData (Map<String, Object> data) { this.data = data; }
+
+	public Object getDataIndex ( int index )
+	{
+		if ( index >= this.getType().getRequiredKeys().size() ) return null;
+
+		Object object = this.getData().get( this.getType().getRequiredKeys().get( index ) );
+		return object;
+	}
 
 	/*--------------------------*/
 	/*   Ajouter une donnée     */

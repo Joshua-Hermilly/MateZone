@@ -1,4 +1,4 @@
-package server.gestionBD;
+package server.bd;
 
 import java.sql.Connection;         // Pour la connexion à la BD
 import java.sql.DriverManager;      // Pour le driver JDBC ( dans /lib )
@@ -28,7 +28,7 @@ public class ConnexionBD
 		private static final String USERNAME  = "***REMOVED***";
 		private static final String PASSWORD  = "***REMOVED***";
 
-		/** Objet Connection de JDBC pour la connexion à la base de données */
+	/** Objet Connection de JDBC pour la connexion à la base de données */
 		private Connection connection;
 	
 		

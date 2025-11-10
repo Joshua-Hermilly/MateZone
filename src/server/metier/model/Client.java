@@ -1,4 +1,4 @@
-package server;
+package server.metier.model;
 
 import java.sql.Timestamp;
 
