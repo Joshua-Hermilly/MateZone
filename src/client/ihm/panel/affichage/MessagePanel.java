@@ -1,102 +1,101 @@
 package client.ihm.panel.affichage;
 
 import javax.swing.*;
-import java.awt.*;
 
+import common.dto.ChatEventDTO;
+
+import java.awt.*;
+/*-------------------------------*/
+/* Class MessagePanel            */
+/*-------------------------------*/
 /**
- * Panel représentant un message individuel dans le chat.
- * Structure en 2 colonnes : marge/photo de profil à gauche, contenu du message
- * à droite.
+ * Classe extend JPanel qui fait office de panel des message (...images ??).
+ * La frame est faite avec le client/ihm/frame/affichage/MateZoneFrame
  */
-public class MessagePanel extends JPanel 
+public class MessagePanel extends JPanel
 {
 	/*--------------------------*/
-	/* Composants               */
+	/*       Constructeur       */
 	/*--------------------------*/
-	private JPanel panelMarge;
-	private JPanel panelContenu;
-	private JLabel lblPhotoProfil;
-	private JLabel lblNomUtilisateur;
-	private JLabel lblDate;
-	private JLabel lblMessage;
-
-	/*--------------------------*/
-	/* Constructeur             */
-	/*--------------------------*/
-	public MessagePanel(String nomUtilisateur, String date, String message) 
+	public MessagePanel( ChatEventDTO event )
 	{
-		this.setLayout(new BorderLayout());
+		this.setLayout( new BorderLayout() );
+		this.setBackground(new Color(18, 18, 18));
+
+		//Composants
+		JPanel panelMarge;
+		JPanel panelContenu;
+	
+		JLabel lblPhotoProfil;
+		JLabel lblNomUtilisateur;
+		JLabel lblDate;
+		JLabel lblMessage;
 
 		/*-------------------------------*/
 		/* Création des composants       */
 		/*-------------------------------*/
+		panelMarge = new JPanel();
+		panelMarge.setOpaque(false);
+		
+		panelContenu = new JPanel(new BorderLayout());
+		panelContenu.setBackground(new Color(30, 30, 30));
+		panelContenu.setBorder
+		(
+			BorderFactory.createCompoundBorder
+			(
+				BorderFactory.createLineBorder (new Color(50, 50, 50), 1),
+				BorderFactory.createEmptyBorder(12, 15, 12, 15)
+			)
+		);
 
-		// Panel de marge/photo de profil (colonne gauche)
-		this.panelMarge = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		this.panelMarge.setPreferredSize(new Dimension(60, 0));
-		this.panelMarge.setBackground(new Color(54, 57, 63));
+		// Récupération des données du message
+		String pseudo  = (String) event.getData().get("pseudo" );
+		String contenu = (String) event.getData().get("contenu");
+		String date    = (String) event.getData().get("date"   );
+		String img     = (String) event.getData().get("img"    );
 
-		// Photo de profil temporaire (sera remplacée plus tard)
-		this.lblPhotoProfil = new JLabel("👤");
-		this.lblPhotoProfil.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 24));
-		this.lblPhotoProfil.setForeground(new Color(114, 118, 125));
-		this.lblPhotoProfil.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		// Photo de profil (placeholder)
+		lblPhotoProfil = new JLabel("👤");
+		lblPhotoProfil.setFont(new Font("Arial", Font.PLAIN, 24));
+		lblPhotoProfil.setForeground(new Color(150, 150, 150));
+		lblPhotoProfil.setHorizontalAlignment(SwingConstants.CENTER);
+		lblPhotoProfil.setPreferredSize(new Dimension(40, 40));
+		lblPhotoProfil.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
 
-		// Panel de contenu (colonne droite)
-		this.panelContenu = new JPanel();
-		this.panelContenu.setLayout(new BoxLayout(this.panelContenu, BoxLayout.Y_AXIS));
-		this.panelContenu.setBackground(new Color(54, 57, 63));
-		this.panelContenu.setBorder(BorderFactory.createEmptyBorder(8, 10, 8, 10));
+		// Nom utilisateur
+		lblNomUtilisateur = new JLabel(pseudo);
+		lblNomUtilisateur.setFont(new Font("Arial", Font.BOLD, 14));
+		lblNomUtilisateur.setForeground(new Color(0, 122, 255));
 
-		// Nom d'utilisateur
-		this.lblNomUtilisateur = new JLabel(nomUtilisateur);
-		this.lblNomUtilisateur.setFont(new Font("Arial", Font.BOLD, 13));
-		this.lblNomUtilisateur.setForeground(new Color(220, 221, 222));
-		this.lblNomUtilisateur.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-		// Date/heure
-		this.lblDate = new JLabel(date);
-		this.lblDate.setFont(new Font("Arial", Font.PLAIN, 11));
-		this.lblDate.setForeground(new Color(163, 166, 170));
-		this.lblDate.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
+		// Date
+		lblDate = new JLabel(date);
+		lblDate.setFont(new Font("Arial", Font.PLAIN, 11));
+		lblDate.setForeground(new Color(150, 150, 150));
 
 		// Message
-		this.lblMessage = new JLabel("<html><div style='width: 400px;'>" + message + "</div></html>");
-		this.lblMessage.setFont(new Font("Arial", Font.PLAIN, 12));
-		this.lblMessage.setForeground(new Color(220, 221, 222));
-		this.lblMessage.setBorder(BorderFactory.createEmptyBorder(3, 0, 0, 0));
-		this.lblMessage.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-		/*-------------------------------*/
-		/* Panel en-tête (nom + date)    */
-		/*-------------------------------*/
-		JPanel panelEnTete = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-		panelEnTete.setBackground(new Color(54, 57, 63));
-		panelEnTete.add(this.lblNomUtilisateur);
-		panelEnTete.add(this.lblDate);
-		panelEnTete.setAlignmentX(Component.LEFT_ALIGNMENT);
+		lblMessage = new JLabel("<html><div style='width:300px'>" + contenu + "</div></html>");
+		lblMessage.setFont(new Font("Arial", Font.PLAIN, 14));
+		lblMessage.setForeground(Color.WHITE);
+		lblMessage.setVerticalAlignment(SwingConstants.TOP);
 
 		/*-------------------------------*/
 		/* Positionnement des composants */
 		/*-------------------------------*/
+		JPanel panelHeader = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+		panelHeader.setOpaque(false);
+		panelHeader.add( lblNomUtilisateur             );
+		panelHeader.add( Box.createHorizontalStrut(10) );
+		panelHeader.add( lblDate                       );
 
-		// Ajout dans le panel de marge
-		this.panelMarge.add(this.lblPhotoProfil);
+		JPanel panelTexte = new JPanel(new BorderLayout());
+		panelTexte.setOpaque(false);
+		panelTexte.add( panelHeader, BorderLayout.NORTH  );
+		panelTexte.add( lblMessage , BorderLayout.CENTER );
 
-		// Ajout dans le panel de contenu
-		this.panelContenu.add(panelEnTete);
-		this.panelContenu.add(this.lblMessage);
+		panelContenu.add( lblPhotoProfil, BorderLayout.WEST   );
+		panelContenu.add( panelTexte    , BorderLayout.CENTER );
 
-		// Ajout des panels principaux
-		this.add(this.panelMarge, BorderLayout.WEST);
-		this.add(this.panelContenu, BorderLayout.CENTER);
-
-		// Style général du panel
-		this.setBackground(new Color(54, 57, 63));
-		this.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(47, 49, 54)),
-				BorderFactory.createEmptyBorder(2, 5, 2, 5)));
-
-		this.setMaximumSize(new Dimension(Integer.MAX_VALUE, this.getPreferredSize().height));
+		this.add( panelContenu              , BorderLayout.CENTER );
+		this.add( Box.createVerticalStrut(5), BorderLayout.SOUTH  );
 	}
 }

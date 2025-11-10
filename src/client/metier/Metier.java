@@ -1,85 +1,132 @@
 package client.metier;
 
-import client.metier.connexionServeur.ClientConnexion;
+import client.metier.interfaces.IEnvoyeur;
+import client.metier.interfaces.INotifieur;
+import common.dto.ChatEventDTO;
+import common.protocol.EventEnum;
 
-public class Metier 
+/*-------------------------------*/
+/* Classe Metier                 */
+/*-------------------------------*/
+/**
+ * Classe Metier - Gère la logique métier de l'application de chat
+ * Fait le lien entre l'ihm et ports.
+ * La passerelle est vers le serveur est fait grâce à client/metier/ports/IiEnvoyeur.
+ */
+public class Metier
 {
 	/*--------------------------*/
-	/*        Attributs         */
+	/* Attributs                */
 	/*--------------------------*/
-	private static String host;
-	private static int    port;
+	private final IEnvoyeur  iEnvoyeur;
+	private final INotifieur iNotifieur;
 
-	private static ClientConnexion client;
+	private int    idChannel;
+	private int    idClient;
+	private String pseudoClient;
 
 	/*--------------------------*/
-	/*     Constructeur         */
+	/* Constructeur             */
 	/*--------------------------*/
-	public Metier() 
+	public Metier( IEnvoyeur iEnvoyeur, INotifieur iNotifieur )
 	{
-		Metier.host      = null;
-		Metier.port      = -1;
-		Metier.client    = null;
+		this.iEnvoyeur  = iEnvoyeur;
+		this.iNotifieur = iNotifieur;
 	}
 
+	/*---------------------------*/
+	/* Getters                   */
+	/*---------------------------*/
+	public IEnvoyeur getiEnvoyeur()  { return iEnvoyeur; }
+
+
+	/*-----------------------------------*/
+	/*              METIER               */
+	/*-----------------------------------*/
 	/*--------------------------*/
-	/*     Client               */
+	/* Client                   */
 	/*--------------------------*/
-	public void connexionAuClient(String pseudo, String mdp) 
+	public void setClient( int idClient, String pseudoClient )
 	{
-		Metier.client.envoyerMessage("LOGIN:" + pseudo + ":" + mdp);
+		this.idClient     = idClient;
+		this.pseudoClient = pseudoClient;
+
+		this.iNotifieur.succesLogin( this.pseudoClient );
 	}
 
-	public void creerClient(String pseudo, String mdp) 
+	/*-----------------------*/
+	/* Connexion/Inscription */
+	/*-----------------------*/
+	// public void connecterAuServeur(String host, int port) 
+	// {
+
+	// }
+
+	public void connecterAuClient( String pseudo, String mdp ) 
 	{
-		Metier.client.envoyerMessage("REGISTER:" + pseudo + ":" + mdp);
+		//Création du message eventDTO
+		ChatEventDTO event = new ChatEventDTO( EventEnum.LOGIN )
+				.add( EventEnum.LOGIN.getKeyInedx(0), pseudo )
+				.add( EventEnum.LOGIN.getKeyInedx(1), mdp    );
+		this.iEnvoyeur.envoyer( event );
 	}
 
-	public void envoyerMessage(String message) 
+	public void enregistrerUtilisateur( String pseudo, String mdp ) 
 	{
-		Metier.client.envoyerMessage("NEWMESSAGE:1:" + Metier.client.getIdClient() + ":" + message);
+		//Création du message eventDTO
+		ChatEventDTO event = new ChatEventDTO( EventEnum.SIGNUP )
+				.add( EventEnum.SIGNUP.getKeyInedx(0), pseudo )
+				.add( EventEnum.SIGNUP.getKeyInedx(1), mdp    );
+		this.iEnvoyeur.envoyer (event );
 	}
 
-
-	/*--------------------------*/
-	/*     Serveur              */
-	/*--------------------------*/
-	public boolean testerConnexionAuServeur(String host, int port) 
+	/*-----------------------*/
+	/*    Envoyer Message    */
+	/*-----------------------*/
+	public void envoyerMessage(String texte) 
 	{
-		try 
-		{
-			Metier.client = new ClientConnexion(host, port);
-			Metier.client.connectBlocking();
-
-			Metier.host = host;
-			Metier.port = port;
-
-			return Metier.client.isOpen();
+		//Création du message eventDTO
+		ChatEventDTO event = new ChatEventDTO( EventEnum.NEW_MESSAGE )
+				.add( EventEnum.NEW_MESSAGE.getKeyInedx(0), this.idChannel )
+				.add( EventEnum.NEW_MESSAGE.getKeyInedx(1), this.idClient  )
+				.add( EventEnum.NEW_MESSAGE.getKeyInedx(2), texte          );
 		
-		} catch (Exception e)  { e.printStackTrace(); return false; }
+		this.iEnvoyeur.envoyer( event );
 	}
 
-	public void deconnecterDuServeur() 
+	public void envoyerPieceJoint( byte[] bytes )
 	{
-		try 
-		{
-			if ( Metier.client != null && Metier.client.isOpen() ) 
-			{
-				Metier.client.closeBlocking();
-			}
+		//Création du message eventDTO NEW_MESSAGE_IMG ( List.of( "IdGroupe" , "idCliet", "byte" ) ),
+		ChatEventDTO event = new ChatEventDTO( EventEnum.NEW_MESSAGE_IMG )
+				.add( EventEnum.NEW_MESSAGE.getKeyInedx(0), this.idChannel )
+				.add( EventEnum.NEW_MESSAGE.getKeyInedx(1), this.idClient  )
+				.add( EventEnum.NEW_MESSAGE.getKeyInedx(2), bytes          );
 		
-		} catch (Exception e) { e.printStackTrace(); }
+		this.iEnvoyeur.envoyer( event );
 	}
 
+	/*-----------------------------------*/
+	/*          INotificateur            */
+	/*-----------------------------------*/
+	public void notifierMessage( ChatEventDTO event )
+	{
+		if ( event.getType().equals( EventEnum.SUCCESS_LOGIN ) || event.getType().equals( EventEnum.SUCCESS_SIGNUP ) ) 
+		{ 
+			int    id     = ( (Number) event.getDataIndex( 0 ) ).intValue();
+			String pseudo =   (String) event.getDataIndex( 1 );
+			System.out.println( "Metier : " + id     );
+			System.out.println( "Metier : " + pseudo );
 
-	/*--------------------------*/
-	/*   Getters et Setters     */
-	/*--------------------------*/
-	public static String          getHost     () { return Metier.host;                  }
-	public static int             getPort     () { return Metier.port;                  }
-	public static ClientConnexion getClient   () { return Metier.client;                }
-	public static boolean         estConnectee() { return Metier.client.estConnectee(); }
+			this.setClient( id, pseudo );
+			return;
+		}
 
-	public static void   setHost(String host) { Metier.host = host; }
-	public static void   setPort(int port   ) { Metier.port = port; }
+		if ( event.getType().equals( EventEnum.ERROR ) )
+		{
+			String erreur = (String) event.getDataIndex( 0 );
+
+			this.iNotifieur.notifierErreur( erreur );
+		}
+	}
+
 }
