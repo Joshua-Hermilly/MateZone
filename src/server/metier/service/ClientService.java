@@ -71,39 +71,49 @@ public class ClientService
 	 * Gère l'inscription d'un nouveau client
 	 * Format attendu: "REGISTER:pseudo:mdp"
 	 */
-	public void handleRegister(WebSocket client, Map<String, Object> data)
+	public void handleRegister(WebSocket client, ChatEventDTO eventRec)
 	{
-		/*String[] parties = message.split(":");
-		
-		if (parties.length == 3) 
+		ChatEventDTO event;
+
+		String pseudo = (String) eventRec.getDataIndex(0);
+		String mdp    = (String) eventRec.getDataIndex(1);
+
+		if (!pseudo.isEmpty() && !mdp.isEmpty())
 		{
-			String pseudo = parties[1];
-			String mdp = parties[2];
-			
-			Client user = new Client(pseudo, mdp);
-			client.send("REGISTERED:" + ServeurMateZone.bd.createClient(user));
-		}*/
+			int idClient = this.iUserRep.createClient(new Client(pseudo,mdp));
+
+			if (idClient != -1)
+			{
+				event = new ChatEventDTO(EventEnum.SUCCESS_SIGNUP)
+				    .add(EventEnum.SUCCESS_LOGIN.getKeyIndex(0), idClient)
+				    .add(EventEnum.SUCCESS_LOGIN.getKeyIndex(1), pseudo  );
+
+				client.send(event.toJson());
+				return;
+			}
+		}
+		
+		// Gestion de l'erreur (champs vides ou échec de création)
+		String erreur = "REGISTER: Erreur de creation de l'utilisateur:" + pseudo + ":" + mdp;
+		event = new ChatEventDTO(EventEnum.ERROR).add(EventEnum.ERROR.getKeyIndex(0), erreur );
+		client.send(event.toJson());
+
 	}
 
 	/**
 	 * Gère l'envoi d'un nouveau message
 	 * Format attendu: "NEWMESSAGE:idClient:idChannel:leMessage"
 	 */
-	public void handleNewMessage(WebSocket client, Map<String, Object> data)
+	public void handleNewMessage(WebSocket client, ChatEventDTO eventRec)
 	{
-		/*String[] parties = message.split(":", 4); // Limite à 4 parties maximum
-		
-		if (parties.length == 4) 
+		int    idClient  = (int)    eventRec.getDataIndex(0);
+		int    idChannel = (int)    eventRec.getDataIndex(1);
+		String nMessage  = (String) eventRec.getDataIndex(2);
+
+		if (this.iMesRep.sendMessage(idClient,idChannel, nMessage ))
 		{
-			int idClient = Integer.parseInt(parties[1]);
-			int idChannel = Integer.parseInt(parties[2]);
-			String nMessage = parties[3]; // Contient tout le reste, même avec des ":"
-			
-			if (ServeurMateZone.bd.sendMessage(idClient, idChannel, nMessage))
-			{
-				this.broadcast();
-			}
-		}*/
+			//client.broadcast();
+		}
 	}
 
 

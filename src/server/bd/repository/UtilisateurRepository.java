@@ -233,16 +233,16 @@ public class UtilisateurRepository implements IUtilisateurRepository
 	 * @param client le client à créer
 	 * @return true si la création a réussi, false sinon
 	 */
-	public boolean createClient(Client client) 
+	public int createClient(Client client) 
 	{
 		if (client == null) 
 		{
-			return false;
+			return -1;
 		}
 		
 		if (this.getClientByPseudo(client.getPseudo()) != null) 
 		{
-			return false;
+			return -1;
 		}
 
 		String sql = "INSERT INTO clients (pseudo, mdp) VALUES (?, ?)";
@@ -265,7 +265,7 @@ public class UtilisateurRepository implements IUtilisateurRepository
 					}
 				}
 				System.out.println("Client créé avec succès: " + client.getPseudo());
-				return true;
+				return client.getId();
 			}
 		} 
 		catch (SQLException e) 
@@ -274,7 +274,7 @@ public class UtilisateurRepository implements IUtilisateurRepository
 			e.printStackTrace();
 		}
 		
-		return false;
+		return -1;
 	}
 	
 	/**
