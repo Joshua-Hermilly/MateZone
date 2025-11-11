@@ -1,5 +1,6 @@
 package server.metier.interfaces;
 
+import java.util.HashMap;
 
 /*-------------------------------*/
 /* Intrerface IMessageRepository */
@@ -10,5 +11,5 @@ package server.metier.interfaces;
  */
 public interface IMessageRepository 
 {
-
+	HashMap<Integer, String[]> getMessages(int idchannel);
 }

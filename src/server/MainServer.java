@@ -19,7 +19,7 @@ public class MainServer
 		IMessageRepository     iMesRepo     = new MessageRepository();
 		IUtilisateurRepository iUserRepo    = new UtilisateurRepository();
 
-		ClientService         UserService   = new ClientService (iUserRepo);
+		ClientService         UserService   = new ClientService (iUserRepo, iMesRepo);
 		//MessageService         MesService   = new MessageService(iMesRepo);
 
 		int port = 8080;
