@@ -1,0 +1,30 @@
+# Configuration du serveur MateZone
+# NE PAS COMMIT CE FICHIER SUR GITHUB !
+# Copiez ce fichier et renommez-le en config.properties
+
+# Configuration de la base de données
+db.url=***REMOVED***
+db.username=***REMOVED***
+db.password=***REMOVED***
+
+# Configuration du serveur WebSocket
+server.host=localhost
+server.port=8080
+
+# Configuration de l'application
+app.name=MateZone Server
+app.version=1.0.0
+app.debug=false
+
+# Configuration des logs
+log.level=INFO
+log.file=matezone-server.log
+
+# Configuration de sécurité
+security.token.expiration=3600
+security.max.connections=100
+
+# Configuration de la base de données (pool de connexions)
+db.pool.min=5
+db.pool.max=20
+db.pool.timeout=30000
