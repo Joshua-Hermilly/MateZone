@@ -1,5 +1,6 @@
 package server.metier.interfaces;
 
+import server.metier.model.Client;
 
 /*-----------------------------------*/
 /* Intrerface IUtilisateurRepository */
@@ -11,4 +12,6 @@ package server.metier.interfaces;
 public interface IUtilisateurRepository 
 {
 	int authenticate(String pseudo, String mdp);
+
+	int createClient(Client client            );
 }
