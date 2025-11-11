@@ -1,5 +1,8 @@
 package server.bd;
 
+import java.io.FileInputStream;     // Pour lire le fichier de configuration
+import java.io.IOException;         // Pour les exceptions IO
+import java.util.Properties;        // Pour charger les propriétés
 import java.sql.Connection;         // Pour la connexion à la BD
 import java.sql.DriverManager;      // Pour le driver JDBC ( dans /lib )
 import java.sql.SQLException;       // Pour les exceptions SQL
@@ -24,12 +27,37 @@ public class ConnexionBD
 	
 	/** Paramètres de connexion à la base de données */
 	/** Configuration pour la base MySQL hébergée sur AlwaysData */
-		private static final String URL       = "jdbc:mysql://mysql-dono0530.alwaysdata.net/***REMOVED***zone";
-		private static final String USERNAME  = "***REMOVED***";
-		private static final String PASSWORD  = "***REMOVED***";
+		private static  String URL;
+		private static  String USERNAME;
+		private static  String PASSWORD;
 
 	/** Objet Connection de JDBC pour la connexion à la base de données */
 		private Connection connection;
+	
+	/** Chargement statique de la configuration */
+	static 
+	{
+		try 
+		{
+			Properties props = new Properties();
+			FileInputStream fis = new FileInputStream("config.properties");
+			props.load(fis);
+			fis.close();
+			
+			URL      = props.getProperty("db.url");
+			USERNAME = props.getProperty("db.username");
+			PASSWORD = props.getProperty("db.password");
+			
+			System.out.println("Configuration de la base de données chargée avec succès !");
+		} 
+		catch (IOException e) 
+		{
+			System.err.println("ERREUR : Impossible de charger le fichier config.properties !");
+			System.err.println("Assurez-vous que le fichier config.properties existe à la racine du projet.");
+			e.printStackTrace();
+			System.exit(1);
+		}
+	}
 	
 		
 	/*-------------------------------*/

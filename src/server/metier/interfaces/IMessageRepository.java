@@ -12,6 +12,7 @@ import java.util.HashMap;
 public interface IMessageRepository 
 {
 	HashMap<Integer, String[]> getMessages(int idchannel);
+	String[] getMessage(int idchannel);
 
-	Boolean sendMessage( int groupe_id, int idUser, String message);
+	int sendMessage( int groupe_id, int idUser, String message);
 }
