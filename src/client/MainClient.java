@@ -6,8 +6,15 @@ import client.controleur.Controleur;
 /* Class MainClient              */
 /*-------------------------------*/
 /**
- * Classe MainClient lance l'application.
- * Créer un Controleur et lance l'application via la méthode lancerApp de Controleur.
+ * Classe principale du client qui sert de point d'entrée pour l'application.
+ * Cette classe contient la méthode main qui initialise et lance l'application
+ * en créant une instance de contrôleur.
+ * 
+ * @author MateZone Team
+ * @author Joshua Hermilly
+ * @author Prévost Donovan
+ * @version V1
+ * @date 08/11/25
  */
 public class MainClient 
 {
