@@ -19,13 +19,13 @@ public enum EventEnum
 	LOGIN          ( List.of( "pseudo", "mdp"      ) ),
 	SIGNUP         ( List.of( "pseudo", "mdp"      ) ),
 	SUCCESS_LOGIN  ( List.of( "id"    ,"pseudo"    ) ),
-	SUCCESS_SIGNUP ( List.of( "id"    , "mdp"      ) ),
+	SUCCESS_SIGNUP ( List.of( "id"    , "pseudo"      ) ),
 
 	// MESSAGE
 	MESSAGE         ( List.of("pseudo"   , "contenu", "date", "img"  ) ),
 	MESSAGE_LIST    ( List.of( ) ),
 	NEW_MESSAGE_IMG ( List.of( "IdGroupe" , "idCliet", "byte" ) ),
-	NEW_MESSAGE     ( List.of( "pseudo" , "contenu" ) ),
+	NEW_MESSAGE     ( List.of( "idClient" , "idChannel", "contenu" ) ),
 
 	// Autres
 	SUCCESS        ( List.of( "message"            ) ),

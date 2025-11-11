@@ -25,6 +25,11 @@ public class WebSocketMateZone extends WebSocketServer
 	}	
 
 
+	public void broadcast()
+	{
+		for ( WebSocket clientCo : this.getConnections() ) {clientCo.send("Broadcast");}
+	}
+
 	/*-------------------------------*/
 	/* @Override                     */
 	/*-------------------------------*/
@@ -46,9 +51,9 @@ public class WebSocketMateZone extends WebSocketServer
 		ChatEventDTO event = ChatEventDTO.jsonToEventDTO(message);
 
 		// Traitement des différents types de messages
-		if ( event.getType() == EventEnum.LOGIN      ) { this.clientService.handleLogin(client, event);     }
-		if ( event.getType() == EventEnum.SIGNUP     ) { this.clientService.handleRegister(client, event.getData());  }
-		//if ( event.getType() == EventEnum.NEW_MESSAGE ) { this.messageService.handleNewMessage(client, event.getData());}
+		if ( event.getType() == EventEnum.LOGIN       )  { this.clientService.handleLogin(client, event);      }
+		if ( event.getType() == EventEnum.SIGNUP      )  { this.clientService.handleRegister(client, event);   }
+		if ( event.getType() == EventEnum.NEW_MESSAGE )  { this.clientService.handleNewMessage(client, event); }
 
 		System.out.println( event );
 	}
