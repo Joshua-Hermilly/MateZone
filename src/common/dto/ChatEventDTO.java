@@ -1,6 +1,7 @@
 package common.dto;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.google.gson.Gson;
@@ -22,6 +23,8 @@ public class ChatEventDTO
 	private EventEnum           type; // Type d'événement
 	private Map<String, Object> data; // Données dynamiques
 
+	private List<ChatEventDTO>  lstEventDTO; //Liste utilisé dans EventEnum.MESSAGE_LIST
+
 	/*--------------------------*/
 	/*     Constructeurs        */
 	/*--------------------------*/
@@ -29,12 +32,16 @@ public class ChatEventDTO
 	{
 		this.data = new HashMap<>();
 	}
-	/*--------------------------*/
-	/*     Constructeurs        */
-	/*--------------------------*/
+
 	public ChatEventDTO( EventEnum type ) 
 	{
 		this();
+		this.type = type;
+	}
+
+	public ChatEventDTO( EventEnum type, List<ChatEventDTO>  lstEventDTO ) 
+	{
+		this.lstEventDTO = lstEventDTO;
 		this.type = type;
 	}
 
