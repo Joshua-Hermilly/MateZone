@@ -101,19 +101,20 @@ public class MessageRepository implements IMessageRepository
 		             "FROM messages s " +
 		             "INNER JOIN clients c ON c.id = s.expediteur_id " +
 		             "WHERE groupe_id = ? " +
-		             "ORDER BY s.id ASC";
+		             "ORDER BY s.id DESC";
 		
 		try (PreparedStatement stmt = this.connexionBD.getConnection().prepareStatement(sql))
 		{
 			stmt.setInt(1, idchannel);
 			ResultSet rs = stmt.executeQuery();
-			
+			Integer   cpt = 0;
+
 			while (rs.next()) 
 			{
-				int id = rs.getInt("id");
-				String pseudo = rs.getString("pseudo");
-				String contenu = rs.getString("contenu");
-				String date = rs.getTimestamp("envoye_le").toString();
+				int id          = rs.getInt      ("id");
+				String pseudo   = rs.getString   ("pseudo");
+				String contenu  = rs.getString   ("contenu");
+				String date     = rs.getTimestamp("envoye_le").toString();
 				
 				String[] messageData = {pseudo, contenu, date};
 				hsMapMessage.put(id, messageData);
