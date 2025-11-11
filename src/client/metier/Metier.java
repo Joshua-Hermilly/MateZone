@@ -1,10 +1,5 @@
 package client.metier;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.sun.jdi.event.Event;
-
 import client.metier.interfaces.IEnvoyeur;
 import client.metier.interfaces.INotifieur;
 import common.dto.ChatEventDTO;
@@ -82,7 +77,8 @@ public class Metier
 		ChatEventDTO event = new ChatEventDTO( EventEnum.SIGNUP )
 				.add( EventEnum.SIGNUP.getKeyIndex(0), pseudo )
 				.add( EventEnum.SIGNUP.getKeyIndex(1), mdp    );
-		this.iEnvoyeur.envoyer (event );
+		this.iEnvoyeur.envoyer( event );
+		this.connecterAuClient(pseudo, mdp);
 	}
 
 	/*-----------------------*/
