@@ -10,5 +10,6 @@ package server.metier.interfaces;
  */
 public interface IUtilisateurRepository 
 {
-	int authenticate(String pseudo, String mdp);
+	int    authenticate (String pseudo, String mdp);
+	byte[] getAvatarById(int    clientId          );
 }

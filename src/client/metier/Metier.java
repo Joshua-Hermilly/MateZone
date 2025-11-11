@@ -1,5 +1,8 @@
 package client.metier;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import client.metier.interfaces.IEnvoyeur;
 import client.metier.interfaces.INotifieur;
 import common.dto.ChatEventDTO;
@@ -66,8 +69,8 @@ public class Metier
 	{
 		//Création du message eventDTO
 		ChatEventDTO event = new ChatEventDTO( EventEnum.LOGIN )
-				.add( EventEnum.LOGIN.getKeyInedx(0), pseudo )
-				.add( EventEnum.LOGIN.getKeyInedx(1), mdp    );
+				.add( EventEnum.LOGIN.getKeyIndex(0), pseudo )
+				.add( EventEnum.LOGIN.getKeyIndex(1), mdp    );
 		this.iEnvoyeur.envoyer( event );
 	}
 
@@ -75,8 +78,8 @@ public class Metier
 	{
 		//Création du message eventDTO
 		ChatEventDTO event = new ChatEventDTO( EventEnum.SIGNUP )
-				.add( EventEnum.SIGNUP.getKeyInedx(0), pseudo )
-				.add( EventEnum.SIGNUP.getKeyInedx(1), mdp    );
+				.add( EventEnum.SIGNUP.getKeyIndex(0), pseudo )
+				.add( EventEnum.SIGNUP.getKeyIndex(1), mdp    );
 		this.iEnvoyeur.envoyer (event );
 	}
 
@@ -87,9 +90,9 @@ public class Metier
 	{
 		//Création du message eventDTO
 		ChatEventDTO event = new ChatEventDTO( EventEnum.NEW_MESSAGE )
-				.add( EventEnum.NEW_MESSAGE.getKeyInedx(0), this.idChannel )
-				.add( EventEnum.NEW_MESSAGE.getKeyInedx(1), this.idClient  )
-				.add( EventEnum.NEW_MESSAGE.getKeyInedx(2), texte          );
+				.add( EventEnum.NEW_MESSAGE.getKeyIndex(0), this.idChannel )
+				.add( EventEnum.NEW_MESSAGE.getKeyIndex(1), this.idClient  )
+				.add( EventEnum.NEW_MESSAGE.getKeyIndex(2), texte          );
 		
 		this.iEnvoyeur.envoyer( event );
 	}
@@ -98,9 +101,9 @@ public class Metier
 	{
 		//Création du message eventDTO NEW_MESSAGE_IMG ( List.of( "IdGroupe" , "idCliet", "byte" ) ),
 		ChatEventDTO event = new ChatEventDTO( EventEnum.NEW_MESSAGE_IMG )
-				.add( EventEnum.NEW_MESSAGE.getKeyInedx(0), this.idChannel )
-				.add( EventEnum.NEW_MESSAGE.getKeyInedx(1), this.idClient  )
-				.add( EventEnum.NEW_MESSAGE.getKeyInedx(2), bytes          );
+				.add( EventEnum.NEW_MESSAGE.getKeyIndex(0), this.idChannel )
+				.add( EventEnum.NEW_MESSAGE.getKeyIndex(1), this.idClient  )
+				.add( EventEnum.NEW_MESSAGE.getKeyIndex(2), bytes          );
 		
 		this.iEnvoyeur.envoyer( event );
 	}
@@ -114,12 +117,21 @@ public class Metier
 		{ 
 			int    id     = ( (Number) event.getDataIndex( 0 ) ).intValue();
 			String pseudo =   (String) event.getDataIndex( 1 );
-			System.out.println( "Metier : " + id     );
-			System.out.println( "Metier : " + pseudo );
 
 			this.setClient( id, pseudo );
 			return;
 		}
+
+		if ( event.getType().equals( EventEnum.MESSAGE_LIST ) )
+		{
+			this.iNotifieur.afficherListMessage( ChatEventDTO.jsonToLstEventDTO(event.toJson()) );
+		}
+
+		if ( event.getType().equals( EventEnum.MESSAGE ) )
+		{
+			this.iNotifieur.afficherNvMessage( event );
+		}
+
 
 		if ( event.getType().equals( EventEnum.ERROR ) )
 		{

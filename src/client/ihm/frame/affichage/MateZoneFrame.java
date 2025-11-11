@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import client.controleur.Controleur;
 import client.ihm.panel.affichage.SaisieMessagePanel;
 import client.ihm.panel.affichage.SalonPanel;
+import common.dto.ChatEventDTO;
 
 /*-------------------------------*/
 /* Class MateZoneFrame           */
@@ -47,4 +48,8 @@ public class MateZoneFrame extends JFrame
 		
 		this.setLocationRelativeTo(null);
 	}
+
+
+	public void afficherListMessage(ChatEventDTO eventDTO) { this.salonPanel.addLstMessage(eventDTO); }
+	public void afficherNvMessage  (ChatEventDTO eventDTO) { this.salonPanel.addMessage   (eventDTO); }
 }

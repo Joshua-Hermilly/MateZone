@@ -22,7 +22,8 @@ public enum EventEnum
 	SUCCESS_SIGNUP ( List.of( "id"    , "mdp"      ) ),
 
 	// MESSAGE
-	MESSAGE         ( List.of( "pseudo"   , "contenu", "date", "img"  ) ),
+	MESSAGE         ( List.of("pseudo"   , "contenu", "date", "img"  ) ),
+	MESSAGE_LIST    ( List.of( ) ),
 	NEW_MESSAGE_IMG ( List.of( "IdGroupe" , "idCliet", "byte" ) ),
 	NEW_MESSAGE     ( List.of( "pseudo" , "contenu" ) ),
 
@@ -48,7 +49,7 @@ public enum EventEnum
 	/*--------------------------*/
 	public List<String> getRequiredKeys() { return this.composants; }
 	
-	public String getKeyInedx ( int index )
+	public String getKeyIndex ( int index )
 	{
 		if ( index >= this.getRequiredKeys().size() ) return null;
 		return this.getRequiredKeys().get(index);

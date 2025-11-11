@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import common.dto.ChatEventDTO;
 import server.bd.ConnexionBD;
 import server.metier.interfaces.IMessageRepository;
 import server.metier.interfaces.IUtilisateurRepository;
@@ -222,6 +223,24 @@ public class UtilisateurRepository implements IUtilisateurRepository
 	{
 		return this.getClients();
 	}
+
+	public byte[] getAvatarById(int clientId) 
+	{
+		try 
+		{
+			String sql = "SELECT img_data FROM clients WHERE id = ?";
+			PreparedStatement st = this.connexionBD.getConnection().prepareStatement(sql);
+
+			st.setInt(1, clientId);
+			ResultSet rs = st.executeQuery();
+
+			if (rs.next()) { return rs.getBytes("img_data");  }
+
+		} catch (Exception e) { e.printStackTrace(); }
+		
+		return null;
+	}
+
 
 	// =========================================================================
 	// MÉTHODES DE CRÉATION ET MODIFICATION - CLIENTS
