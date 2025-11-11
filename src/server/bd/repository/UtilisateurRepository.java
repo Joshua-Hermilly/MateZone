@@ -367,4 +367,25 @@ public class UtilisateurRepository implements IUtilisateurRepository
 		
 		return new Client(id, pseudo, mdp, createdAt);
 	}
+
+	// =========================================================================
+	// MÉTHODES GESTION DES IMAGES - CLIENTS
+	// =========================================================================
+
+	    public byte[] getAvatarById(int clientId) 
+    {
+        try 
+        {
+            String sql = "SELECT img_data FROM clients WHERE id = ?";
+            PreparedStatement st = this.connexionBD.getConnection().prepareStatement(sql);
+
+            st.setInt(1, clientId);
+            ResultSet rs = st.executeQuery();
+
+            if (rs.next()) { return rs.getBytes("img_data");  }
+
+        } catch (Exception e) { e.printStackTrace(); }
+        
+        return null;
+    }
 }

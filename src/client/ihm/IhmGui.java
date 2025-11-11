@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 import client.controleur.Controleur;
 import client.ihm.frame.affichage.MateZoneFrame;
 import client.ihm.frame.connexion.ConnexionFrame;
+import common.dto.ChatEventDTO;
 
 /*-------------------------------*/
 /* Classe IhmGui                 */
@@ -53,38 +54,10 @@ public class IhmGui
 	/*--------------------------*/
 	/* Affichage                */
 	/*--------------------------*/
-	public void afficherErreur(String message) 
-	{
-		JOptionPane.showMessageDialog(this.connexionFrame, message, "Erreur", JOptionPane.ERROR_MESSAGE);
-	}
+	public void afficherErreur(String message) { JOptionPane.showMessageDialog(this.connexionFrame, message, "Erreur", JOptionPane.ERROR_MESSAGE); }
 
-	public void afficherImg(byte[] bytes)
-	{
-		try 
-		{
-			if (bytes == null) 
-			{
-				this.afficherErreur("Image introuvable ou lecture impossible.");
-				return;
-			}
-			
-			// convert byte[] back to a BufferedImage
-			InputStream is     = new ByteArrayInputStream(bytes);
-			BufferedImage newBi = ImageIO.read(is);
+	public void afficherListMessage ( ChatEventDTO eventDTO ) { this.mateZoneFrame.afficherListMessage( eventDTO ); }
+	public void afficherNvMessage   ( ChatEventDTO eventDTO ) { this.mateZoneFrame.afficherNvMessage  ( eventDTO ); }
 
-			if (newBi == null) 
-			{
-				// ImageIO.read returns null when the input is not a known image format
-				this.afficherErreur("Format d'image non reconnu ou données corrompues.");
-				return;
-			}
 
-			// Save the image to disk
-			java.io.File imageDir = new java.io.File("./image/");
-			if (!imageDir.exists()) { imageDir.mkdirs(); } //create folder
-			java.io.File outputFile = new java.io.File("./image/image_" + System.currentTimeMillis() + ".png");
-			ImageIO.write(newBi, "png", outputFile);
-
-		} catch (Exception e) { e.printStackTrace(); }
-	}
 }

@@ -1,17 +1,18 @@
 package server.metier.service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.print.DocFlavor.STRING;
 
 import org.java_websocket.WebSocket;
 
 import common.dto.ChatEventDTO;
 import common.protocol.EventEnum;
-import server.bd.repository.UtilisateurRepository;
 import server.metier.interfaces.IMessageRepository;
 import server.metier.interfaces.IUtilisateurRepository;
+import server.metier.interfaces.IWebSocketMateZone;
 import server.metier.model.Client;
 
 
@@ -21,11 +22,19 @@ public class ClientService
 
 	private final IUtilisateurRepository iUserRep;
 	private final IMessageRepository     iMesRep;
+	private       IWebSocketMateZone     iWebSocketMateZone;
 
-	public ClientService(IUtilisateurRepository  iUserRepo ,IMessageRepository iMesRepo )
+	public ClientService(IUtilisateurRepository  iUserRepo, IMessageRepository iMesRepo)
 	{
-		this.iUserRep = iUserRepo;
-		this.iMesRep  = iMesRepo; 
+		this.iUserRep            = iUserRepo;
+		this.iMesRep             = iMesRepo; 
+		this.iWebSocketMateZone  = null; 
+	}
+
+
+	public void setIWebSocketMateZone(IWebSocketMateZone iWebSocketMateZone)
+	{
+		this.iWebSocketMateZone = iWebSocketMateZone;
 	}
 
 	/*-------------------------------*/
@@ -101,20 +110,46 @@ public class ClientService
 	}
 
 	/**
-	 * Gère l'envoi d'un nouveau message
+	 * Gère l'insertion d'un nouveau message
 	 * Format attendu: "NEWMESSAGE:idClient:idChannel:leMessage"
 	 */
 	public void handleNewMessage(WebSocket client, ChatEventDTO eventRec)
 	{
-		int    idClient  = (int)    eventRec.getDataIndex(0);
-		int    idChannel = (int)    eventRec.getDataIndex(1);
+
+		System.out.println(eventRec);
+		int    idClient  = ((Double) eventRec.getDataIndex(0)).intValue();
+		int    idChannel = ((Double) eventRec.getDataIndex(1)).intValue();
 		String nMessage  = (String) eventRec.getDataIndex(2);
 
-		if (this.iMesRep.sendMessage(idClient,idChannel, nMessage ))
+		int idMessage = this.iMesRep.sendMessage(idChannel, idClient, nMessage );
+
+		if (idMessage != -1 )
 		{
-			//client.broadcast();
+			String[] tabmMessage=  this.iMesRep.getMessage(idMessage);
+
+				ChatEventDTO event = new ChatEventDTO(EventEnum.MESSAGE)
+			    .add(EventEnum.MESSAGE.getKeyIndex(0), tabmMessage[0])
+			    .add(EventEnum.MESSAGE.getKeyIndex(1), tabmMessage[1])
+			    .add(EventEnum.MESSAGE.getKeyIndex(2), tabmMessage[2])
+			    .add(EventEnum.MESSAGE.getKeyIndex(3), tabmMessage[3]);
+
+
+			this.iWebSocketMateZone.broadcast(idChannel, event);
 		}
 	}
+
+
+	/**
+	 * Savoir ou est l'utilisateur
+	 * Fo"
+	 */
+	public void handleNewChannel(WebSocket client, ChatEventDTO eventRec)
+	{
+		int    idChannel  = (int)    eventRec.getDataIndex(0);
+
+		this.iWebSocketMateZone.setClientChannel(client,idChannel);
+	}
+
 
 
 	private void envoyerMessageList(int IdGroupe, WebSocket client)
@@ -128,7 +163,8 @@ public class ClientService
 			lstEventDTO.add( new ChatEventDTO(EventEnum.MESSAGE)
 			    .add(EventEnum.MESSAGE.getKeyIndex(0), mapMessages.get(key)[0])
 			    .add(EventEnum.MESSAGE.getKeyIndex(1), mapMessages.get(key)[1])
-			    .add(EventEnum.MESSAGE.getKeyIndex(2), mapMessages.get(key)[2]));
+			    .add(EventEnum.MESSAGE.getKeyIndex(2), mapMessages.get(key)[2])
+			    .add(EventEnum.MESSAGE.getKeyIndex(3), mapMessages.get(key)[3]));
 		}
 
 		ChatEventDTO event =  new ChatEventDTO(EventEnum.MESSAGE_LIST, lstEventDTO);

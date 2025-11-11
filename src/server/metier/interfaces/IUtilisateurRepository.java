@@ -14,4 +14,6 @@ public interface IUtilisateurRepository
 	int authenticate(String pseudo, String mdp);
 
 	int createClient(Client client            );
+
+	byte[] getAvatarById(int clientId);
 }

@@ -13,8 +13,10 @@ public interface INotifieur
 {
 	void notifierMessage( ChatEventDTO eventDTO );
 
-
 	void succesLogin( String pseudo );
+
+	void afficherListMessage( ChatEventDTO eventDTO );
+	void afficherNvMessage  ( ChatEventDTO eventDTO );
 
 	void notifierErreur( String erreur );
 }

@@ -5,149 +5,178 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.IOException;
 
 import client.controleur.Controleur;
 
 /*-------------------------------*/
-/* Class SaisieMessagePanel      */
+/* Class SaisieMessagePanel     */
 /*-------------------------------*/
 /**
- * Classe extend JPanel qui fait office de panel de pour la saisie des message (...images ??).
- * Cette class gère la saisie du client avec les messages, images pieces jointes qu'il voudra afficher.
- * La frame est faite avec le client/ihm/frame/affichage/MateZoneFrame
+ * Panel de saisie des messages (champ + bouton envoyer + pièce jointe).
+ * Envoie sur Enter ou bouton Envoyer.
  */
-public class SaisieMessagePanel extends JPanel implements ActionListener
+public class SaisieMessagePanel extends JPanel implements ActionListener 
 {
 	/*--------------------------*/
-	/*        Composants        */
+	/* Composants               */
 	/*--------------------------*/
-	private Controleur     controleur;
+	private final Controleur controleur;
+	private JTextField txtMessage;
+	private JButton    btnEnvoyer;
+	private JButton    btnPieceJointe;
+	private JPanel     panelPrincipal;
+	private JPanel     panelSaisie;
+	private JPanel     panelBoutons;
 
-	private JTextField     txtMessage;
-	private JButton        btnEnvoyer;
-	private JButton        btnPieceJointe;
-
 	/*--------------------------*/
-	/*       Constructeur       */
+	/* Constructeur             */
 	/*--------------------------*/
-	public SaisieMessagePanel( Controleur controleur )
+	public SaisieMessagePanel(Controleur controleur) 
 	{
 		this.controleur = controleur;
+		
 		this.setLayout(new BorderLayout());
 		this.setBackground(new Color(18, 18, 18));
-		
+
 		/*-------------------------------*/
 		/* Création des composants       */
 		/*-------------------------------*/
-		this.txtMessage = new JTextField(30);
-		this.btnEnvoyer = new JButton("Envoyer");
-		this.btnPieceJointe = new JButton("Pièce jointe");
+		this.creerComposants();
+		
+		/*-------------------------------*/
+		/* Positionnement des composants */
+		/*-------------------------------*/
+		this.positionnerComposants();
+		
+		/*-------------------------------*/
+		/* Ajout des listeners           */
+		/*-------------------------------*/
+		this.ajouterListeners();
+	}
 
-		// Style dark pour le champ de texte
+	/*--------------------------*/
+	/* Création des composants  */
+	/*--------------------------*/
+	private void creerComposants()
+	{
+		// Champ de texte
+		this.txtMessage = new JTextField(30);
 		this.txtMessage.setFont(new Font("Arial", Font.PLAIN, 14));
 		this.txtMessage.setBackground(new Color(40, 40, 40));
 		this.txtMessage.setForeground(Color.WHITE);
 		this.txtMessage.setCaretColor(Color.WHITE);
-		this.txtMessage.setBorder(
-			BorderFactory.createCompoundBorder(
+		this.txtMessage.setBorder
+		(
+			BorderFactory.createCompoundBorder
+			(
 				BorderFactory.createLineBorder(new Color(60, 60, 60), 1),
 				BorderFactory.createEmptyBorder(10, 15, 10, 15)
 			)
 		);
 
-		// Style dark pour le bouton envoyer (bouton principal)
+		// Bouton envoyer
+		this.btnEnvoyer = new JButton("Envoyer");
 		this.btnEnvoyer.setFont(new Font("Arial", Font.BOLD, 14));
 		this.btnEnvoyer.setBackground(new Color(0, 122, 255));
 		this.btnEnvoyer.setForeground(Color.WHITE);
-		this.btnEnvoyer.setBorder(
-			BorderFactory.createEmptyBorder(12, 20, 12, 20)
-		);
+		this.btnEnvoyer.setBorder(BorderFactory.createEmptyBorder(12, 20, 12, 20));
 		this.btnEnvoyer.setFocusPainted(false);
 
-		// Style dark pour le bouton pièce jointe (bouton secondaire)
+		// Bouton pièce jointe
+		this.btnPieceJointe = new JButton("Pièce jointe");
 		this.btnPieceJointe.setFont(new Font("Arial", Font.PLAIN, 14));
 		this.btnPieceJointe.setBackground(new Color(30, 30, 30));
 		this.btnPieceJointe.setForeground(new Color(0, 122, 255));
-		this.btnPieceJointe.setBorder(
-			BorderFactory.createCompoundBorder(
+		this.btnPieceJointe.setBorder
+		(
+			BorderFactory.createCompoundBorder
+			(
 				BorderFactory.createLineBorder(new Color(0, 122, 255), 1),
 				BorderFactory.createEmptyBorder(12, 20, 12, 20)
 			)
 		);
 		this.btnPieceJointe.setFocusPainted(false);
 
-		/*-------------------------------*/
-		/* Positionnement des composants */
-		/*-------------------------------*/
-		JPanel panelPrincipal = new JPanel(new BorderLayout());
-		panelPrincipal.setBackground(new Color(30, 30, 30));
-		panelPrincipal.setBorder(
-			BorderFactory.createCompoundBorder(
+		// Panels
+		this.panelPrincipal = new JPanel(new BorderLayout());
+		this.panelPrincipal.setBackground(new Color(30, 30, 30));
+		this.panelPrincipal.setBorder
+		(
+			BorderFactory.createCompoundBorder
+			(
 				BorderFactory.createLineBorder(new Color(50, 50, 50), 1),
 				BorderFactory.createEmptyBorder(15, 20, 15, 20)
 			)
 		);
 
-		JPanel panelSaisie = new JPanel(new BorderLayout(10, 0));
-		panelSaisie.setOpaque(false);
-		
-		JPanel panelBoutons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
-		panelBoutons.setOpaque(false);
-		panelBoutons.add(this.btnPieceJointe);
-		panelBoutons.add(this.btnEnvoyer);
-		
-		panelSaisie.add(this.txtMessage, BorderLayout.CENTER);
-		panelSaisie.add(panelBoutons, BorderLayout.EAST);
-		
-		panelPrincipal.add(panelSaisie, BorderLayout.CENTER);
-		
-		this.add(panelPrincipal, BorderLayout.CENTER);
+		this.panelSaisie = new JPanel(new BorderLayout(10, 0));
+		this.panelSaisie.setOpaque(false);
 
-		/*-------------------------------*/
-		/*  Activation des composants    */
-		/*-------------------------------*/
-		this.btnEnvoyer.addActionListener(this);
-		this.btnPieceJointe.addActionListener(this);
+		this.panelBoutons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
+		this.panelBoutons.setOpaque(false);
 	}
 
-	/*-----------------------------*/
-	/*  Méthode Listener           */
-	/*-----------------------------*/
+	/*----------------------------------*/
+	/* Positionnement des composants    */
+	/*----------------------------------*/
+	private void positionnerComposants()
+	{
+		this.panelBoutons.add(this.btnPieceJointe);
+		this.panelBoutons.add(this.btnEnvoyer);
+
+		this.panelSaisie.add(this.txtMessage, BorderLayout.CENTER);
+		this.panelSaisie.add(this.panelBoutons, BorderLayout.EAST);
+
+		this.panelPrincipal.add(this.panelSaisie, BorderLayout.CENTER);
+
+		this.add(this.panelPrincipal, BorderLayout.CENTER);
+	}
+
+	/*----------------------------------*/
+	/* Ajout des listeners              */
+	/*----------------------------------*/
+	private void ajouterListeners()
+	{
+		this.btnEnvoyer.addActionListener(this);
+		this.btnPieceJointe.addActionListener(this);
+		this.txtMessage.addActionListener(e -> sendMessage());
+	}
+
+	/*----------------------------------*/
+	/* Override                         */
+	/*----------------------------------*/
+	@Override
 	public void actionPerformed(ActionEvent e) 
 	{
 		if (e.getSource() == this.btnEnvoyer) 
 		{
-			String message = this.txtMessage.getText().trim();
-		
-			if (!message.isEmpty()) 
+			sendMessage();
+
+		} else if (e.getSource() == this.btnPieceJointe) 
+		{
+			JFileChooser chooser = new JFileChooser();
+			chooser.setDialogTitle("Choisir une image");
+			chooser.setCurrentDirectory(new File("."));
+
+			int rv = chooser.showOpenDialog(this);
+			if (rv == JFileChooser.APPROVE_OPTION)
 			{
-				this.controleur.envoyerMessage(message);
-				this.txtMessage.setText("");
+				File selected = chooser.getSelectedFile();
+				this.controleur.envoyerPieceJoint(selected.getAbsolutePath());
 			}
 		}
+	}
 
-		if (e.getSource() == this.btnPieceJointe) 
+	/*----------------------------------*/
+	/* Méthodes privées                 */
+	/*----------------------------------*/
+	private void sendMessage() 
+	{
+		String message = this.txtMessage.getText().trim();
+		if (!message.isEmpty()) 
 		{
-			//créer la boite de selection
-			JFileChooser jFileChooser = new JFileChooser();
-			jFileChooser.setDialogTitle( "Choisir une image");
-			jFileChooser.setCurrentDirectory( new File(".") ); //Si on veut qu'il s'ouvre dans le rep current sn on enlève et c la racine
-
-			//si fichier selectionnee
-			int returnValue = jFileChooser.showOpenDialog(this);
-
-			//look si le int correspont au num de fichier selectionne
-			if ( returnValue == JFileChooser.APPROVE_OPTION ) 
-			{
-				//fichier selectionné
-				File   selectedFile = jFileChooser.getSelectedFile();
-				String cheminFic    = selectedFile.getAbsolutePath();
-				
-				this.controleur.envoyerPieceJoint(cheminFic);
-
-				System.out.println(cheminFic);
-			}
+			this.controleur.envoyerMessage(message);
+			this.txtMessage.setText("");
 		}
 	}
 }

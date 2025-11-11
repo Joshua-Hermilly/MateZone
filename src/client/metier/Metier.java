@@ -1,5 +1,10 @@
 package client.metier;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.sun.jdi.event.Event;
+
 import client.metier.interfaces.IEnvoyeur;
 import client.metier.interfaces.INotifieur;
 import common.dto.ChatEventDTO;
@@ -87,16 +92,18 @@ public class Metier
 	{
 		//Création du message eventDTO
 		ChatEventDTO event = new ChatEventDTO( EventEnum.NEW_MESSAGE )
-				.add( EventEnum.NEW_MESSAGE.getKeyIndex(0), this.idChannel )
-				.add( EventEnum.NEW_MESSAGE.getKeyIndex(1), this.idClient  )
+				.add( EventEnum.NEW_MESSAGE.getKeyIndex(0), this.idClient )
+				.add( EventEnum.NEW_MESSAGE.getKeyIndex(1), this.idChannel  )
 				.add( EventEnum.NEW_MESSAGE.getKeyIndex(2), texte          );
 		
+		System.out.println(this.idClient);
+		System.out.println(this.idChannel);
 		this.iEnvoyeur.envoyer( event );
 	}
 
 	public void envoyerPieceJoint( byte[] bytes )
 	{
-		//Création du message eventDTO NEW_MESSAGE_IMG ( List.of( "IdGroupe" , "idCliet", "byte" ) ),
+		//Création du message eventDTO NEW_MESSAGE_IMG ( List.of( "IdGroupe" , "idClient", "byte" ) ),
 		ChatEventDTO event = new ChatEventDTO( EventEnum.NEW_MESSAGE_IMG )
 				.add( EventEnum.NEW_MESSAGE.getKeyIndex(0), this.idChannel )
 				.add( EventEnum.NEW_MESSAGE.getKeyIndex(1), this.idClient  )
@@ -114,12 +121,22 @@ public class Metier
 		{ 
 			int    id     = ( (Number) event.getDataIndex( 0 ) ).intValue();
 			String pseudo =   (String) event.getDataIndex( 1 );
-			System.out.println( "Metier : " + id     );
-			System.out.println( "Metier : " + pseudo );
 
 			this.setClient( id, pseudo );
+			this.idChannel = 1;
 			return;
 		}
+
+		if ( event.getType().equals( EventEnum.MESSAGE_LIST ) )
+		{
+			this.iNotifieur.afficherListMessage( ChatEventDTO.jsonToLstEventDTO(event.toJson()) );
+		}
+
+		if ( event.getType().equals( EventEnum.MESSAGE ) )
+		{
+			this.iNotifieur.afficherNvMessage( event );
+		}
+
 
 		if ( event.getType().equals( EventEnum.ERROR ) )
 		{

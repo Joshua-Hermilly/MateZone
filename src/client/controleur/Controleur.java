@@ -87,7 +87,6 @@ public class Controleur implements INotifieur
 		}
 
 		this.metier.envoyerPieceJoint( bytes );
-		this.ihmGui.afficherImg      ( bytes );
 	}
 
 
@@ -109,9 +108,11 @@ public class Controleur implements INotifieur
 	/*---------------------------*/
 	/* Notifications (Interface) */
 	/*---------------------------*/
-	public void notifierMessage(ChatEventDTO event  ) { this.metier.notifierMessage    (event ); }
-	public void succesLogin    (String       pseudo ) { this.ihmGui.lancerMateZoneFrame(pseudo); }
-	public void notifierErreur (String       erreur ) { this.ihmGui.afficherErreur     (erreur); }
+	public void notifierMessage     (ChatEventDTO event       ) { this.metier.notifierMessage    ( event       ); }
+	public void succesLogin         (String       pseudo      ) { this.ihmGui.lancerMateZoneFrame( pseudo      ); }
+	public void notifierErreur      (String       erreur      ) { this.ihmGui.afficherErreur     ( erreur      ); }
+	public void afficherListMessage (ChatEventDTO lstEventDTO ) { this.ihmGui.afficherListMessage( lstEventDTO ); }
+	public void afficherNvMessage   (ChatEventDTO eventDTO    ) { this.ihmGui.afficherNvMessage  ( eventDTO    ); }
 
 	/*---------------------------*/
 	/* Validations               */
