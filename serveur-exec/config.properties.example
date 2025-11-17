@@ -3,9 +3,9 @@
 # Copiez ce fichier et renommez-le en config.properties
 
 # Configuration de la base de données
-db.url=***REMOVED***
-db.username=***REMOVED***
-db.password=***REMOVED***
+db.url=jdbc:mysql://mysql-"BD-LINK"
+db.username="USERNAMEXEMPLE"
+db.password="PASSWORDEXEMPLE"
 
 # Configuration du serveur WebSocket
 server.host=localhost
