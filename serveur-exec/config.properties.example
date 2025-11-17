@@ -3,9 +3,9 @@
 # Copiez ce fichier et renommez-le en config.properties
 
 # Configuration de la base de données
-db.url=jdbc:mysql://mysql-dono0530.alwaysdata.net/dono0530_matezone
-db.username=dono0530_mate
-db.password=GentleMates > KaCa !
+db.url=jdbc:mysql://mysql-"BD-LINK"
+db.username="USERNAMEXEMPLE"
+db.password="PASSWORDEXEMPLE"
 
 # Configuration du serveur WebSocket
 server.host=localhost
