@@ -131,12 +131,23 @@ mysql -u root -p < src/server/bd/SQL/MateZone.sql
 ```
 
 ### 3. Configuration
-Créer un fichier `config.properties` à la racine :
+
+⚠️ **Important** : Le fichier `config.properties` contient des informations sensibles et ne doit **JAMAIS** être commité sur GitHub.
+
+```bash
+# Copier le fichier d'exemple dans le répertoire serveur-exec
+cd serveur-exec
+cp config.properties.example config.properties
+```
+
+Éditer le fichier `serveur-exec/config.properties` avec vos propres valeurs :
 ```properties
 db.url=jdbc:mysql://localhost:3306/votre_nom_bd
 db.username=votre_username
 db.password=votre_password
 ```
+
+**Note de sécurité** : Le fichier `.gitattributes` est configuré pour empêcher l'affichage des modifications de `config.properties.example` dans l'historique git, évitant ainsi l'exposition accidentelle de mots de passe.
 
 ### 4. Compilation
 ```bash
@@ -210,6 +221,10 @@ Ouvrir `docs/index.html` dans votre navigateur.
 - Validation des entrées utilisateur
 - Gestion des erreurs de connexion
 - Isolation des canaux de discussion
+- **Protection des fichiers de configuration** :
+  - Le fichier `config.properties` est dans `.gitignore` pour éviter tout commit accidentel
+  - Le fichier `.gitattributes` masque les diffs de `config.properties.example` pour protéger contre l'exposition de mots de passe dans l'historique git
+  - Utilisez toujours `config.properties.example` comme modèle et créez votre propre `config.properties` localement
 
 <!-- ## 🧪 Tests
 

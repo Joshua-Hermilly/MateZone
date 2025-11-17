@@ -73,4 +73,11 @@ Les logs du serveur sont enregistrés dans le fichier spécifié par `log.file` 
 
 ## Sécurité
 
-⚠️ **ATTENTION** : Le fichier `config.properties` contient des informations sensibles (mots de passe de base de données). Ne jamais commiter ce fichier dans un dépôt Git public !
+⚠️ **ATTENTION** : Le fichier `config.properties` contient des informations sensibles (mots de passe de base de données). 
+
+**Mesures de protection mises en place :**
+- Le fichier `config.properties` est inclus dans `.gitignore` pour éviter tout commit accidentel
+- Le fichier `.gitattributes` à la racine du projet masque les diffs de `config.properties.example` dans l'historique git, empêchant l'affichage de mots de passe lors des modifications
+- Utilisez toujours `config.properties.example` comme modèle et créez votre propre `config.properties` localement
+
+**Ne jamais commiter** `config.properties` dans un dépôt Git public !
