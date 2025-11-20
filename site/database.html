@@ -6,7 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Base de données - MateZone</title>
 	<meta name="description"
-		content="Découvrez la structure de base de données PostgreSQL de MateZone, ses tables et relations.">
+		content="Découvrez la structure de base de données MySQL de MateZone, ses tables et relations avec moteur InnoDB.">
 	<link rel="stylesheet" href="css/style.css">
 	<link rel="icon"
 		href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
@@ -50,8 +50,8 @@
 			<div class="container">
 				<div class="hero-content">
 					<h1>Base de données MateZone</h1>
-					<p>Découvrez la structure de données PostgreSQL qui alimente MateZone, conçue pour la performance et
-						la fiabilité.</p>
+					<p>Découvrez la structure de données MySQL qui alimente MateZone, avec moteur InnoDB et encodage
+						utf8mb4 pour la performance et la fiabilité.</p>
 				</div>
 			</div>
 		</section>
@@ -179,8 +179,9 @@ db.connectionTimeout=30000</pre>
 				</div>
 
 				<div class="card mb-4">
-					<h3>👤 Table Utilisateurs</h3>
-					<p>Stockage des comptes utilisateur avec leurs informations d'authentification et de profil.</p>
+					<h3>👤 Table clients</h3>
+					<p>Stockage des comptes utilisateur avec leurs informations d'authentification et image de profil.
+					</p>
 
 					<div class="table-container">
 						<table class="table">
@@ -197,64 +198,106 @@ db.connectionTimeout=30000</pre>
 									<td><strong>id</strong></td>
 									<td>INT</td>
 									<td>PRIMARY KEY, AUTO_INCREMENT</td>
-									<td>Identifiant unique de l'utilisateur</td>
+									<td>Identifiant unique du client</td>
 								</tr>
 								<tr>
 									<td><strong>pseudo</strong></td>
-									<td>VARCHAR(50)</td>
+									<td>VARCHAR</td>
 									<td>NOT NULL, UNIQUE</td>
 									<td>Nom d'utilisateur pour la connexion</td>
 								</tr>
 								<tr>
-									<td><strong>mot_de_passe</strong></td>
-									<td>VARCHAR(255)</td>
+									<td><strong>mdp</strong></td>
+									<td>VARCHAR</td>
 									<td>NOT NULL</td>
 									<td>Mot de passe (hashé)</td>
 								</tr>
 								<tr>
-									<td><strong>email</strong></td>
-									<td>VARCHAR(100)</td>
-									<td>UNIQUE</td>
-									<td>Adresse email (optionnel)</td>
-								</tr>
-								<tr>
-									<td><strong>date_creation</strong></td>
-									<td>TIMESTAMP</td>
-									<td>DEFAULT CURRENT_TIMESTAMP</td>
-									<td>Date de création du compte</td>
-								</tr>
-								<tr>
-									<td><strong>derniere_connexion</strong></td>
-									<td>TIMESTAMP</td>
+									<td><strong>img_data</strong></td>
+									<td>MEDIUMBLOB</td>
 									<td>NULL</td>
-									<td>Date de dernière connexion</td>
-								</tr>
-								<tr>
-									<td><strong>statut</strong></td>
-									<td>ENUM</td>
-									<td>'actif', 'inactif', 'suspendu'</td>
-									<td>Statut du compte utilisateur</td>
+									<td>Image de profil (données binaires)</td>
 								</tr>
 							</tbody>
 						</table>
 					</div>
 
 					<div class="code-block mt-3">
-						<pre>CREATE TABLE utilisateurs (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    pseudo VARCHAR(50) NOT NULL UNIQUE,
-    mot_de_passe VARCHAR(255) NOT NULL,
-    email VARCHAR(100) UNIQUE,
-    date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    derniere_connexion TIMESTAMP NULL,
-    statut ENUM('actif', 'inactif', 'suspendu') DEFAULT 'actif'
-);</pre>
+						<pre>CREATE TABLE IF NOT EXISTS clients 
+(
+    id         INT AUTO_INCREMENT PRIMARY KEY,
+    pseudo     VARCHAR(...) NOT NULL UNIQUE,
+    mdp        VARCHAR(...) NOT NULL,
+    img_data   MEDIUMBLOB
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;</pre>
 					</div>
 				</div>
 
 				<div class="card mb-4">
-					<h3>💬 Table Messages</h3>
-					<p>Stockage de tous les messages échangés dans l'application avec leurs métadonnées.</p>
+					<h3>🏢 Table groupes</h3>
+					<p>Gestion des groupes/canaux de discussion avec leurs créateurs et métadonnées.</p>
+
+					<div class="table-container">
+						<table class="table">
+							<thead>
+								<tr>
+									<th>Champ</th>
+									<th>Type</th>
+									<th>Contraintes</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><strong>id</strong></td>
+									<td>INT</td>
+									<td>PRIMARY KEY, AUTO_INCREMENT</td>
+									<td>Identifiant unique du groupe</td>
+								</tr>
+								<tr>
+									<td><strong>nom</strong></td>
+									<td>VARCHAR</td>
+									<td>NOT NULL</td>
+									<td>Nom du groupe/canal</td>
+								</tr>
+								<tr>
+									<td><strong>description</strong></td>
+									<td>TEXT</td>
+									<td>NULL</td>
+									<td>Description du groupe</td>
+								</tr>
+								<tr>
+									<td><strong>cree_par</strong></td>
+									<td>INT</td>
+									<td>FOREIGN KEY</td>
+									<td>Référence vers le client créateur</td>
+								</tr>
+								<tr>
+									<td><strong>date_creation</strong></td>
+									<td>TIMESTAMP</td>
+									<td>DEFAULT CURRENT_TIMESTAMP</td>
+									<td>Date de création du groupe</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<div class="code-block mt-3">
+						<pre>CREATE TABLE IF NOT EXISTS groupes 
+(
+    id             INT AUTO_INCREMENT PRIMARY KEY,
+    nom            VARCHAR(...) NOT NULL,
+    description    TEXT,
+    cree_par       INT,
+    date_creation  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (cree_par) REFERENCES clients(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;</pre>
+					</div>
+				</div>
+
+				<div class="card mb-4">
+					<h3>💬 Table messages</h3>
+					<p>Conservation de l'historique complet des messages avec support des images et fichiers.</p>
 
 					<div class="table-container">
 						<table class="table">
@@ -404,8 +447,8 @@ db.connectionTimeout=30000</pre>
 				</div>
 
 				<div class="card">
-					<h3>🔗 Table Membres_Canaux</h3>
-					<p>Table de liaison pour gérer l'appartenance des utilisateurs aux canaux.</p>
+					<h3>🔗 Table membres_groupes</h3>
+					<p>Table d'association pour gérer l'appartenance des clients aux groupes de discussion.</p>
 
 					<div class="table-container">
 						<table class="table">
@@ -419,43 +462,50 @@ db.connectionTimeout=30000</pre>
 							</thead>
 							<tbody>
 								<tr>
-									<td><strong>utilisateur_id</strong></td>
+									<td><strong>id</strong></td>
 									<td>INT</td>
-									<td>FOREIGN KEY, NOT NULL</td>
-									<td>Référence vers l'utilisateur</td>
+									<td>PRIMARY KEY, AUTO_INCREMENT</td>
+									<td>Identifiant unique de l'association</td>
 								</tr>
 								<tr>
-									<td><strong>canal_id</strong></td>
+									<td><strong>client_id</strong></td>
 									<td>INT</td>
 									<td>FOREIGN KEY, NOT NULL</td>
-									<td>Référence vers le canal</td>
+									<td>Référence vers le client</td>
+								</tr>
+								<tr>
+									<td><strong>groupe_id</strong></td>
+									<td>INT</td>
+									<td>FOREIGN KEY, NOT NULL</td>
+									<td>Référence vers le groupe</td>
 								</tr>
 								<tr>
 									<td><strong>date_adhesion</strong></td>
 									<td>TIMESTAMP</td>
 									<td>DEFAULT CURRENT_TIMESTAMP</td>
-									<td>Date d'adhésion au canal</td>
+									<td>Date d'adhésion au groupe</td>
 								</tr>
 								<tr>
 									<td><strong>role</strong></td>
-									<td>ENUM</td>
-									<td>'membre', 'moderateur', 'admin'</td>
-									<td>Rôle de l'utilisateur dans le canal</td>
+									<td>VARCHAR</td>
+									<td>DEFAULT 'membre'</td>
+									<td>Rôle du client dans le groupe</td>
 								</tr>
 							</tbody>
 						</table>
 					</div>
 
 					<div class="code-block mt-3">
-						<pre>CREATE TABLE membres_canaux (
-    utilisateur_id INT NOT NULL,
-    canal_id INT NOT NULL,
+						<pre>CREATE TABLE IF NOT EXISTS membres_groupes 
+(
+    id            INT AUTO_INCREMENT PRIMARY KEY,
+    client_id     INT NOT NULL,
+    groupe_id     INT NOT NULL,
     date_adhesion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    role ENUM('membre', 'moderateur', 'admin') DEFAULT 'membre',
-    PRIMARY KEY (utilisateur_id, canal_id),
-    FOREIGN KEY (utilisateur_id) REFERENCES utilisateurs(id) ON DELETE CASCADE,
-    FOREIGN KEY (canal_id) REFERENCES canaux(id) ON DELETE CASCADE
-);</pre>
+    role          VARCHAR(50) DEFAULT 'membre',
+    FOREIGN KEY (groupe_id) REFERENCES groupes(id) ON DELETE CASCADE,
+    FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;</pre>
 					</div>
 				</div>
 			</div>
@@ -728,7 +778,7 @@ ON messages(auteur_id);</pre>
 			</div>
 
 			<div class="footer-bottom">
-				<p>&copy; 2024 MateZone. Tous droits réservés.</p>
+				<p>&copy; 2025 MateZone Team. Projet éducatif - Joshua Hermilly & Donovan Prévost</p>
 			</div>
 		</div>
 	</footer>
