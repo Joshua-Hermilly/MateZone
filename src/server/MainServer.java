@@ -2,8 +2,14 @@ package server;
 
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpExchange;
+
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.sql.Connection;
+import java.util.Properties;
+
 import server.bd.ConnexionBD;
 import server.bd.repository.*;
 
@@ -32,6 +38,34 @@ import server.metier.service.*;
  */
 public class MainServer
 {
+
+	/** Paramètres des Serveurs */
+		private static int PORTMESS;
+		private static int PORTWEB;
+	
+	/** Chargement statique de la configuration */
+	static 
+	{
+		try 
+		{
+			Properties props = new Properties();
+			FileInputStream fis = new FileInputStream("src/server/config.properties");
+			props.load(fis);
+			fis.close();
+			
+			PORTMESS = Integer.parseInt(props.getProperty("server.port"));
+			PORTWEB  = Integer.parseInt(props.getProperty("web.port"   ));
+			
+		} 
+		catch (IOException e) 
+		{
+			System.err.println("ERREUR : Impossible de charger le fichier config.properties du serveur!");
+			e.printStackTrace();
+			System.exit(1);
+		}
+	}
+
+
 
 	/**
 	 * Méthode principale du serveur MateZone.
@@ -65,18 +99,17 @@ public class MainServer
 		/*--------------------------------------------*/
 		/* 4) Serveur WebSocket                       */
 		/*--------------------------------------------*/
-		int websocketPort = 8080;
-		WebSocketMateZone wsServer = new WebSocketMateZone(websocketPort, userService);
+		WebSocketMateZone wsServer = new WebSocketMateZone(MainServer.PORTMESS, userService);
 		wsServer.start();
 		IWebSocketMateZone iWebSocketMateZone = wsServer;
 		userService.setIWebSocketMateZone(iWebSocketMateZone);
 
-		System.out.println("Serveur WebSocket démarré sur ws://127.0.0.1:" + websocketPort);
-
 		/*--------------------------------------------*/
 		/* 5) Serveur HTTP avatar                     */
 		/*--------------------------------------------*/
-		MainServer.startAvatarServer(userRepo); // Port 8081
+		MainServer.startAvatarServer(userRepo);
+
+			System.out.println("Serveur WebSocket démarré sur ws://127.0.0.1:" + MainServer.PORTMESS + " et WebServer démarré sur http://127.0.0.1:" + MainServer.PORTWEB);
 	}
 
 	/**
@@ -91,8 +124,7 @@ public class MainServer
 	public static void startAvatarServer(IUtilisateurRepository repo) throws Exception 
 	{
 
-		int httpPort = 8081;
-		HttpServer http = HttpServer.create(new InetSocketAddress(httpPort), 0);
+		HttpServer http = HttpServer.create(new InetSocketAddress(MainServer.PORTWEB), 0);
 
 		http.createContext("/avatar", (HttpExchange exchange) -> 
 		{
@@ -121,6 +153,5 @@ public class MainServer
 		});
 
 		http.start();
-		System.out.println("Serveur HTTP Avatar prêt sur http://127.0.0.1:" + httpPort + "/avatar?id=1");
 	}
 }
