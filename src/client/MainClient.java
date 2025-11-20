@@ -1,5 +1,8 @@
 package client;
 
+import java.io.FileInputStream;
+import java.util.Properties;
+
 import client.controleur.Controleur;
 
 /*-------------------------------*/
@@ -22,10 +25,27 @@ public class MainClient
 	/*        Main              */
 	/*--------------------------*/
 	public static void main(String[] args) 
-	{
+	{		
+		String ADRESSE  = "";
+		int    CHATPORT = 0;
+		int    IMGPORT  = 0;
+		
+		try 
+		{	
+			Properties props = new Properties();
+			FileInputStream fis = new FileInputStream("src/client/config.properties");
+			props.load(fis);
+			fis.close();
+
+			ADRESSE  = props.getProperty("server.URL"      );
+			CHATPORT = Integer.parseInt( props.getProperty("serverChat.PORT" ) );
+			IMGPORT  = Integer.parseInt( props.getProperty("serverImg.PORT"  ) );
+		
+		} catch (Exception e) { System.err.println("config" ); e.printStackTrace(); System.exit( 1 );	}
+
 		try
 		{
-			Controleur controleur = new Controleur();
+			Controleur controleur = new Controleur( ADRESSE, CHATPORT, IMGPORT );
 			controleur.lancerApp(); // affiche la fenêtre
 
 		} catch (Exception e) { e.printStackTrace(); }

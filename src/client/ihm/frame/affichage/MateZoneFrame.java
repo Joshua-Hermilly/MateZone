@@ -61,7 +61,7 @@ public class MateZoneFrame extends JFrame
 		/* Création des composants */
 		/*-------------------------------*/
 		this.saisieMessagePanel = new SaisieMessagePanel(controleur);
-		this.salonPanel         = new SalonPanel("#TEMP14>");
+		this.salonPanel         = new SalonPanel("#TEMP14>", controleur.getAdrServImg() );
 
 		/*-------------------------------*/
 		/* Positionnement des composants */

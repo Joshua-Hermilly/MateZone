@@ -31,6 +31,12 @@ public class SalonPanel extends JPanel
 	private String channelName;
 
 	/**
+	 * Port du serveur des images
+	 */
+	private String adresseServImg;
+
+
+	/**
 	 * Liste des panneaux de messages affichés dans le salon.
 	 * Maintient l'ordre d'affichage des messages.
 	 */
@@ -63,10 +69,11 @@ public class SalonPanel extends JPanel
 	 * 
 	 * @param channelName le nom du canal de chat à afficher
 	 */
-	public SalonPanel(String channelName) 
+	public SalonPanel(String channelName, String adresseServImg ) 
 	{
-		this.channelName = channelName;
-		this.lstMsgPanel = new ArrayList<MessagePanel>();
+		this.channelName     = channelName;
+		this.adresseServImg  = adresseServImg;
+		this.lstMsgPanel     = new ArrayList<MessagePanel>();
 
 		this.setLayout(new BorderLayout());
 		this.setBackground(new Color(18, 18, 18));
@@ -125,7 +132,7 @@ public class SalonPanel extends JPanel
 	 */
 	public void addMessage(ChatEventDTO event)
 	{
-		MessagePanel messagePanel = new MessagePanel(event);
+		MessagePanel messagePanel = new MessagePanel(event, this.adresseServImg );
 
 		// Aligneme gauche
 		messagePanel.setAlignmentX(Component.LEFT_ALIGNMENT);

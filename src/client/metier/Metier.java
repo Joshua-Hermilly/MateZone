@@ -152,8 +152,8 @@ public class Metier
 				.add(EventEnum.NEW_MESSAGE.getKeyIndex(1), this.idChannel)
 				.add(EventEnum.NEW_MESSAGE.getKeyIndex(2), texte         );
 
-		System.out.println(this.idClient );
-		System.out.println(this.idChannel);
+		// System.out.println(this.idClient );
+		// System.out.println(this.idChannel);
 		this.iEnvoyeur.envoyer(event);
 	}
 
