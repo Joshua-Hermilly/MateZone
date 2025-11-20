@@ -3,11 +3,7 @@ package server.bd.repository;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import server.bd.ConnexionBD;
 import server.metier.interfaces.IMessageRepository;
@@ -17,8 +13,9 @@ import server.metier.interfaces.IMessageRepository;
  * Classe responsable de toutes les opérations de base de données sur la tables Message
  * Gère les clients, les messages et l'authentification
  * 
- * @author MateZone Team
- * @version 1.0
+ * @author Prévost Donovan
+ * @version V1
+ * @date 08/11/25
  */
 public class MessageRepository implements IMessageRepository 
 {
