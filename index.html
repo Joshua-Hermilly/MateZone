@@ -51,217 +51,202 @@
 						<a href="site/documentation.html" class="btn btn-secondary">Documentation</a>
 					</div>
 				</div>
-				<div class="hero-image">
-					<div class="terminal-window">
-						<div class="terminal-header">
-							<div class="terminal-controls">
-								<span class="control red"></span>
-								<span class="control yellow"></span>
-								<span class="control green"></span>
-							</div>
-							<span class="terminal-title">MateZone Server</span>
-						</div>
-						<div class="terminal-body">
-							<div class="terminal-line">
-								<span class="prompt">server@matezone:~$</span>
-								<span class="command">java -jar MateZone-Server.jar</span>
-							</div>
-							<div class="terminal-line output">
-								<span class="success">✓ Server started on port 8080</span>
-							</div>
-							<div class="terminal-line output">
-								<span class="success">✓ WebSocket endpoint: /chat</span>
-							</div>
-							<div class="terminal-line output">
-								<span class="success">✓ Database connected (MySQL)</span>
-							</div>
-							<div class="terminal-line">
-								<span class="prompt">server@matezone:~$</span>
-								<span class="cursor">_</span>
-							</div>
-						</div>
-					</div>
-				</div>
 			</div>
 		</section>
 
-		<!-- Stats Section -->
-		<section class="stats-section">
-			<div class="container">
-				<div class="stats-grid">
-					<div class="stat-card">
-						<div class="stat-number" data-target="4">0</div>
-						<div class="stat-label">Modules principaux</div>
-					</div>
-					<div class="stat-card">
-						<div class="stat-number" data-target="11">0</div>
-						<div class="stat-label">Types d'événements</div>
-					</div>
-					<div class="stat-card">
-						<div class="stat-number" data-target="4">0</div>
-						<div class="stat-label">Tables MySQL</div>
-					</div>
-					<div class="stat-card">
-						<div class="stat-number" data-target="100">0</div>
-						<div class="stat-label">% Architecture hexagonale</div>
-					</div>
-				</div>
-			</div>
-		</section>
-
-		<!-- Features Section -->
-		<section class="features-section section">
+		<!-- Fonctionnalités principales -->
+		<section class="section">
 			<div class="container">
 				<div class="section-title">
 					<h2>Fonctionnalités principales</h2>
-					<p>Découvrez les capacités avancées de MateZone</p>
+					<p>Découvrez les capacités avancées de MateZone pour une expérience de messagerie optimale</p>
 				</div>
-				<div class="features-grid">
-					<div class="feature-card">
-						<div class="feature-icon">🚀</div>
-						<h3>Communication temps réel</h3>
-						<p>WebSockets pour une messagerie instantanée fluide et réactive sans latence perceptible.</p>
+
+				<div class="grid grid-3">
+					<div class="card">
+						<span class="card-icon">💬</span>
+						<h3>Messagerie temps réel</h3>
+						<p>Communication instantanée grâce à la technologie WebSocket. Échangez des messages en temps
+							réel avec vos contacts sans latence.</p>
 					</div>
-					<div class="feature-card">
-						<div class="feature-icon">🏗️</div>
-						<h3>Architecture hexagonale</h3>
-						<p>Séparation claire des responsabilités avec une architecture modulaire et maintenable.</p>
+
+					<div class="card">
+						<span class="card-icon">👥</span>
+						<h3>Gestion d'utilisateurs</h3>
+						<p>Système complet d'authentification avec inscription, connexion sécurisée et gestion des
+							profils utilisateurs.</p>
 					</div>
-					<div class="feature-card">
-						<div class="feature-icon">🔒</div>
+
+					<div class="card">
+						<span class="card-icon">🔒</span>
 						<h3>Sécurité avancée</h3>
-						<p>Authentification robuste et chiffrement des communications pour protéger vos données.</p>
+						<p>Protection des données avec validation des entrées, authentification robuste et gestion
+							sécurisée des sessions.</p>
 					</div>
-					<div class="feature-card">
-						<div class="feature-icon">🎯</div>
+
+					<div class="card">
+						<span class="card-icon">📱</span>
 						<h3>Interface intuitive</h3>
-						<p>Interface utilisateur Java Swing moderne et ergonomique pour une expérience optimale.</p>
+						<p>Interface utilisateur moderne développée en Java Swing avec une expérience utilisateur
+							optimisée et responsive.</p>
 					</div>
-					<div class="feature-card">
-						<div class="feature-icon">📊</div>
+
+					<div class="card">
+						<span class="card-icon">🗄️</span>
 						<h3>Base de données MySQL</h3>
-						<p>Persistance fiable avec MySQL et moteur InnoDB pour la gestion des utilisateurs et messages.
-						</p>
+						<p>Persistance fiable des données avec MySQL, sauvegarde de l'historique des messages et gestion
+							des utilisateurs.</p>
 					</div>
-					<div class="feature-card">
-						<div class="feature-icon">🔌</div>
-						<h3>API WebSocket complète</h3>
-						<p>Protocole standardisé avec ChatEventDTO pour tous les échanges client-serveur.</p>
+
+					<div class="card">
+						<span class="card-icon">🏗️</span>
+						<h3>Architecture hexagonale</h3>
+						<p>Code maintenable et évolutif grâce à une architecture hexagonale bien structurée avec
+							séparation des responsabilités.</p>
 					</div>
 				</div>
 			</div>
 		</section>
 
 		<!-- Architecture Overview -->
-		<section class="architecture-section section section-alt">
+		<section class="section section-alt">
 			<div class="container">
 				<div class="section-title">
-					<h2>Architecture technique</h2>
-					<p>Une architecture moderne basée sur les principes hexagonaux</p>
+					<h2>Architecture du système</h2>
+					<p>MateZone utilise une architecture hexagonale moderne pour une séparation claire des
+						responsabilités</p>
 				</div>
-				<div class="architecture-grid">
-					<div class="architecture-layer">
-						<h3>🖥️ Client</h3>
-						<p>Interface utilisateur Java Swing avec architecture MVC</p>
-						<ul>
-							<li>MainClient.java - Point d'entrée</li>
-							<li>MateZoneFrame.java - Interface principale</li>
-							<li>WebSocketChatAdapter.java - Adaptateur réseau</li>
-							<li>Controleur.java - Logique de contrôle</li>
-						</ul>
+
+				<div class="architecture-diagram">
+					<div class="layer layer-client">
+						<h4>🖥️ Client (Architecture MVC)</h4>
+						<p>Interface utilisateur • Contrôleur • Logique métier client</p>
 					</div>
-					<div class="architecture-layer">
-						<h3>🔄 Protocole</h3>
-						<p>Communication standardisée via JSON et WebSocket</p>
-						<ul>
-							<li>ChatEventDTO.java - Structure des messages</li>
-							<li>EventEnum.java - Types d'événements</li>
-							<li>Sérialisation Gson automatique</li>
-							<li>Validation des données</li>
-						</ul>
+
+					<div class="layer layer-common">
+						<h4>🔄 Couche commune</h4>
+						<p>DTO • Protocoles • Énumérations partagées</p>
 					</div>
-					<div class="architecture-layer">
-						<h3>⚙️ Serveur</h3>
-						<p>Serveur robuste avec couches métier séparées</p>
-						<ul>
-							<li>MainServer.java - Serveur principal</li>
-							<li>WebSocketMateZone.java - Endpoint WebSocket</li>
-							<li>ClientService.java - Logique métier</li>
-							<li>ConnexionBD.java - Accès données (Singleton)</li>
-						</ul>
+
+					<div class="layer layer-server">
+						<h4>⚙️ Serveur (Architecture en couches)</h4>
+						<p>WebSocket • Services métier • Repository pattern</p>
 					</div>
-					<div class="architecture-layer">
-						<h3>🗄️ Persistance</h3>
-						<p>Base de données MySQL avec moteur InnoDB</p>
-						<ul>
-							<li>Table clients - Utilisateurs et profils</li>
-							<li>Table groupes - Canaux de discussion</li>
-							<li>Table messages - Historique complet</li>
-							<li>Table membres_groupes - Associations</li>
-						</ul>
+
+					<div class="layer layer-db">
+						<h4>🗄️ Base de données</h4>
+						<p>MySQL • Persistance • Gestion des utilisateurs et messages</p>
 					</div>
 				</div>
-				<div class="cta-section">
-					<h3>Explorez l'architecture</h3>
-					<p>Découvrez en détail comment MateZone implémente l'architecture hexagonale</p>
-					<a href="site/architecture.html" class="btn btn-primary">Voir l'architecture complète</a>
+
+				<div class="text-center mt-4">
+					<a href="site/architecture.html" class="btn btn-primary">Voir l'architecture détaillée</a>
 				</div>
 			</div>
 		</section>
 
-		<!-- Technology Stack -->
-		<section class="tech-section section">
+		<!-- Technologies utilisées -->
+		<section class="section">
 			<div class="container">
 				<div class="section-title">
 					<h2>Technologies utilisées</h2>
-					<p>Stack technique moderne et éprouvée</p>
+					<p>MateZone s'appuie sur des technologies éprouvées pour garantir performance et fiabilité</p>
 				</div>
-				<div class="tech-grid">
-					<div class="tech-card">
-						<div class="tech-logo">☕</div>
-						<h3>Java 25</h3>
-						<p>JDK dernière génération avec fonctionnalités avancées</p>
+
+				<div class="grid grid-4">
+					<div class="card">
+						<h3>☕ Java</h3>
+						<p>JDK 25 pour une performance optimale et les dernières fonctionnalités du langage</p>
 					</div>
-					<div class="tech-card">
-						<div class="tech-logo">🔌</div>
-						<h3>WebSocket</h3>
-						<p>Communication bidirectionnelle temps réel</p>
+
+					<div class="card">
+						<h3>🔌 WebSocket</h3>
+						<p>Communication bidirectionnelle en temps réel entre client et serveur</p>
 					</div>
-					<div class="tech-card">
-						<div class="tech-logo">🗄️</div>
-						<h3>MySQL</h3>
-						<p>Base de données relationnelle avec InnoDB</p>
+
+					<div class="card">
+						<h3>🗄️ MySQL</h3>
+						<p>Base de données relationnelle robuste pour la persistance des données</p>
 					</div>
-					<div class="tech-card">
-						<div class="tech-logo">📦</div>
-						<h3>Gson</h3>
-						<p>Sérialisation JSON automatique et type-safe</p>
+
+					<div class="card">
+						<h3>🎨 Java Swing</h3>
+						<p>Interface utilisateur native et responsive pour une expérience optimale</p>
 					</div>
-					<div class="tech-card">
-						<div class="tech-logo">🖼️</div>
-						<h3>Java Swing</h3>
-						<p>Interface utilisateur native multiplateforme</p>
+
+					<div class="card">
+						<h3>📄 JSON</h3>
+						<p>Format d'échange de données léger avec la librairie Gson</p>
 					</div>
-					<div class="tech-card">
-						<div class="tech-logo">🏗️</div>
-						<h3>Architecture Hexagonale</h3>
-						<p>Pattern architectural pour la maintenabilité</p>
+
+					<div class="card">
+						<h3>🏗️ Architecture hexagonale</h3>
+						<p>Pattern architectural pour un code maintenable et testable</p>
 					</div>
 				</div>
 			</div>
 		</section>
 
-		<!-- CTA Section -->
-		<section class="cta-section section section-alt">
+		<!-- Statistiques du projet -->
+		<section class="section section-alt">
 			<div class="container">
-				<div class="cta-content">
-					<h2>Prêt à explorer MateZone ?</h2>
-					<p>Découvrez comment installer, configurer et utiliser cette application de messagerie moderne</p>
-					<div class="cta-buttons">
-						<a href="site/guide.html" class="btn btn-primary btn-large">Guide d'installation</a>
-						<a href="https://github.com/Joshua-Hermilly/MateZone" class="btn btn-secondary btn-large"
-							target="_blank">Code source</a>
-						<a href="docs/index.html" class="btn btn-secondary btn-large" target="_blank">Javadoc</a>
+				<div class="section-title">
+					<h2>Le projet en chiffres</h2>
+					<p>Quelques statistiques sur le développement de MateZone</p>
+				</div>
+
+				<div class="grid grid-4">
+					<div class="card text-center">
+						<h3 class="counter" data-target="2">0</h3>
+						<p>Développeurs</p>
+					</div>
+
+					<div class="card text-center">
+						<h3 class="counter" data-target="18">0</h3>
+						<p>Classes Java</p>
+					</div>
+
+					<div class="card text-center">
+						<h3 class="counter" data-target="3">0</h3>
+						<p>Couches d'architecture</p>
+					</div>
+
+					<div class="card text-center">
+						<h3>100%</h3>
+						<p>Open Source</p>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Call to action -->
+		<section class="section">
+			<div class="container">
+				<div class="section-title">
+					<h2>Prêt à découvrir MateZone ?</h2>
+					<p>Explorez le code source, consultez la documentation ou contactez l'équipe de développement</p>
+				</div>
+
+				<div class="grid grid-3">
+					<div class="card text-center">
+						<span class="card-icon">📖</span>
+						<h3>Documentation</h3>
+						<p>Consultez la Javadoc complète et les guides d'utilisation détaillés</p>
+						<a href="site/documentation.html" class="btn btn-primary mt-2">Voir la documentation</a>
+					</div>
+
+					<div class="card text-center">
+						<span class="card-icon">🚀</span>
+						<h3>Guide de démarrage</h3>
+						<p>Suivez notre guide étape par étape pour installer et utiliser MateZone</p>
+						<a href="site/guide.html" class="btn btn-primary mt-2">Commencer</a>
+					</div>
+
+					<div class="card text-center">
+						<span class="card-icon">💬</span>
+						<h3>Nous contacter</h3>
+						<p>Une question, un bug, une suggestion ? N'hésitez pas à nous contacter</p>
+						<a href="site/contact.html" class="btn btn-primary mt-2">Nous écrire</a>
 					</div>
 				</div>
 			</div>
@@ -274,13 +259,11 @@
 			<div class="footer-content">
 				<div class="footer-section">
 					<h3>MateZone</h3>
-					<p>Application de messagerie temps réel avec architecture hexagonale et WebSocket.</p>
-					<div class="social-links">
-						<a href="https://github.com/Joshua-Hermilly/MateZone" target="_blank" rel="noopener"
-							title="GitHub">🐱</a>
-						<a href="docs/index.html" target="_blank" rel="noopener" title="Documentation">📚</a>
-					</div>
+					<p>Application de messagerie instantanée développée en Java avec une architecture moderne et
+						sécurisée.</p>
+					<p>Projet open source sous licence MIT.</p>
 				</div>
+
 				<div class="footer-section">
 					<h3>Navigation</h3>
 					<p><a href="index.html">Accueil</a></p>
@@ -288,6 +271,7 @@
 					<p><a href="site/database.html">Base de données</a></p>
 					<p><a href="site/guide.html">Guide d'utilisation</a></p>
 				</div>
+
 				<div class="footer-section">
 					<h3>Ressources</h3>
 					<p><a href="site/documentation.html">Documentation</a></p>
@@ -295,6 +279,7 @@
 					<p><a href="https://github.com/Joshua-Hermilly/MateZone" target="_blank">Code source</a></p>
 					<p><a href="site/contact.html">Support</a></p>
 				</div>
+
 				<div class="footer-section">
 					<h3>Développeurs</h3>
 					<p><strong>Serveur :</strong> DNB_Dono530</p>
@@ -302,6 +287,7 @@
 					<p><a href="https://github.com/Joshua-Hermilly" target="_blank">GitHub</a></p>
 				</div>
 			</div>
+
 			<div class="footer-bottom">
 				<p>&copy; 2025 MateZone Team. Projet éducatif - Joshua Hermilly & Donovan Prévost</p>
 			</div>
