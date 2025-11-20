@@ -10,36 +10,55 @@ import client.ihm.panel.connexion.ConnexionPanel;
 /* Class ConnexionFrame          */
 /*-------------------------------*/
 /**
- * Classe extend JFrame qui fait office de fenètre de connexion.
- * Le panel est fait avec le client/ihm/panel/connexion/ConnexionPanel.
+ * Fenêtre de connexion qui étend JFrame et sert d'interface principale pour
+ * l'authentification.
+ * Cette fenêtre contient le panneau ConnexionPanel et configure l'apparence
+ * générale de la fenêtre.
+ * Elle est affichée au lancement de l'application pour permettre à
+ * l'utilisateur de se connecter ou s'enregistrer.
+ *
+ * @author Joshua Hermilly
+ * @version V1
+ * @date 08/11/25
  */
 public class ConnexionFrame extends JFrame
 {
 	/*--------------------------*/
-	/*   Attributs              */
+	/* Attributs                */
 	/*--------------------------*/
+	/**
+	 * Panneau de connexion contenant les éléments d'interface utilisateur.
+	 * Gère la saisie des identifiants et les boutons d'action.
+	 */
 	private ConnexionPanel panelConnexion;
-	
+
 	/*--------------------------*/
-	/*   Constructeur           */
+	/* Constructeur             */
 	/*--------------------------*/
-	public ConnexionFrame( Controleur controleur )
+	/**
+	 * Constructeur de la fenêtre de connexion.
+	 * Configure les propriétés de la fenêtre (titre, icône, taille) et initialise
+	 * le panneau de connexion.
+	 * La fenêtre est centrée sur l'écran et non redimensionnable.
+	 * 
+	 * @param controleur le contrôleur principal de l'application
+	 */
+	public ConnexionFrame(Controleur controleur) 
 	{
 		this.setTitle("Connexion");
 		this.setResizable(false);
 		this.setIconImage(Toolkit.getDefaultToolkit().getImage("./image/image_1762797388911.png"));
 
 		/*-------------------------------*/
-		/*-------------------------------*/
 		/* Création des composants       */
 		/*-------------------------------*/
-		this.panelConnexion = new ConnexionPanel( controleur );
+		this.panelConnexion = new ConnexionPanel(controleur);
 
 		/*-------------------------------*/
 		/* Positionnement des composants */
 		/*-------------------------------*/
 		this.add(this.panelConnexion);
-		
+
 		this.pack();
 		this.setLocationRelativeTo(null);
 	}

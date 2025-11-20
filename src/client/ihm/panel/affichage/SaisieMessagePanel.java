@@ -12,29 +12,72 @@ import client.controleur.Controleur;
 /* Class SaisieMessagePanel     */
 /*-------------------------------*/
 /**
- * Panel de saisie des messages (champ + bouton envoyer + pièce jointe).
- * Envoie sur Enter ou bouton Envoyer.
+ * Panneau de saisie des messages qui étend JPanel et gère l'envoi de messages
+ * et pièces jointes.
+ * Contient un champ de texte, un bouton d'envoi et un bouton pour les pièces
+ * jointes.
+ * L'envoi peut se faire via la touche Entrée ou le bouton Envoyer.
+ * Utilise un thème sombre cohérent avec le reste de l'application.
+ *
+ * @author Joshua Hermilly
+ * @version V1
+ * @date 08/11/25
  */
 public class SaisieMessagePanel extends JPanel implements ActionListener 
 {
 	/*--------------------------*/
 	/* Composants               */
 	/*--------------------------*/
+	/**
+	 * Référence vers le contrôleur principal pour envoyer les messages et pièces
+	 * jointes.
+	 */
 	private final Controleur controleur;
+
+	/**
+	 * Champ de texte pour la saisie des messages par l'utilisateur.
+	 */
 	private JTextField txtMessage;
-	private JButton    btnEnvoyer;
-	private JButton    btnPieceJointe;
-	private JPanel     panelPrincipal;
-	private JPanel     panelSaisie;
-	private JPanel     panelBoutons;
+
+	/**
+	 * Bouton principal pour envoyer le message saisi.
+	 */
+	private JButton btnEnvoyer;
+
+	/**
+	 * Bouton pour ouvrir le sélecteur de fichier et envoyer une pièce jointe.
+	 */
+	private JButton btnPieceJointe;
+
+	/**
+	 * Panneau principal contenant tous les éléments de saisie.
+	 */
+	private JPanel panelPrincipal;
+
+	/**
+	 * Panneau organisant le champ de texte et les boutons horizontalement.
+	 */
+	private JPanel panelSaisie;
+
+	/**
+	 * Panneau contenant les boutons d'action (envoyer et pièce jointe).
+	 */
+	private JPanel panelBoutons;
 
 	/*--------------------------*/
 	/* Constructeur             */
 	/*--------------------------*/
-	public SaisieMessagePanel(Controleur controleur) 
+	/**
+	 * Constructeur du panneau de saisie des messages.
+	 * Initialise tous les composants graphiques avec le thème sombre,
+	 * configure la mise en page et active les écouteurs d'événements.
+	 * 
+	 * @param controleur le contrôleur principal de l'application
+	 */
+	public SaisieMessagePanel(Controleur controleur)
 	{
 		this.controleur = controleur;
-		
+
 		this.setLayout(new BorderLayout());
 		this.setBackground(new Color(18, 18, 18));
 
@@ -42,12 +85,12 @@ public class SaisieMessagePanel extends JPanel implements ActionListener
 		/* Création des composants       */
 		/*-------------------------------*/
 		this.creerComposants();
-		
+
 		/*-------------------------------*/
 		/* Positionnement des composants */
 		/*-------------------------------*/
 		this.positionnerComposants();
-		
+
 		/*-------------------------------*/
 		/* Ajout des listeners           */
 		/*-------------------------------*/
@@ -55,9 +98,14 @@ public class SaisieMessagePanel extends JPanel implements ActionListener
 	}
 
 	/*--------------------------*/
-	/* Création des composants  */
+	/* Création des composants */
 	/*--------------------------*/
-	private void creerComposants()
+	/**
+	 * Crée et configure tous les composants graphiques du panneau.
+	 * Initialise le champ de texte, les boutons et les panneaux conteneurs avec le
+	 * style sombre.
+	 */
+	private void creerComposants() 
 	{
 		// Champ de texte
 		this.txtMessage = new JTextField(30);
@@ -69,8 +117,8 @@ public class SaisieMessagePanel extends JPanel implements ActionListener
 		(
 			BorderFactory.createCompoundBorder
 			(
-				BorderFactory.createLineBorder(new Color(60, 60, 60), 1),
-				BorderFactory.createEmptyBorder(10, 15, 10, 15)
+					BorderFactory.createLineBorder(new Color(60, 60, 60), 1),
+					BorderFactory.createEmptyBorder(10, 15, 10, 15)
 			)
 		);
 
@@ -104,8 +152,8 @@ public class SaisieMessagePanel extends JPanel implements ActionListener
 		(
 			BorderFactory.createCompoundBorder
 			(
-				BorderFactory.createLineBorder(new Color(50, 50, 50), 1),
-				BorderFactory.createEmptyBorder(15, 20, 15, 20)
+					BorderFactory.createLineBorder(new Color(50, 50, 50), 1),
+					BorderFactory.createEmptyBorder(15, 20, 15, 20)
 			)
 		);
 
@@ -119,13 +167,18 @@ public class SaisieMessagePanel extends JPanel implements ActionListener
 	/*----------------------------------*/
 	/* Positionnement des composants    */
 	/*----------------------------------*/
-	private void positionnerComposants()
+	/**
+	 * Organise et positionne tous les composants dans la hiérarchie des panneaux.
+	 * Configure la disposition horizontale avec le champ de texte au centre et les
+	 * boutons à droite.
+	 */
+	private void positionnerComposants() 
 	{
 		this.panelBoutons.add(this.btnPieceJointe);
-		this.panelBoutons.add(this.btnEnvoyer);
+		this.panelBoutons.add(this.btnEnvoyer    );
 
-		this.panelSaisie.add(this.txtMessage, BorderLayout.CENTER);
-		this.panelSaisie.add(this.panelBoutons, BorderLayout.EAST);
+		this.panelSaisie.add(this.txtMessage  , BorderLayout.CENTER);
+		this.panelSaisie.add(this.panelBoutons, BorderLayout.EAST  );
 
 		this.panelPrincipal.add(this.panelSaisie, BorderLayout.CENTER);
 
@@ -135,31 +188,43 @@ public class SaisieMessagePanel extends JPanel implements ActionListener
 	/*----------------------------------*/
 	/* Ajout des listeners              */
 	/*----------------------------------*/
-	private void ajouterListeners()
+	/**
+	 * Ajoute les écouteurs d'événements aux composants interactifs.
+	 * Configure les actions pour les boutons et la touche Entrée du champ de texte.
+	 */
+	private void ajouterListeners() 
 	{
-		this.btnEnvoyer.addActionListener(this);
-		this.btnPieceJointe.addActionListener(this);
-		this.txtMessage.addActionListener(e -> sendMessage());
+		this.btnEnvoyer    .addActionListener(this              );
+		this.btnPieceJointe.addActionListener(this              );
+		this.txtMessage    .addActionListener(e -> sendMessage());
 	}
 
 	/*----------------------------------*/
-	/* Override                         */
+	/* Override */
 	/*----------------------------------*/
+	/**
+	 * Gère les événements de clic sur les boutons du panneau.
+	 * Traite l'envoi de messages texte et l'ouverture du sélecteur de fichiers pour
+	 * les pièces jointes.
+	 * 
+	 * @param e l'événement d'action déclenché par un composant
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) 
 	{
 		if (e.getSource() == this.btnEnvoyer) 
 		{
-			sendMessage();
+			this.sendMessage();
+		} 
 
-		} else if (e.getSource() == this.btnPieceJointe) 
+		else if (e.getSource() == this.btnPieceJointe)
 		{
 			JFileChooser chooser = new JFileChooser();
 			chooser.setDialogTitle("Choisir une image");
 			chooser.setCurrentDirectory(new File("."));
 
 			int rv = chooser.showOpenDialog(this);
-			if (rv == JFileChooser.APPROVE_OPTION)
+			if (rv == JFileChooser.APPROVE_OPTION) 
 			{
 				File selected = chooser.getSelectedFile();
 				this.controleur.envoyerPieceJoint(selected.getAbsolutePath());
@@ -170,9 +235,15 @@ public class SaisieMessagePanel extends JPanel implements ActionListener
 	/*----------------------------------*/
 	/* Méthodes privées                 */
 	/*----------------------------------*/
+	/**
+	 * Envoie le message saisi dans le champ de texte.
+	 * Vérifie que le message n'est pas vide, l'envoie via le contrôleur et vide le
+	 * champ.
+	 */
 	private void sendMessage() 
 	{
 		String message = this.txtMessage.getText().trim();
+		
 		if (!message.isEmpty()) 
 		{
 			this.controleur.envoyerMessage(message);
