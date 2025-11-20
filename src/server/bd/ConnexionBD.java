@@ -40,7 +40,7 @@ public class ConnexionBD
 		try 
 		{
 			Properties props = new Properties();
-			FileInputStream fis = new FileInputStream("config.properties");
+			FileInputStream fis = new FileInputStream("./server/config.properties");
 			props.load(fis);
 			fis.close();
 			

@@ -23,6 +23,7 @@ import common.dto.ChatEventDTO;
  * @version V1
  * @date 08/11/25
  */
+
 public class Controleur implements INotifieur 
 {
 	/*--------------------------*/
@@ -31,7 +32,20 @@ public class Controleur implements INotifieur
 	/**
 	 * Adresse du serveur WebSocket pour la connexion au chat MateZone.
 	 */
-	private static final String ADRESSE_SERVEUR = "ws://localhost:8080";
+	private static String ADRESSE_SERVEUR = "";
+
+	/**
+	 * Port du serveur WebSocket utilisé pour les communications de chat.
+	 * Ce port est utilisé pour établir la connexion avec le serveur de messagerie.
+	 */
+	private static int PORT_SERVEUR_CHAT = 0;
+
+	/**
+	 * Port du serveur utilisé pour le transfert d'images et de pièces jointes.
+	 * Ce port est dédié aux communications de fichiers et médias.
+	 */
+	private static int PORT_SERVEUR_IMG  = 0;
+
 
 	/**
 	 * Interface utilisateur graphique de l'application.
@@ -56,12 +70,17 @@ public class Controleur implements INotifieur
 	 * 
 	 * @throws Exception si une erreur survient lors de l'initialisation ou de la connexion
 	 */
-	public Controleur() throws Exception 
+	public Controleur( String ADRESSE, int CHATPORT, int IMGPORT ) throws Exception 
 	{
+		Controleur.ADRESSE_SERVEUR   = ADRESSE;
+		Controleur.PORT_SERVEUR_CHAT = CHATPORT;
+		Controleur.PORT_SERVEUR_IMG  = IMGPORT;
+
 		this.ihmGui = new IhmGui( this );
 
 		INotifieur iNotifieur = this;
-		IEnvoyeur  iEnvoyeur = new WebSocketChatAdapter( Controleur.ADRESSE_SERVEUR, iNotifieur );
+		IEnvoyeur  iEnvoyeur = new WebSocketChatAdapter( "ws://"+Controleur.ADRESSE_SERVEUR+Controleur.PORT_SERVEUR_CHAT, iNotifieur );
+		System.out.println( Controleur.ADRESSE_SERVEUR+Controleur.PORT_SERVEUR_CHAT );
 		iEnvoyeur.connecter();
 
 		this.metier = new Metier( iEnvoyeur, iNotifieur );
@@ -164,6 +183,8 @@ public class Controleur implements INotifieur
 	/*--------------------------*/
 	/* Serveur                  */
 	/*--------------------------*/
+	public String getAdrServImg() { return Controleur.ADRESSE_SERVEUR + Controleur.PORT_SERVEUR_IMG; }
+
 
 	/*---------------------------*/
 	/* Notifications (Interface) */

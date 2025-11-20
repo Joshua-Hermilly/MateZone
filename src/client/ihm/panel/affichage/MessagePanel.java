@@ -35,6 +35,11 @@ public class MessagePanel extends JPanel
 	private ChatEventDTO event;
 
 	/**
+	 * Adresse pour les images
+	 */
+	private String adresse;
+
+	/**
 	 * Panneau principal contenant tous les éléments du message.
 	 */
 	private JPanel panelContenu;
@@ -82,9 +87,10 @@ public class MessagePanel extends JPanel
 	 * 
 	 * @param event l'événement de chat contenant les données du message à afficher
 	 */
-	public MessagePanel(ChatEventDTO event)
+	public MessagePanel(ChatEventDTO event, String adrresse )
 	{
-		this.event = event;
+		this.event   = event;
+		this.adresse = adrresse;
 
 		this.setLayout(new BorderLayout());
 		this.setBackground(new Color(18, 18, 18));
@@ -136,9 +142,9 @@ public class MessagePanel extends JPanel
 	private void creerComposants() 
 	{
 		// Récupération des données
-		String pseudo  = (String) this.event.getDataIndex(1);
-		String contenu = (String) this.event.getDataIndex(2);
-		String date    = (String) this.event.getDataIndex(3);
+		String pseudo  = (String) this.event.getData().get("pseudo");
+		String contenu = (String) this.event.getData().get("contenu");
+		String date    = (String) this.event.getData().get("date");
 
 		// Conteneur principal
 		this.panelContenu = new JPanel(new BorderLayout());
@@ -204,10 +210,11 @@ public class MessagePanel extends JPanel
 	{
 		this.lblPhotoProfil = new JLabel();
 		Image avatarImage   = null;
+		String id    = (String)this.event.getData().get("idClient");
 
 		try 
 		{
-			avatarImage = ImageIO.read(new URL("http://localhost:8081/avatar?id=3"));
+			avatarImage = ImageIO.read(new URL("http://"+this.adresse+"/avatar?id="+id));
 
 		} catch (Exception e) { System.out.println("Erreur chargement image panel Message"); }
 
