@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Architecture - MateZone</title>
+	<meta name="description"
+		content="Découvrez l'architecture hexagonale de MateZone, ses patterns de conception et sa structure modulaire.">
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="icon"
+		href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+</head>
+
+<body>
+	<!-- Navigation -->
+	<nav class="navbar">
+		<div class="nav-container">
+			<a href="index.html" class="logo">MateZone</a>
+			<ul class="nav-menu">
+				<li><a href="index.html" class="nav-link">Accueil</a></li>
+				<li><a href="architecture.html" class="nav-link active">Architecture</a></li>
+				<li><a href="database.html" class="nav-link">Base de données</a></li>
+				<li><a href="protocol.html" class="nav-link">Protocole</a></li>
+				<li><a href="guide.html" class="nav-link">Guide d'utilisation</a></li>
+				<li><a href="documentation.html" class="nav-link">Documentation</a></li>
+				<li><a href="contact.html" class="nav-link">Contact</a></li>
+			</ul>
+			<div class="hamburger">
+				<span></span>
+				<span></span>
+				<span></span>
+			</div>
+		</div>
+	</nav>
+
+	<main>
+		<!-- Breadcrumbs -->
+		<section class="breadcrumbs">
+			<div class="container">
+				<ol>
+					<li><a href="index.html">Accueil</a></li>
+					<li>Architecture</li>
+				</ol>
+			</div>
+		</section>
+
+		<!-- Header -->
+		<section class="hero">
+			<div class="container">
+				<div class="hero-content">
+					<h1>Architecture de MateZone</h1>
+					<p>Découvrez la structure hexagonale moderne qui fait de MateZone une application robuste,
+						maintenable et évolutive.</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- Vue d'ensemble -->
+		<section class="section">
+			<div class="container">
+				<div class="section-title">
+					<h2>Vue d'ensemble de l'architecture</h2>
+					<p>MateZone suit une architecture hexagonale (ports/adapters) avec une séparation claire entre les
+						différentes couches</p>
+				</div>
+
+				<div class="architecture-diagram">
+					<div class="layer layer-client">
+						<h4>🖥️ Couche Client (MVC)</h4>
+						<div class="grid grid-3 mt-2">
+							<div>
+								<strong>Contrôleur</strong>
+								<p>Gestion des interactions utilisateur</p>
+							</div>
+							<div>
+								<strong>IHM</strong>
+								<p>Interface utilisateur Swing</p>
+							</div>
+							<div>
+								<strong>Métier Client</strong>
+								<p>Logique business côté client</p>
+							</div>
+						</div>
+					</div>
+
+					<div class="layer layer-common">
+						<h4>🔄 Couche Commune</h4>
+						<div class="grid grid-2 mt-2">
+							<div>
+								<strong>DTO</strong>
+								<p>Objets de transfert de données</p>
+							</div>
+							<div>
+								<strong>Protocol</strong>
+								<p>Énumérations et contrats</p>
+							</div>
+						</div>
+					</div>
+
+					<div class="layer layer-server">
+						<h4>⚙️ Couche Serveur</h4>
+						<div class="grid grid-3 mt-2">
+							<div>
+								<strong>WebSocket</strong>
+								<p>Protocole de communication</p>
+							</div>
+							<div>
+								<strong>Service</strong>
+								<p>Logique métier serveur</p>
+							</div>
+							<div>
+								<strong>Repository</strong>
+								<p>Accès aux données</p>
+							</div>
+						</div>
+					</div>
+
+					<div class="layer layer-db">
+						<h4>🗄️ Couche Persistance</h4>
+						<div class="text-center mt-2">
+							<strong>Base de données PostgreSQL</strong>
+							<p>Stockage des utilisateurs, messages et canaux</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Structure détaillée -->
+		<section class="section section-alt">
+			<div class="container">
+				<div class="section-title">
+					<h2>Structure détaillée des modules</h2>
+					<p>Exploration approfondie de chaque module et de ses responsabilités</p>
+				</div>
+
+				<div class="grid grid-2">
+					<div class="card">
+						<h3>🖥️ Module Client</h3>
+						<div class="code-block">
+							<pre>client/
+├── MainClient.java
+├── controleur/
+│   └── Controleur.java
+├── ihm/
+│   ├── IhmGui.java
+│   ├── frame/
+│   │   ├── affichage/
+│   │   │   └── MateZoneFrame.java
+│   │   └── connexion/
+│   │       └── ConnexionFrame.java
+│   └── panel/
+│       ├── affichage/
+│       └── connexion/
+├── infrastructure/
+│   └── websocket/
+│       └── WebSocketChatAdapter.java
+└── metier/
+    ├── Metier.java
+    └── interfaces/
+        ├── IEnvoyeur.java
+        └── INotifieur.java</pre>
+						</div>
+						<p><strong>Responsabilités :</strong></p>
+						<ul>
+							<li>Gestion de l'interface utilisateur</li>
+							<li>Traitement des événements utilisateur</li>
+							<li>Communication avec le serveur via WebSocket</li>
+							<li>Logique métier côté client</li>
+						</ul>
+					</div>
+
+					<div class="card">
+						<h3>⚙️ Module Serveur</h3>
+						<div class="code-block">
+							<pre>server/
+├── MainServer.java
+├── bd/
+│   ├── ConnexionBD.java
+│   ├── repository/
+│   │   ├── MessageRepository.java
+│   │   └── UtilisateurRepository.java
+│   └── SQL/
+│       └── MateZone.sql
+├── metier/
+│   ├── interfaces/
+│   │   ├── IMessageRepository.java
+│   │   ├── IUtilisateurRepository.java
+│   │   └── IWebSocketMateZone.java
+│   ├── model/
+│   │   ├── Client.java
+│   │   └── Message.java
+│   └── service/
+│       └── ClientService.java
+└── Protocol/
+    └── webSocket/
+        └── WebSocketMateZone.java</pre>
+						</div>
+						<p><strong>Responsabilités :</strong></p>
+						<ul>
+							<li>Gestion des connexions WebSocket</li>
+							<li>Logique métier serveur</li>
+							<li>Persistance des données</li>
+							<li>Authentification et sécurité</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Patterns de conception -->
+		<section class="section">
+			<div class="container">
+				<div class="section-title">
+					<h2>Patterns de conception utilisés</h2>
+					<p>MateZone implémente plusieurs patterns de conception reconnus pour garantir la qualité du code
+					</p>
+				</div>
+
+				<div class="grid grid-3">
+					<div class="card">
+						<span class="card-icon">🏗️</span>
+						<h3>Architecture Hexagonale</h3>
+						<p>Séparation claire entre la logique métier et les adaptateurs externes (base de données,
+							interface utilisateur, réseau).</p>
+						<div class="alert alert-info">
+							<strong>Avantage :</strong> Code facilement testable et maintenable
+						</div>
+					</div>
+
+					<div class="card">
+						<span class="card-icon">🏛️</span>
+						<h3>Pattern MVC</h3>
+						<p>Architecture Modèle-Vue-Contrôleur pour organiser le code côté client avec séparation des
+							responsabilités.</p>
+						<div class="alert alert-info">
+							<strong>Avantage :</strong> Interface utilisateur découplée de la logique
+						</div>
+					</div>
+
+					<div class="card">
+						<span class="card-icon">🗄️</span>
+						<h3>Pattern Repository</h3>
+						<p>Abstraction de l'accès aux données avec des interfaces bien définies pour chaque entité
+							métier.</p>
+						<div class="alert alert-info">
+							<strong>Avantage :</strong> Changement facile de source de données
+						</div>
+					</div>
+
+					<div class="card">
+						<span class="card-icon">🏭</span>
+						<h3>Pattern DTO</h3>
+						<p>Objets de transfert de données pour sérialiser les échanges entre client et serveur via JSON.
+						</p>
+						<div class="alert alert-info">
+							<strong>Avantage :</strong> Communication structurée et type-safe
+						</div>
+					</div>
+
+					<div class="card">
+						<span class="card-icon">🔌</span>
+						<h3>Pattern Adapter</h3>
+						<p>Adaptation des WebSockets aux interfaces métier pour découpler la technologie de
+							communication.</p>
+						<div class="alert alert-info">
+							<strong>Avantage :</strong> Flexibilité technologique
+						</div>
+					</div>
+
+					<div class="card">
+						<span class="card-icon">🎯</span>
+						<h3>Dependency Injection</h3>
+						<p>Injection des dépendances pour réduire le couplage entre les composants du système.</p>
+						<div class="alert alert-info">
+							<strong>Avantage :</strong> Code plus flexible et testable
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Flux de communication -->
+		<section class="section section-alt">
+			<div class="container">
+				<div class="section-title">
+					<h2>Flux de communication</h2>
+					<p>Comment les données circulent entre le client et le serveur</p>
+				</div>
+
+				<div class="grid grid-2">
+					<div class="card">
+						<h3>📤 Envoi de message</h3>
+						<ol style="text-align: left; padding-left: 1rem;">
+							<li>L'utilisateur saisit un message dans l'IHM</li>
+							<li>Le contrôleur capture l'événement</li>
+							<li>Le métier client valide le message</li>
+							<li>L'adaptateur WebSocket envoie le DTO</li>
+							<li>Le serveur WebSocket reçoit le message</li>
+							<li>Le service traite et sauvegarde en base</li>
+							<li>Le message est diffusé aux clients connectés</li>
+						</ol>
+					</div>
+
+					<div class="card">
+						<h3>📥 Réception de message</h3>
+						<ol style="text-align: left; padding-left: 1rem;">
+							<li>Le serveur diffuse un nouveau message</li>
+							<li>L'adaptateur WebSocket client reçoit le DTO</li>
+							<li>Le métier client traite l'événement</li>
+							<li>Le notifieur met à jour l'IHM</li>
+							<li>L'interface affiche le nouveau message</li>
+							<li>L'utilisateur voit la mise à jour temps réel</li>
+						</ol>
+					</div>
+				</div>
+
+				<div class="code-block mt-4">
+					<pre>{
+  "type": "NEW_MESSAGE",
+  "pseudo": "utilisateur",
+  "contenu": "Bonjour MateZone !",
+  "channel": 1,
+  "timestamp": "2024-11-11T10:30:00"
+}</pre>
+				</div>
+			</div>
+		</section>
+
+		<!-- Avantages de l'architecture -->
+		<section class="section">
+			<div class="container">
+				<div class="section-title">
+					<h2>Avantages de cette architecture</h2>
+					<p>Pourquoi MateZone utilise-t-il une architecture hexagonale ?</p>
+				</div>
+
+				<div class="grid grid-2">
+					<div class="card">
+						<span class="card-icon">🧪</span>
+						<h3>Testabilité</h3>
+						<p>La séparation des couches permet de tester chaque composant indépendamment avec des mocks et
+							des stubs.</p>
+						<ul style="text-align: left;">
+							<li>Tests unitaires isolés</li>
+							<li>Tests d'intégration ciblés</li>
+							<li>Mocking des dépendances externes</li>
+						</ul>
+					</div>
+
+					<div class="card">
+						<span class="card-icon">🔧</span>
+						<h3>Maintenabilité</h3>
+						<p>Code organisé et structuré facilitant la maintenance et l'évolution de l'application.</p>
+						<ul style="text-align: left;">
+							<li>Responsabilités bien définies</li>
+							<li>Faible couplage entre modules</li>
+							<li>Documentation claire du code</li>
+						</ul>
+					</div>
+
+					<div class="card">
+						<span class="card-icon">📈</span>
+						<h3>Évolutivité</h3>
+						<p>Architecture flexible permettant l'ajout de nouvelles fonctionnalités sans impacter
+							l'existant.</p>
+						<ul style="text-align: left;">
+							<li>Nouveaux adaptateurs possibles</li>
+							<li>Extension des services métier</li>
+							<li>Changement de technologies facile</li>
+						</ul>
+					</div>
+
+					<div class="card">
+						<span class="card-icon">🔄</span>
+						<h3>Réutilisabilité</h3>
+						<p>Composants modulaires réutilisables dans d'autres contextes ou projets.</p>
+						<ul style="text-align: left;">
+							<li>Logique métier indépendante</li>
+							<li>Interfaces standardisées</li>
+							<li>Composants découplés</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Technologies et choix techniques -->
+		<section class="section section-alt">
+			<div class="container">
+				<div class="section-title">
+					<h2>Choix techniques et justifications</h2>
+					<p>Les technologies sélectionnées et les raisons de ces choix</p>
+				</div>
+
+				<div class="table-container">
+					<table class="table">
+						<thead>
+							<tr>
+								<th>Technologie</th>
+								<th>Utilisation</th>
+								<th>Justification</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><strong>Java WebSocket API</strong></td>
+								<td>Communication temps réel</td>
+								<td>Standard Java, performance optimale, support natif du protocole WebSocket</td>
+							</tr>
+							<tr>
+								<td><strong>Java Swing</strong></td>
+								<td>Interface utilisateur</td>
+								<td>Interface native, riche en composants, intégration parfaite avec Java</td>
+							</tr>
+							<tr>
+								<td><strong>MySQL</strong></td>
+								<td>Base de données</td>
+								<td>Fiabilité éprouvée, performance, support des transactions ACID</td>
+							</tr>
+							<tr>
+								<td><strong>Gson</strong></td>
+								<td>Sérialisation JSON</td>
+								<td>Simple d'utilisation, performance, support des types génériques</td>
+							</tr>
+							<tr>
+								<td><strong>Architecture hexagonale</strong></td>
+								<td>Structure du code</td>
+								<td>Maintenabilité, testabilité, séparation des responsabilités</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</section>
+	</main>
+
+	<!-- Footer -->
+	<footer class="footer">
+		<div class="container">
+			<div class="footer-content">
+				<div class="footer-section">
+					<h3>MateZone</h3>
+					<p>Application de messagerie instantanée développée en Java avec une architecture moderne et
+						sécurisée.</p>
+				</div>
+
+				<div class="footer-section">
+					<h3>Navigation</h3>
+					<p><a href="index.html">Accueil</a></p>
+					<p><a href="architecture.html">Architecture</a></p>
+					<p><a href="database.html">Base de données</a></p>
+					<p><a href="guide.html">Guide d'utilisation</a></p>
+				</div>
+
+				<div class="footer-section">
+					<h3>Ressources</h3>
+					<p><a href="documentation.html">Documentation</a></p>
+					<p><a href="../docs/index.html" target="_blank">Javadoc</a></p>
+					<p><a href="https://github.com/Joshua-Hermilly/MateZone" target="_blank">Code source</a></p>
+				</div>
+
+				<div class="footer-section">
+					<h3>Contact</h3>
+					<p><a href="contact.html">Nous contacter</a></p>
+					<p><a href="https://github.com/Joshua-Hermilly" target="_blank">GitHub</a></p>
+				</div>
+			</div>
+
+			<div class="footer-bottom">
+				<p>&copy; 2024 MateZone. Tous droits réservés.</p>
+			</div>
+		</div>
+	</footer>
+
+	<script src="js/script.js"></script>
+</body>
+
+</html>

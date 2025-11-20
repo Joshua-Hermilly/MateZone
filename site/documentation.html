@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Documentation - MateZone</title>
+	<meta name="description" content="Documentation complète de MateZone incluant la Javadoc et les guides techniques.">
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="icon"
+		href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+</head>
+
+<body>
+	<!-- Navigation -->
+	<nav class="navbar">
+		<div class="nav-container">
+			<a href="index.html" class="logo">MateZone</a>
+			<ul class="nav-menu">
+				<li><a href="index.html" class="nav-link">Accueil</a></li>
+				<li><a href="architecture.html" class="nav-link">Architecture</a></li>
+				<li><a href="database.html" class="nav-link">Base de données</a></li>
+				<li><a href="protocol.html" class="nav-link">Protocole</a></li>
+				<li><a href="guide.html" class="nav-link">Guide d'utilisation</a></li>
+				<li><a href="documentation.html" class="nav-link active">Documentation</a></li>
+				<li><a href="contact.html" class="nav-link">Contact</a></li>
+			</ul>
+			<div class="hamburger">
+				<span></span>
+				<span></span>
+				<span></span>
+			</div>
+		</div>
+	</nav>
+
+	<main>
+		<!-- Breadcrumbs -->
+		<section class="breadcrumbs">
+			<div class="container">
+				<ol>
+					<li><a href="index.html">Accueil</a></li>
+					<li>Documentation</li>
+				</ol>
+			</div>
+		</section>
+
+		<!-- Header -->
+		<section class="hero">
+			<div class="container">
+				<div class="hero-content">
+					<h1>Documentation MateZone</h1>
+					<p>Documentation technique complète pour développeurs et administrateurs système.</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- Vue d'ensemble -->
+		<section class="section">
+			<div class="container">
+				<div class="section-title">
+					<h2>📚 Ressources documentaires</h2>
+					<p>Toute la documentation nécessaire pour comprendre, utiliser et étendre MateZone</p>
+				</div>
+
+				<div class="grid grid-3">
+					<div class="card">
+						<span class="card-icon">📖</span>
+						<h3>Javadoc API</h3>
+						<p>Documentation complète du code source généré automatiquement avec toutes les classes,
+							méthodes et interfaces.</p>
+						<a href="../docs/index.html" class="btn btn-primary mt-2" target="_blank">Consulter la
+							Javadoc</a>
+					</div>
+
+					<div class="card">
+						<span class="card-icon">🏗️</span>
+						<h3>Guide architectural</h3>
+						<p>Comprenez l'architecture hexagonale de MateZone et les patterns utilisés pour une maintenance
+							efficace.</p>
+						<a href="architecture.html" class="btn btn-primary mt-2">Voir l'architecture</a>
+					</div>
+
+					<div class="card">
+						<span class="card-icon">🗄️</span>
+						<h3>Documentation BDD</h3>
+						<p>Structure complète de la base de données MySQL avec schémas, relations et exemples de
+							requêtes.</p>
+						<a href="database.html" class="btn btn-primary mt-2">Base de données</a>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- API Documentation -->
+		<section class="section section-alt">
+			<div class="container">
+				<div class="section-title">
+					<h2>🔌 Documentation de l'API</h2>
+					<p>Interfaces et classes principales de MateZone</p>
+				</div>
+
+				<div class="grid grid-2">
+					<div class="card">
+						<h3>📦 Packages principaux</h3>
+						<div class="table-container">
+							<table class="table">
+								<thead>
+									<tr>
+										<th>Package</th>
+										<th>Description</th>
+										<th>Javadoc</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td><strong>client</strong></td>
+										<td>Application cliente MVC</td>
+										<td><a href="../docs/client/package-summary.html" target="_blank">📖</a></td>
+									</tr>
+									<tr>
+										<td><strong>client.controleur</strong></td>
+										<td>Contrôleurs de l'interface</td>
+										<td><a href="../docs/client/controleur/package-summary.html"
+												target="_blank">📖</a></td>
+									</tr>
+									<tr>
+										<td><strong>client.ihm</strong></td>
+										<td>Interface utilisateur Swing</td>
+										<td><a href="../docs/client/ihm/package-summary.html" target="_blank">📖</a>
+										</td>
+									</tr>
+									<tr>
+										<td><strong>client.metier</strong></td>
+										<td>Logique métier client</td>
+										<td><a href="../docs/client/metier/package-summary.html" target="_blank">📖</a>
+										</td>
+									</tr>
+									<tr>
+										<td><strong>server</strong></td>
+										<td>Serveur WebSocket</td>
+										<td><a href="../docs/server/package-summary.html" target="_blank">📖</a></td>
+									</tr>
+									<tr>
+										<td><strong>server.metier</strong></td>
+										<td>Services métier serveur</td>
+										<td><a href="../docs/server/metier/service/package-summary.html"
+												target="_blank">📖</a></td>
+									</tr>
+									<tr>
+										<td><strong>server.bd</strong></td>
+										<td>Accès aux données</td>
+										<td><a href="../docs/server/bd/package-summary.html" target="_blank">📖</a></td>
+									</tr>
+									<tr>
+										<td><strong>common</strong></td>
+										<td>Éléments partagés</td>
+										<td><a href="../docs/common/dto/package-summary.html" target="_blank">📖</a>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+
+					<div class="card">
+						<h3>🔑 Classes principales</h3>
+						<div class="table-container">
+							<table class="table">
+								<thead>
+									<tr>
+										<th>Classe</th>
+										<th>Responsabilité</th>
+										<th>Documentation</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td><strong>MainClient</strong></td>
+										<td>Point d'entrée client</td>
+										<td><a href="../docs/client/MainClient.html" target="_blank">📖</a></td>
+									</tr>
+									<tr>
+										<td><strong>MainServer</strong></td>
+										<td>Point d'entrée serveur</td>
+										<td><a href="../docs/server/MainServer.html" target="_blank">📖</a></td>
+									</tr>
+									<tr>
+										<td><strong>Controleur</strong></td>
+										<td>Contrôleur principal client</td>
+										<td><a href="../docs/client/controleur/Controleur.html" target="_blank">📖</a>
+										</td>
+									</tr>
+									<tr>
+										<td><strong>WebSocketMateZone</strong></td>
+										<td>Serveur WebSocket</td>
+										<td><a href="../docs/server/Protocol/webSocket/WebSocketMateZone.html"
+												target="_blank">📖</a></td>
+									</tr>
+									<tr>
+										<td><strong>ConnexionBD</strong></td>
+										<td>Connexion base de données</td>
+										<td><a href="../docs/server/bd/ConnexionBD.html" target="_blank">📖</a></td>
+									</tr>
+									<tr>
+										<td><strong>ChatEventDTO</strong></td>
+										<td>Objet de transfert messages</td>
+										<td><a href="../docs/common/dto/ChatEventDTO.html" target="_blank">📖</a></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+
+				<div class="alert alert-info mt-4">
+					<strong>Navigation :</strong> La Javadoc inclut un système de navigation complet avec index,
+					recherche et arbre des classes.
+					Utilisez la fonction de recherche pour trouver rapidement une classe ou méthode spécifique.
+				</div>
+			</div>
+		</section>
+
+		<!-- Protocole de communication -->
+		<section class="section">
+			<div class="container">
+				<div class="section-title">
+					<h2>📡 Protocole de communication</h2>
+					<p>Format des messages échangés entre client et serveur</p>
+				</div>
+
+				<div class="card mb-4">
+					<h3>📋 Types d'événements</h3>
+					<p>Énumération des différents types de messages supportés par le protocole WebSocket :</p>
+
+					<div class="table-container">
+						<table class="table">
+							<thead>
+								<tr>
+									<th>Type</th>
+									<th>Direction</th>
+									<th>Description</th>
+									<th>Exemple d'usage</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><strong>LOGIN</strong></td>
+									<td>Client → Serveur</td>
+									<td>Demande d'authentification</td>
+									<td>Connexion utilisateur</td>
+								</tr>
+								<tr>
+									<td><strong>SIGNUP</strong></td>
+									<td>Client → Serveur</td>
+									<td>Demande d'inscription</td>
+									<td>Création nouveau compte</td>
+								</tr>
+								<tr>
+									<td><strong>NEW_MESSAGE</strong></td>
+									<td>Bidirectionnel</td>
+									<td>Envoi/réception de message</td>
+									<td>Message de chat</td>
+								</tr>
+								<tr>
+									<td><strong>NEW_CHANNEL</strong></td>
+									<td>Client → Serveur</td>
+									<td>Création d'un canal</td>
+									<td>Nouveau canal de discussion</td>
+								</tr>
+								<tr>
+									<td><strong>JOIN_CHANNEL</strong></td>
+									<td>Client → Serveur</td>
+									<td>Rejoindre un canal</td>
+									<td>Adhésion à un canal</td>
+								</tr>
+								<tr>
+									<td><strong>USER_CONNECTED</strong></td>
+									<td>Serveur → Client</td>
+									<td>Notification de connexion</td>
+									<td>Utilisateur en ligne</td>
+								</tr>
+								<tr>
+									<td><strong>USER_DISCONNECTED</strong></td>
+									<td>Serveur → Client</td>
+									<td>Notification de déconnexion</td>
+									<td>Utilisateur hors ligne</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+				<div class="grid grid-2">
+					<div class="card">
+						<h3>📨 Structure des messages</h3>
+						<p>Format JSON standard pour tous les échanges :</p>
+
+						<div class="code-block">
+							<pre>{
+  "type": "NEW_MESSAGE",
+  "pseudo": "nom_utilisateur",
+  "contenu": "Contenu du message",
+  "channel": 1,
+  "timestamp": "2024-11-11T10:30:00.000Z"
+}</pre>
+						</div>
+
+						<h4>Champs obligatoires :</h4>
+						<ul style="text-align: left;">
+							<li><strong>type</strong> : Type d'événement (enum)</li>
+							<li><strong>timestamp</strong> : Horodatage ISO 8601</li>
+						</ul>
+
+						<h4>Champs optionnels :</h4>
+						<ul style="text-align: left;">
+							<li><strong>pseudo</strong> : Nom d'utilisateur</li>
+							<li><strong>contenu</strong> : Contenu textuel</li>
+							<li><strong>channel</strong> : ID du canal</li>
+							<li><strong>metadata</strong> : Données additionnelles</li>
+						</ul>
+					</div>
+
+					<div class="card">
+						<h3>🔒 Authentification</h3>
+						<p>Processus de connexion sécurisé :</p>
+
+						<h4>1. Demande de connexion</h4>
+						<div class="code-block">
+							<pre>{
+  "type": "LOGIN",
+  "pseudo": "utilisateur",
+  "motDePasse": "hash_password",
+  "timestamp": "2024-11-11T10:30:00.000Z"
+}</pre>
+						</div>
+
+						<h4>2. Réponse du serveur</h4>
+						<div class="code-block">
+							<pre>// Succès
+{
+  "type": "LOGIN_SUCCESS",
+  "pseudo": "utilisateur",
+  "sessionId": "abc123",
+  "timestamp": "2024-11-11T10:30:01.000Z"
+}
+
+// Échec
+{
+  "type": "LOGIN_FAILED",
+  "error": "Identifiants incorrects",
+  "timestamp": "2024-11-11T10:30:01.000Z"
+}</pre>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Exemples de code -->
+		<section class="section section-alt">
+			<div class="container">
+				<div class="section-title">
+					<h2>💻 Exemples de code</h2>
+					<p>Extraits de code illustrant les fonctionnalités principales</p>
+				</div>
+
+				<div class="grid grid-2">
+					<div class="card">
+						<h3>📤 Envoi de message côté client</h3>
+						<div class="code-block">
+							<pre>public class WebSocketChatAdapter implements IEnvoyeur {
+    private WebSocketContainer container;
+    private Session session;
+    
+    @Override
+    public void envoyerMessage(String contenu, int canalId) {
+        ChatEventDTO event = new ChatEventDTO();
+        event.setType(EventEnum.NEW_MESSAGE);
+        event.setContenu(contenu);
+        event.setChannel(canalId);
+        event.setTimestamp(LocalDateTime.now());
+        
+        String json = gson.toJson(event);
+        
+        try {
+            session.getBasicRemote().sendText(json);
+        } catch (IOException e) {
+            logger.error("Erreur envoi message", e);
+        }
+    }
+}</pre>
+						</div>
+					</div>
+
+					<div class="card">
+						<h3>📥 Réception côté serveur</h3>
+						<div class="code-block">
+							<pre>@ServerEndpoint("/websocket")
+public class WebSocketMateZone {
+    
+    @OnMessage
+    public void onMessage(String message, Session session) {
+        ChatEventDTO event = gson.fromJson(message, ChatEventDTO.class);
+        
+        switch (event.getType()) {
+            case NEW_MESSAGE:
+                traiterNouveauMessage(event, session);
+                break;
+            case LOGIN:
+                traiterConnexion(event, session);
+                break;
+            default:
+                logger.warn("Type d'événement non géré: " + event.getType());
+        }
+    }
+    
+    private void traiterNouveauMessage(ChatEventDTO event, Session session) {
+        // Sauvegarder en base
+        messageRepository.save(event);
+        
+        // Diffuser aux clients connectés
+        diffuserMessage(event);
+    }
+}</pre>
+						</div>
+					</div>
+
+					<div class="card">
+						<h3>🗄️ Accès aux données</h3>
+						<div class="code-block">
+							<pre>public class MessageRepository implements IMessageRepository {
+    private ConnexionBD connexionBD;
+    
+    @Override
+    public void sauvegarderMessage(Message message) {
+        String sql = "INSERT INTO messages (auteur_id, canal_id, contenu, timestamp) VALUES (?, ?, ?, ?)";
+        
+        try (Connection conn = connexionBD.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setInt(1, message.getAuteurId());
+            stmt.setInt(2, message.getCanalId());
+            stmt.setString(3, message.getContenu());
+            stmt.setTimestamp(4, Timestamp.valueOf(message.getTimestamp()));
+            
+            stmt.executeUpdate();
+            
+        } catch (SQLException e) {
+            logger.error("Erreur sauvegarde message", e);
+            throw new RepositoryException("Impossible de sauvegarder le message", e);
+        }
+    }
+}</pre>
+						</div>
+					</div>
+
+					<div class="card">
+						<h3>🖥️ Interface utilisateur</h3>
+						<div class="code-block">
+							<pre>public class MateZoneFrame extends JFrame {
+    private JTextArea messageArea;
+    private JTextField inputField;
+    private JList<String> channelList;
+    private Controleur controleur;
+    
+    public void afficherNouveauMessage(Message message) {
+        SwingUtilities.invokeLater(() -> {
+            String formatted = String.format("[%s] %s: %s%n",
+                message.getTimestamp().format(DateTimeFormatter.ofPattern("HH:mm")),
+                message.getAuteur(),
+                message.getContenu()
+            );
+            
+            messageArea.append(formatted);
+            messageArea.setCaretPosition(messageArea.getDocument().getLength());
+        });
+    }
+    
+    private void setupEventHandlers() {
+        inputField.addActionListener(e -> {
+            String text = inputField.getText().trim();
+            if (!text.isEmpty()) {
+                controleur.envoyerMessage(text);
+                inputField.setText("");
+            }
+        });
+    }
+}</pre>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Configuration et déploiement -->
+		<section class="section">
+			<div class="container">
+				<div class="section-title">
+					<h2>⚙️ Configuration et déploiement</h2>
+					<p>Guides techniques pour la mise en production</p>
+				</div>
+
+				<div class="grid grid-3">
+					<div class="card">
+						<h3>🔧 Fichiers de configuration</h3>
+
+						<h4>config.properties</h4>
+						<div class="code-block">
+							<pre># Base de données
+db.url=jdbc:mysql://localhost:3306/matezone
+db.username=${DB_USER}
+db.password=${DB_PASSWORD}
+db.driver=com.mysql.cj.jdbc.Driver
+
+# Serveur
+server.port=8080
+server.host=0.0.0.0
+server.maxConnections=100
+
+# Logging
+log.level=INFO
+log.file=logs/matezone.log</pre>
+						</div>
+
+						<div class="alert alert-warning mt-3">
+							<strong>Variables d'environnement :</strong> Utilisez des variables pour les données
+							sensibles.
+						</div>
+					</div>
+
+					<div class="card">
+						<h3>🐳 Docker</h3>
+
+						<h4>Dockerfile</h4>
+						<div class="code-block">
+							<pre>FROM openjdk:21-jre-slim
+
+WORKDIR /app
+
+COPY bin/ bin/
+COPY lib/ lib/
+COPY config/ config/
+
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-cp", "bin:lib/*", "server.MainServer"]</pre>
+						</div>
+
+						<h4>docker-compose.yml</h4>
+						<div class="code-block">
+							<pre>version: '3.8'
+services:
+  matezone:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_HOST=db
+      - DB_USER=matezone
+      - DB_PASSWORD=password
+    depends_on:
+      - db
+      
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: matezone
+      MYSQL_USER: matezone
+      MYSQL_PASSWORD: password</pre>
+						</div>
+					</div>
+
+					<div class="card">
+						<h3>🚀 Scripts de déploiement</h3>
+
+						<h4>deploy.sh</h4>
+						<div class="code-block">
+							<pre>#!/bin/bash
+set -e
+
+echo "🚀 Déploiement MateZone"
+
+# Arrêt du service existant
+sudo systemctl stop matezone || true
+
+# Sauvegarde
+sudo -u mysql mysqldump matezone > backup_$(date +%Y%m%d_%H%M%S).sql
+
+# Compilation
+./run.sh
+
+# Copie des fichiers
+sudo cp -r bin lib /opt/matezone/
+
+# Redémarrage
+sudo systemctl start matezone
+sudo systemctl status matezone
+
+echo "✅ Déploiement terminé"</pre>
+						</div>
+
+						<h4>Service systemd</h4>
+						<div class="code-block">
+							<pre># /etc/systemd/system/matezone.service
+[Unit]
+Description=MateZone Chat Server
+After=mysql.service
+Requires=mysql.service
+
+[Service]
+Type=simple
+User=matezone
+WorkingDirectory=/opt/matezone
+ExecStart=/usr/bin/java -cp "bin:lib/*" server.MainServer
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target</pre>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Contribution et développement -->
+		<section class="section section-alt">
+			<div class="container">
+				<div class="section-title">
+					<h2>🤝 Contribution au projet</h2>
+					<p>Guide pour les développeurs souhaitant contribuer à MateZone</p>
+				</div>
+
+				<div class="grid grid-2">
+					<div class="card">
+						<h3>📋 Processus de contribution</h3>
+						<ol style="text-align: left;">
+							<li><strong>Fork</strong> du repository sur GitHub</li>
+							<li><strong>Clone</strong> votre fork localement</li>
+							<li><strong>Branche</strong> pour votre fonctionnalité :
+								<code>git checkout -b feature/ma-feature</code></li>
+							<li><strong>Développement</strong> avec tests unitaires</li>
+							<li><strong>Commit</strong> avec messages clairs</li>
+							<li><strong>Push</strong> vers votre fork</li>
+							<li><strong>Pull Request</strong> vers le repository principal</li>
+						</ol>
+
+						<div class="alert alert-info mt-3">
+							<strong>Convention :</strong> Utilisez des messages de commit descriptifs au format "type:
+							description courte".
+						</div>
+					</div>
+
+					<div class="card">
+						<h3>🧪 Tests et qualité</h3>
+						<ul style="text-align: left;">
+							<li><strong>Tests unitaires</strong> obligatoires pour nouvelles fonctionnalités</li>
+							<li><strong>Couverture</strong> minimale de 80%</li>
+							<li><strong>Documentation</strong> Javadoc pour toutes les méthodes publiques</li>
+							<li><strong>Style</strong> respecter les conventions Java</li>
+						</ul>
+
+						<div class="code-block mt-3">
+							<pre># Exécuter les tests
+./gradlew test
+
+# Générer le rapport de couverture
+./gradlew jacocoTestReport
+
+# Vérifier le style de code
+./gradlew checkstyleMain</pre>
+						</div>
+					</div>
+				</div>
+
+				<div class="card mt-4">
+					<h3>📝 Standards de documentation</h3>
+					<div class="grid grid-2">
+						<div>
+							<h4>Javadoc obligatoire pour :</h4>
+							<ul style="text-align: left;">
+								<li>Toutes les classes publiques</li>
+								<li>Toutes les méthodes publiques</li>
+								<li>Tous les champs publics</li>
+								<li>Toutes les interfaces</li>
+							</ul>
+						</div>
+
+						<div>
+							<h4>Exemple de documentation :</h4>
+							<div class="code-block">
+								<pre>/**
+ * Envoie un message à tous les clients connectés au canal spécifié.
+ * 
+ * @param message le message à diffuser
+ * @param canalId l'identifiant du canal cible
+ * @throws IllegalArgumentException si le message est null ou vide
+ * @throws RepositoryException si erreur d'accès aux données
+ * @since 1.0
+ */
+public void diffuserMessage(String message, int canalId) {
+    // Implémentation
+}</pre>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</main>
+
+	<!-- Footer -->
+	<footer class="footer">
+		<div class="container">
+			<div class="footer-content">
+				<div class="footer-section">
+					<h3>MateZone</h3>
+					<p>Documentation complète pour développeurs, utilisateurs et administrateurs système.</p>
+				</div>
+
+				<div class="footer-section">
+					<h3>Navigation</h3>
+					<p><a href="index.html">Accueil</a></p>
+					<p><a href="architecture.html">Architecture</a></p>
+					<p><a href="database.html">Base de données</a></p>
+					<p><a href="guide.html">Guide d'utilisation</a></p>
+				</div>
+
+				<div class="footer-section">
+					<h3>Ressources techniques</h3>
+					<p><a href="../docs/index.html" target="_blank">Javadoc complète</a></p>
+					<p><a href="https://github.com/Joshua-Hermilly/MateZone" target="_blank">Code source</a></p>
+					<p><a href="https://github.com/Joshua-Hermilly/MateZone/releases" target="_blank">Releases</a></p>
+				</div>
+
+				<div class="footer-section">
+					<h3>Support développeur</h3>
+					<p><a href="contact.html">Questions techniques</a></p>
+					<p><a href="https://github.com/Joshua-Hermilly/MateZone/issues" target="_blank">Issues GitHub</a>
+					</p>
+					<p><a href="https://github.com/Joshua-Hermilly/MateZone/pulls" target="_blank">Pull Requests</a></p>
+				</div>
+			</div>
+
+			<div class="footer-bottom">
+				<p>&copy; 2024 MateZone. Documentation sous licence MIT.</p>
+			</div>
+		</div>
+	</footer>
+
+	<script src="js/script.js"></script>
+</body>
+
+</html>

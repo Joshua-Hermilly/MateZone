@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Base de données - MateZone</title>
+	<meta name="description"
+		content="Découvrez la structure de base de données PostgreSQL de MateZone, ses tables et relations.">
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="icon"
+		href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+</head>
+
+<body>
+	<!-- Navigation -->
+	<nav class="navbar">
+		<div class="nav-container">
+			<a href="index.html" class="logo">MateZone</a>
+			<ul class="nav-menu">
+				<li><a href="index.html" class="nav-link">Accueil</a></li>
+				<li><a href="architecture.html" class="nav-link">Architecture</a></li>
+				<li><a href="database.html" class="nav-link active">Base de données</a></li>
+				<li><a href="protocol.html" class="nav-link">Protocole</a></li>
+				<li><a href="guide.html" class="nav-link">Guide d'utilisation</a></li>
+				<li><a href="documentation.html" class="nav-link">Documentation</a></li>
+				<li><a href="contact.html" class="nav-link">Contact</a></li>
+			</ul>
+			<div class="hamburger">
+				<span></span>
+				<span></span>
+				<span></span>
+			</div>
+		</div>
+	</nav>
+
+	<main>
+		<!-- Breadcrumbs -->
+		<section class="breadcrumbs">
+			<div class="container">
+				<ol>
+					<li><a href="index.html">Accueil</a></li>
+					<li>Base de données</li>
+				</ol>
+			</div>
+		</section>
+
+		<!-- Header -->
+		<section class="hero">
+			<div class="container">
+				<div class="hero-content">
+					<h1>Base de données MateZone</h1>
+					<p>Découvrez la structure de données PostgreSQL qui alimente MateZone, conçue pour la performance et
+						la fiabilité.</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- Vue d'ensemble -->
+		<section class="section">
+			<div class="container">
+				<div class="section-title">
+					<h2>Vue d'ensemble de la base de données</h2>
+					<p>MateZone utilise MySQL pour stocker de manière fiable les utilisateurs, messages et informations
+						de session</p>
+				</div>
+
+				<div class="grid grid-3">
+					<div class="card">
+						<span class="card-icon">👥</span>
+						<h3>Gestion des utilisateurs</h3>
+						<p>Stockage sécurisé des comptes utilisateur avec authentification et profils personnalisables.
+						</p>
+						<ul style="text-align: left;">
+							<li>Identifiants uniques</li>
+							<li>Mots de passe sécurisés</li>
+							<li>Informations de profil</li>
+							<li>Statuts de connexion</li>
+						</ul>
+					</div>
+
+					<div class="card">
+						<span class="card-icon">💬</span>
+						<h3>Historique des messages</h3>
+						<p>Conservation complète de l'historique des conversations avec métadonnées détaillées.</p>
+						<ul style="text-align: left;">
+							<li>Messages horodatés</li>
+							<li>Association aux canaux</li>
+							<li>Gestion des auteurs</li>
+							<li>Persistance des échanges</li>
+						</ul>
+					</div>
+
+					<div class="card">
+						<span class="card-icon">🏷️</span>
+						<h3>Organisation par canaux</h3>
+						<p>Structure flexible permettant l'organisation des conversations en différents espaces
+							thématiques.</p>
+						<ul style="text-align: left;">
+							<li>Canaux multiples</li>
+							<li>Permissions d'accès</li>
+							<li>Métadonnées de canal</li>
+							<li>Gestion des membres</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Configuration de la base de données -->
+		<section class="section section-alt">
+			<div class="container">
+				<div class="section-title">
+					<h2>Configuration et connexion</h2>
+					<p>Comment configurer et se connecter à la base de données MySQL</p>
+				</div>
+
+				<div class="grid grid-2">
+					<div class="card">
+						<h3>⚙️ Configuration requise</h3>
+						<div class="table-container">
+							<table class="table">
+								<tbody>
+									<tr>
+										<td><strong>SGBD</strong></td>
+										<td>MySQL 8.0+</td>
+									</tr>
+									<tr>
+										<td><strong>Encodage</strong></td>
+										<td>UTF-8 (utf8mb4)</td>
+									</tr>
+									<tr>
+										<td><strong>Moteur</strong></td>
+										<td>InnoDB</td>
+									</tr>
+									<tr>
+										<td><strong>Port par défaut</strong></td>
+										<td>3306</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+
+						<div class="alert alert-warning mt-3">
+							<strong>Sécurité :</strong> Le fichier config.properties contient les identifiants de base
+							de données et ne doit jamais être versionné.
+						</div>
+					</div>
+
+					<div class="card">
+						<h3>🔧 Fichier de configuration</h3>
+						<p>Structure du fichier <code>config.properties</code> :</p>
+						<div class="code-block">
+							<pre># Configuration de la base de données
+db.url=jdbc:mysql://localhost:3306/matezone
+db.username=votre_username
+db.password=votre_password
+
+# Paramètres de connexion
+db.maxConnections=10
+db.connectionTimeout=30000</pre>
+						</div>
+
+						<div class="alert alert-info mt-3">
+							<strong>Note :</strong> Copiez config.properties.example vers config.properties et modifiez
+							avec vos paramètres.
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Structure des tables -->
+		<section class="section">
+			<div class="container">
+				<div class="section-title">
+					<h2>Structure des tables</h2>
+					<p>Détail des tables principales de la base de données MateZone</p>
+				</div>
+
+				<div class="card mb-4">
+					<h3>👤 Table Utilisateurs</h3>
+					<p>Stockage des comptes utilisateur avec leurs informations d'authentification et de profil.</p>
+
+					<div class="table-container">
+						<table class="table">
+							<thead>
+								<tr>
+									<th>Champ</th>
+									<th>Type</th>
+									<th>Contraintes</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><strong>id</strong></td>
+									<td>INT</td>
+									<td>PRIMARY KEY, AUTO_INCREMENT</td>
+									<td>Identifiant unique de l'utilisateur</td>
+								</tr>
+								<tr>
+									<td><strong>pseudo</strong></td>
+									<td>VARCHAR(50)</td>
+									<td>NOT NULL, UNIQUE</td>
+									<td>Nom d'utilisateur pour la connexion</td>
+								</tr>
+								<tr>
+									<td><strong>mot_de_passe</strong></td>
+									<td>VARCHAR(255)</td>
+									<td>NOT NULL</td>
+									<td>Mot de passe (hashé)</td>
+								</tr>
+								<tr>
+									<td><strong>email</strong></td>
+									<td>VARCHAR(100)</td>
+									<td>UNIQUE</td>
+									<td>Adresse email (optionnel)</td>
+								</tr>
+								<tr>
+									<td><strong>date_creation</strong></td>
+									<td>TIMESTAMP</td>
+									<td>DEFAULT CURRENT_TIMESTAMP</td>
+									<td>Date de création du compte</td>
+								</tr>
+								<tr>
+									<td><strong>derniere_connexion</strong></td>
+									<td>TIMESTAMP</td>
+									<td>NULL</td>
+									<td>Date de dernière connexion</td>
+								</tr>
+								<tr>
+									<td><strong>statut</strong></td>
+									<td>ENUM</td>
+									<td>'actif', 'inactif', 'suspendu'</td>
+									<td>Statut du compte utilisateur</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<div class="code-block mt-3">
+						<pre>CREATE TABLE utilisateurs (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    pseudo VARCHAR(50) NOT NULL UNIQUE,
+    mot_de_passe VARCHAR(255) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    derniere_connexion TIMESTAMP NULL,
+    statut ENUM('actif', 'inactif', 'suspendu') DEFAULT 'actif'
+);</pre>
+					</div>
+				</div>
+
+				<div class="card mb-4">
+					<h3>💬 Table Messages</h3>
+					<p>Stockage de tous les messages échangés dans l'application avec leurs métadonnées.</p>
+
+					<div class="table-container">
+						<table class="table">
+							<thead>
+								<tr>
+									<th>Champ</th>
+									<th>Type</th>
+									<th>Contraintes</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><strong>id</strong></td>
+									<td>INT</td>
+									<td>PRIMARY KEY, AUTO_INCREMENT</td>
+									<td>Identifiant unique du message</td>
+								</tr>
+								<tr>
+									<td><strong>auteur_id</strong></td>
+									<td>INT</td>
+									<td>FOREIGN KEY, NOT NULL</td>
+									<td>Référence vers l'utilisateur auteur</td>
+								</tr>
+								<tr>
+									<td><strong>canal_id</strong></td>
+									<td>INT</td>
+									<td>FOREIGN KEY, NOT NULL</td>
+									<td>Référence vers le canal de discussion</td>
+								</tr>
+								<tr>
+									<td><strong>contenu</strong></td>
+									<td>TEXT</td>
+									<td>NOT NULL</td>
+									<td>Contenu textuel du message</td>
+								</tr>
+								<tr>
+									<td><strong>timestamp</strong></td>
+									<td>TIMESTAMP</td>
+									<td>DEFAULT CURRENT_TIMESTAMP</td>
+									<td>Date et heure d'envoi du message</td>
+								</tr>
+								<tr>
+									<td><strong>type_message</strong></td>
+									<td>ENUM</td>
+									<td>'text', 'system', 'notification'</td>
+									<td>Type de message</td>
+								</tr>
+								<tr>
+									<td><strong>modifie</strong></td>
+									<td>BOOLEAN</td>
+									<td>DEFAULT FALSE</td>
+									<td>Indique si le message a été modifié</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<div class="code-block mt-3">
+						<pre>CREATE TABLE messages (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    auteur_id INT NOT NULL,
+    canal_id INT NOT NULL,
+    contenu TEXT NOT NULL,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    type_message ENUM('text', 'system', 'notification') DEFAULT 'text',
+    modifie BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (auteur_id) REFERENCES utilisateurs(id) ON DELETE CASCADE,
+    FOREIGN KEY (canal_id) REFERENCES canaux(id) ON DELETE CASCADE
+);</pre>
+					</div>
+				</div>
+
+				<div class="card mb-4">
+					<h3>🏷️ Table Canaux</h3>
+					<p>Organisation des discussions en canaux thématiques avec gestion des permissions.</p>
+
+					<div class="table-container">
+						<table class="table">
+							<thead>
+								<tr>
+									<th>Champ</th>
+									<th>Type</th>
+									<th>Contraintes</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><strong>id</strong></td>
+									<td>INT</td>
+									<td>PRIMARY KEY, AUTO_INCREMENT</td>
+									<td>Identifiant unique du canal</td>
+								</tr>
+								<tr>
+									<td><strong>nom</strong></td>
+									<td>VARCHAR(100)</td>
+									<td>NOT NULL, UNIQUE</td>
+									<td>Nom du canal de discussion</td>
+								</tr>
+								<tr>
+									<td><strong>description</strong></td>
+									<td>TEXT</td>
+									<td>NULL</td>
+									<td>Description du canal</td>
+								</tr>
+								<tr>
+									<td><strong>createur_id</strong></td>
+									<td>INT</td>
+									<td>FOREIGN KEY, NOT NULL</td>
+									<td>Référence vers l'utilisateur créateur</td>
+								</tr>
+								<tr>
+									<td><strong>date_creation</strong></td>
+									<td>TIMESTAMP</td>
+									<td>DEFAULT CURRENT_TIMESTAMP</td>
+									<td>Date de création du canal</td>
+								</tr>
+								<tr>
+									<td><strong>type_canal</strong></td>
+									<td>ENUM</td>
+									<td>'public', 'prive', 'direct'</td>
+									<td>Type de canal</td>
+								</tr>
+								<tr>
+									<td><strong>actif</strong></td>
+									<td>BOOLEAN</td>
+									<td>DEFAULT TRUE</td>
+									<td>Indique si le canal est actif</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<div class="code-block mt-3">
+						<pre>CREATE TABLE canaux (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nom VARCHAR(100) NOT NULL UNIQUE,
+    description TEXT,
+    createur_id INT NOT NULL,
+    date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    type_canal ENUM('public', 'prive', 'direct') DEFAULT 'public',
+    actif BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY (createur_id) REFERENCES utilisateurs(id) ON DELETE CASCADE
+);</pre>
+					</div>
+				</div>
+
+				<div class="card">
+					<h3>🔗 Table Membres_Canaux</h3>
+					<p>Table de liaison pour gérer l'appartenance des utilisateurs aux canaux.</p>
+
+					<div class="table-container">
+						<table class="table">
+							<thead>
+								<tr>
+									<th>Champ</th>
+									<th>Type</th>
+									<th>Contraintes</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><strong>utilisateur_id</strong></td>
+									<td>INT</td>
+									<td>FOREIGN KEY, NOT NULL</td>
+									<td>Référence vers l'utilisateur</td>
+								</tr>
+								<tr>
+									<td><strong>canal_id</strong></td>
+									<td>INT</td>
+									<td>FOREIGN KEY, NOT NULL</td>
+									<td>Référence vers le canal</td>
+								</tr>
+								<tr>
+									<td><strong>date_adhesion</strong></td>
+									<td>TIMESTAMP</td>
+									<td>DEFAULT CURRENT_TIMESTAMP</td>
+									<td>Date d'adhésion au canal</td>
+								</tr>
+								<tr>
+									<td><strong>role</strong></td>
+									<td>ENUM</td>
+									<td>'membre', 'moderateur', 'admin'</td>
+									<td>Rôle de l'utilisateur dans le canal</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<div class="code-block mt-3">
+						<pre>CREATE TABLE membres_canaux (
+    utilisateur_id INT NOT NULL,
+    canal_id INT NOT NULL,
+    date_adhesion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    role ENUM('membre', 'moderateur', 'admin') DEFAULT 'membre',
+    PRIMARY KEY (utilisateur_id, canal_id),
+    FOREIGN KEY (utilisateur_id) REFERENCES utilisateurs(id) ON DELETE CASCADE,
+    FOREIGN KEY (canal_id) REFERENCES canaux(id) ON DELETE CASCADE
+);</pre>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Diagramme relationnel -->
+		<section class="section section-alt">
+			<div class="container">
+				<div class="section-title">
+					<h2>Diagramme relationnel</h2>
+					<p>Visualisation des relations entre les tables de la base de données</p>
+				</div>
+
+				<div class="architecture-diagram">
+					<div class="grid grid-2">
+						<div class="layer layer-db">
+							<h4>👤 UTILISATEURS</h4>
+							<p>id (PK), pseudo, mot_de_passe, email, date_creation, derniere_connexion, statut</p>
+						</div>
+
+						<div class="layer layer-server">
+							<h4>🏷️ CANAUX</h4>
+							<p>id (PK), nom, description, createur_id (FK), date_creation, type_canal, actif</p>
+						</div>
+					</div>
+
+					<div style="text-align: center; margin: 1rem 0; font-size: 2rem;">↕️</div>
+
+					<div class="layer layer-common">
+						<h4>🔗 MEMBRES_CANAUX</h4>
+						<p>utilisateur_id (FK), canal_id (FK), date_adhesion, role</p>
+					</div>
+
+					<div style="text-align: center; margin: 1rem 0; font-size: 2rem;">↕️</div>
+
+					<div class="layer layer-client">
+						<h4>💬 MESSAGES</h4>
+						<p>id (PK), auteur_id (FK), canal_id (FK), contenu, timestamp, type_message, modifie</p>
+					</div>
+				</div>
+
+				<div class="alert alert-info mt-4">
+					<strong>Relations clés :</strong>
+					<ul style="text-align: left; margin-top: 1rem;">
+						<li>Un utilisateur peut créer plusieurs canaux (1:N)</li>
+						<li>Un utilisateur peut appartenir à plusieurs canaux (N:M via membres_canaux)</li>
+						<li>Un canal contient plusieurs messages (1:N)</li>
+						<li>Un utilisateur peut écrire plusieurs messages (1:N)</li>
+					</ul>
+				</div>
+			</div>
+		</section>
+
+		<!-- Opérations CRUD -->
+		<section class="section">
+			<div class="container">
+				<div class="section-title">
+					<h2>Opérations principales</h2>
+					<p>Exemples de requêtes SQL typiques utilisées par MateZone</p>
+				</div>
+
+				<div class="grid grid-2">
+					<div class="card">
+						<h3>👤 Gestion des utilisateurs</h3>
+
+						<h4>Inscription d'un nouvel utilisateur :</h4>
+						<div class="code-block">
+							<pre>INSERT INTO utilisateurs (pseudo, mot_de_passe, email) 
+VALUES ('nouveau_user', 'hash_password', 'user@example.com');</pre>
+						</div>
+
+						<h4>Authentification :</h4>
+						<div class="code-block">
+							<pre>SELECT id, pseudo, statut 
+FROM utilisateurs 
+WHERE pseudo = ? AND mot_de_passe = ?;</pre>
+						</div>
+
+						<h4>Mise à jour de la dernière connexion :</h4>
+						<div class="code-block">
+							<pre>UPDATE utilisateurs 
+SET derniere_connexion = CURRENT_TIMESTAMP 
+WHERE id = ?;</pre>
+						</div>
+					</div>
+
+					<div class="card">
+						<h3>💬 Gestion des messages</h3>
+
+						<h4>Envoi d'un nouveau message :</h4>
+						<div class="code-block">
+							<pre>INSERT INTO messages (auteur_id, canal_id, contenu) 
+VALUES (?, ?, ?);</pre>
+						</div>
+
+						<h4>Récupération de l'historique :</h4>
+						<div class="code-block">
+							<pre>SELECT m.contenu, m.timestamp, u.pseudo 
+FROM messages m 
+JOIN utilisateurs u ON m.auteur_id = u.id 
+WHERE m.canal_id = ? 
+ORDER BY m.timestamp DESC 
+LIMIT 50;</pre>
+						</div>
+
+						<h4>Recherche de messages :</h4>
+						<div class="code-block">
+							<pre>SELECT m.*, u.pseudo 
+FROM messages m 
+JOIN utilisateurs u ON m.auteur_id = u.id 
+WHERE m.contenu LIKE ? 
+AND m.canal_id = ?;</pre>
+						</div>
+					</div>
+
+					<div class="card">
+						<h3>🏷️ Gestion des canaux</h3>
+
+						<h4>Création d'un canal :</h4>
+						<div class="code-block">
+							<pre>INSERT INTO canaux (nom, description, createur_id, type_canal) 
+VALUES (?, ?, ?, ?);</pre>
+						</div>
+
+						<h4>Liste des canaux d'un utilisateur :</h4>
+						<div class="code-block">
+							<pre>SELECT c.id, c.nom, c.description, mc.role 
+FROM canaux c 
+JOIN membres_canaux mc ON c.id = mc.canal_id 
+WHERE mc.utilisateur_id = ? AND c.actif = TRUE;</pre>
+						</div>
+
+						<h4>Ajout d'un membre au canal :</h4>
+						<div class="code-block">
+							<pre>INSERT INTO membres_canaux (utilisateur_id, canal_id, role) 
+VALUES (?, ?, 'membre');</pre>
+						</div>
+					</div>
+
+					<div class="card">
+						<h3>📊 Statistiques et rapports</h3>
+
+						<h4>Nombre de messages par canal :</h4>
+						<div class="code-block">
+							<pre>SELECT c.nom, COUNT(m.id) as nb_messages 
+FROM canaux c 
+LEFT JOIN messages m ON c.id = m.canal_id 
+GROUP BY c.id, c.nom;</pre>
+						</div>
+
+						<h4>Utilisateurs les plus actifs :</h4>
+						<div class="code-block">
+							<pre>SELECT u.pseudo, COUNT(m.id) as nb_messages 
+FROM utilisateurs u 
+JOIN messages m ON u.id = m.auteur_id 
+GROUP BY u.id, u.pseudo 
+ORDER BY nb_messages DESC 
+LIMIT 10;</pre>
+						</div>
+
+						<h4>Activité récente :</h4>
+						<div class="code-block">
+							<pre>SELECT DATE(timestamp) as jour, COUNT(*) as nb_messages 
+FROM messages 
+WHERE timestamp >= DATE_SUB(NOW(), INTERVAL 7 DAY) 
+GROUP BY DATE(timestamp) 
+ORDER BY jour;</pre>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Performance et optimisation -->
+		<section class="section section-alt">
+			<div class="container">
+				<div class="section-title">
+					<h2>Performance et optimisation</h2>
+					<p>Stratégies mises en place pour optimiser les performances de la base de données</p>
+				</div>
+
+				<div class="grid grid-3">
+					<div class="card">
+						<span class="card-icon">⚡</span>
+						<h3>Index optimisés</h3>
+						<ul style="text-align: left;">
+							<li><strong>utilisateurs.pseudo</strong> - Connexion rapide</li>
+							<li><strong>messages.canal_id</strong> - Récupération des messages</li>
+							<li><strong>messages.timestamp</strong> - Tri chronologique</li>
+							<li><strong>membres_canaux(utilisateur_id, canal_id)</strong> - Jointures</li>
+						</ul>
+
+						<div class="code-block mt-3">
+							<pre>CREATE INDEX idx_messages_canal_timestamp 
+ON messages(canal_id, timestamp DESC);
+
+CREATE INDEX idx_utilisateurs_pseudo 
+ON utilisateurs(pseudo);
+
+CREATE INDEX idx_messages_auteur 
+ON messages(auteur_id);</pre>
+						</div>
+					</div>
+
+					<div class="card">
+						<span class="card-icon">🔒</span>
+						<h3>Contraintes d'intégrité</h3>
+						<ul style="text-align: left;">
+							<li><strong>Clés étrangères</strong> - Cohérence référentielle</li>
+							<li><strong>Contraintes UNIQUE</strong> - Pas de doublons</li>
+							<li><strong>Contraintes NOT NULL</strong> - Données obligatoires</li>
+							<li><strong>Contraintes CHECK</strong> - Validation métier</li>
+						</ul>
+
+						<div class="alert alert-info mt-3">
+							<strong>Avantage :</strong> Garantit la cohérence des données au niveau de la base,
+							indépendamment de l'application.
+						</div>
+					</div>
+
+					<div class="card">
+						<span class="card-icon">🧹</span>
+						<h3>Maintenance automatique</h3>
+						<ul style="text-align: left;">
+							<li><strong>CASCADE</strong> - Suppression en cascade</li>
+							<li><strong>Archivage</strong> - Messages anciens</li>
+							<li><strong>Nettoyage</strong> - Sessions expirées</li>
+							<li><strong>Statistiques</strong> - Mise à jour auto</li>
+						</ul>
+
+						<div class="alert alert-success mt-3">
+							<strong>Résultat :</strong> Base de données auto-entretenue avec performance constante.
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</main>
+
+	<!-- Footer -->
+	<footer class="footer">
+		<div class="container">
+			<div class="footer-content">
+				<div class="footer-section">
+					<h3>MateZone</h3>
+					<p>Application de messagerie instantanée développée en Java avec une architecture moderne et
+						sécurisée.</p>
+				</div>
+
+				<div class="footer-section">
+					<h3>Navigation</h3>
+					<p><a href="index.html">Accueil</a></p>
+					<p><a href="architecture.html">Architecture</a></p>
+					<p><a href="database.html">Base de données</a></p>
+					<p><a href="guide.html">Guide d'utilisation</a></p>
+				</div>
+
+				<div class="footer-section">
+					<h3>Ressources</h3>
+					<p><a href="documentation.html">Documentation</a></p>
+					<p><a href="../docs/index.html" target="_blank">Javadoc</a></p>
+					<p><a href="https://github.com/Joshua-Hermilly/MateZone" target="_blank">Code source</a></p>
+				</div>
+
+				<div class="footer-section">
+					<h3>Contact</h3>
+					<p><a href="contact.html">Nous contacter</a></p>
+					<p><a href="https://github.com/Joshua-Hermilly" target="_blank">GitHub</a></p>
+				</div>
+			</div>
+
+			<div class="footer-bottom">
+				<p>&copy; 2024 MateZone. Tous droits réservés.</p>
+			</div>
+		</div>
+	</footer>
+
+	<script src="js/script.js"></script>
+</body>
+
+</html>

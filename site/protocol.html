@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Protocole WebSocket - MateZone</title>
+	<meta name="description"
+		content="Documentation complète du protocole WebSocket de MateZone avec ChatEventDTO et EventEnum.">
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="icon"
+		href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+</head>
+
+<body>
+	<!-- Navigation -->
+	<nav class="navbar">
+		<div class="nav-container">
+			<a href="index.html" class="logo">MateZone</a>
+			<ul class="nav-menu">
+				<li><a href="index.html" class="nav-link">Accueil</a></li>
+				<li><a href="architecture.html" class="nav-link">Architecture</a></li>
+				<li><a href="database.html" class="nav-link">Base de données</a></li>
+				<li><a href="guide.html" class="nav-link">Guide d'utilisation</a></li>
+				<li><a href="documentation.html" class="nav-link">Documentation</a></li>
+				<li><a href="protocol.html" class="nav-link active">Protocole</a></li>
+				<li><a href="contact.html" class="nav-link">Contact</a></li>
+			</ul>
+			<div class="hamburger">
+				<span></span>
+				<span></span>
+				<span></span>
+			</div>
+		</div>
+	</nav>
+
+	<main>
+		<!-- Breadcrumbs -->
+		<section class="breadcrumbs">
+			<div class="container">
+				<ol>
+					<li><a href="index.html">Accueil</a></li>
+					<li>Protocole WebSocket</li>
+				</ol>
+			</div>
+		</section>
+
+		<!-- Header -->
+		<section class="hero">
+			<div class="container">
+				<div class="hero-content">
+					<h1>🔌 Protocole WebSocket MateZone</h1>
+					<p>Documentation technique complète du protocole de communication temps réel entre client et
+						serveur.</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- Vue d'ensemble -->
+		<section class="section">
+			<div class="container">
+				<div class="section-title">
+					<h2>Vue d'ensemble du protocole</h2>
+					<p>MateZone utilise un protocole WebSocket structuré basé sur JSON pour assurer une communication
+						fiable</p>
+				</div>
+
+				<div class="grid grid-2">
+					<div class="card">
+						<span class="card-icon">📦</span>
+						<h3>ChatEventDTO</h3>
+						<p>Classe principale de transfert de données responsable de la structure des événements de chat
+							échangés en JSON.</p>
+						<div class="alert alert-info">
+							<strong>Format standardisé</strong> pour tous les échanges client-serveur
+						</div>
+					</div>
+
+					<div class="card">
+						<span class="card-icon">🏷️</span>
+						<h3>EventEnum</h3>
+						<p>Énumération définissant les types d'événements et leurs clés de données requises pour
+							garantir la cohérence.</p>
+						<div class="alert alert-info">
+							<strong>Validation automatique</strong> des messages échangés
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Structure ChatEventDTO -->
+		<section class="section section-alt">
+			<div class="container">
+				<div class="section-title">
+					<h2>Structure ChatEventDTO</h2>
+					<p>Anatomie complète de la classe principale de communication</p>
+				</div>
+
+				<div class="code-block">
+					<pre><code>// Structure générale d'un ChatEventDTO
+{
+  "type": "MESSAGE",           // Type d'événement (EventEnum)
+  "data": {                    // Map<String, Object> des données
+    "idClient": "user123",
+    "pseudo": "Alice",
+    "contenu": "Hello World!",
+    "date": "2024-01-15T10:30:00Z"
+  },
+  "lstEventDTO": []           // Liste optionnelle d'autres ChatEventDTO
+}</code></pre>
+				</div>
+
+				<div class="grid grid-3">
+					<div class="card">
+						<h3>🎯 Type</h3>
+						<p>Définit le type d'événement selon l'énumération <code>EventEnum</code>. Détermine les clés de
+							données requises.</p>
+					</div>
+
+					<div class="card">
+						<h3>📊 Data</h3>
+						<p>Map clé-valeur contenant les données spécifiques à l'événement selon son type.</p>
+					</div>
+
+					<div class="card">
+						<h3>📋 LstEventDTO</h3>
+						<p>Liste optionnelle d'événements, utilisée principalement pour MESSAGE_LIST.</p>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Types d'événements -->
+		<section class="section">
+			<div class="container">
+				<div class="section-title">
+					<h2>Types d'événements (EventEnum)</h2>
+					<p>Catalogue complet des événements supportés par le protocole</p>
+				</div>
+
+				<div class="grid grid-2">
+					<div class="card">
+						<h3>🔐 Authentification</h3>
+
+						<h4>LOGIN</h4>
+						<p><strong>Clés requises :</strong> pseudo, mot de passe</p>
+						<div class="code-block">
+							<pre><code>{
+  "type": "LOGIN",
+  "data": {
+    "pseudo": "alice",
+    "motDePasse": "secretPassword"
+  }
+}</code></pre>
+						</div>
+
+						<h4>SIGNUP</h4>
+						<p><strong>Clés requises :</strong> pseudo, mot de passe</p>
+						<div class="code-block">
+							<pre><code>{
+  "type": "SIGNUP",
+  "data": {
+    "pseudo": "newUser",
+    "motDePasse": "newPassword"
+  }
+}</code></pre>
+						</div>
+
+						<h4>SUCCESS_LOGIN</h4>
+						<p><strong>Clés requises :</strong> identifiant utilisateur, pseudo</p>
+
+						<h4>SUCCESS_SIGNUP</h4>
+						<p><strong>Clés requises :</strong> identifiant utilisateur, pseudo</p>
+					</div>
+
+					<div class="card">
+						<h3>💬 Messages</h3>
+
+						<h4>MESSAGE</h4>
+						<p><strong>Clés requises :</strong> identifiant client, pseudo, contenu, date</p>
+						<div class="code-block">
+							<pre><code>{
+  "type": "MESSAGE",
+  "data": {
+    "idClient": "user123",
+    "pseudo": "Alice",
+    "contenu": "Bonjour !",
+    "date": "2024-11-11T10:30:00Z"
+  }
+}</code></pre>
+						</div>
+
+						<h4>NEW_MESSAGE</h4>
+						<p><strong>Clés requises :</strong> identifiant client, identifiant canal, contenu</p>
+
+						<h4>NEW_MESSAGE_IMG</h4>
+						<p><strong>Clés requises :</strong> identifiant groupe, identifiant client, données binaires</p>
+
+						<h4>MESSAGE_LIST</h4>
+						<p><strong>Utilise lstEventDTO</strong> - Aucune clé data requise</p>
+					</div>
+
+					<div class="card">
+						<h3>📡 Canaux</h3>
+
+						<h4>NEW_CHANNEL</h4>
+						<p><strong>Clés requises :</strong> identifiant du canal</p>
+						<div class="code-block">
+							<pre><code>{
+  "type": "NEW_CHANNEL",
+  "data": {
+    "idCanal": "channel_001"
+  }
+}</code></pre>
+						</div>
+					</div>
+
+					<div class="card">
+						<h3>⚠️ Réponses système</h3>
+
+						<h4>SUCCESS</h4>
+						<p><strong>Clés requises :</strong> message de succès</p>
+
+						<h4>ERROR</h4>
+						<p><strong>Clés requises :</strong> message d'erreur</p>
+						<div class="code-block">
+							<pre><code>{
+  "type": "ERROR",
+  "data": {
+    "messageErreur": "Connexion échouée"
+  }
+}</code></pre>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Méthodes ChatEventDTO -->
+		<section class="section section-alt">
+			<div class="container">
+				<div class="section-title">
+					<h2>API ChatEventDTO</h2>
+					<p>Méthodes principales pour manipuler les événements de chat</p>
+				</div>
+
+				<div class="grid grid-2">
+					<div class="card">
+						<h3>🔧 Construction</h3>
+						<div class="code-block">
+							<pre><code>// Constructeurs
+ChatEventDTO()
+ChatEventDTO(EventEnum type)
+ChatEventDTO(EventEnum type, List&lt;ChatEventDTO&gt; lstEventDTO)
+
+// Ajout de données (pattern Builder)
+ChatEventDTO add(String key, Object value)
+
+// Exemple d'utilisation
+ChatEventDTO event = new ChatEventDTO(EventEnum.NEW_MESSAGE)
+    .add("idClient", "user123")
+    .add("idCanal", "channel1")
+    .add("contenu", "Hello!");</code></pre>
+						</div>
+					</div>
+
+					<div class="card">
+						<h3>🔄 Sérialisation JSON</h3>
+						<div class="code-block">
+							<pre><code>// Vers JSON
+String json = event.toJson();
+
+// Depuis JSON
+ChatEventDTO event = ChatEventDTO.jsonToEventDTO(jsonString);
+
+// Depuis JSON avec liste d'événements
+ChatEventDTO eventWithList = 
+    ChatEventDTO.jsonToLstEventDTO(jsonString);</code></pre>
+						</div>
+					</div>
+
+					<div class="card">
+						<h3>📊 Accès aux données</h3>
+						<div class="code-block">
+							<pre><code>// Accès aux données
+Map&lt;String, Object&gt; data = event.getData();
+Object value = event.getDataIndex(0); // Par index
+List&lt;ChatEventDTO&gt; messages = event.getLstMes();
+
+// Getters/Setters
+EventEnum type = event.getType();
+event.setType(EventEnum.MESSAGE);
+event.setData(dataMap);</code></pre>
+						</div>
+					</div>
+
+					<div class="card">
+						<h3>🔍 Validation EventEnum</h3>
+						<div class="code-block">
+							<pre><code>// Récupération des clés requises
+List&lt;String&gt; requiredKeys = EventEnum.LOGIN.getRequiredKeys();
+// Résultat: ["pseudo", "motDePasse"]
+
+// Accès par index
+String keyName = EventEnum.MESSAGE.getKeyIndex(0);
+// Résultat: "idClient"</code></pre>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Flux de communication -->
+		<section class="section">
+			<div class="container">
+				<div class="section-title">
+					<h2>Flux de communication typiques</h2>
+					<p>Exemples concrets d'échanges client-serveur</p>
+				</div>
+
+				<div class="grid grid-2">
+					<div class="card">
+						<h3>🔐 Séquence de connexion</h3>
+						<ol style="text-align: left; padding-left: 1rem;">
+							<li><strong>Client → Serveur</strong> : LOGIN
+								<div class="code-block">
+									<pre><code>{
+  "type": "LOGIN",
+  "data": {
+    "pseudo": "alice",
+    "motDePasse": "secret123"
+  }
+}</code></pre>
+								</div>
+							</li>
+							<li><strong>Serveur → Client</strong> : SUCCESS_LOGIN
+								<div class="code-block">
+									<pre><code>{
+  "type": "SUCCESS_LOGIN",
+  "data": {
+    "idUtilisateur": "user_456",
+    "pseudo": "alice"
+  }
+}</code></pre>
+								</div>
+							</li>
+						</ol>
+					</div>
+
+					<div class="card">
+						<h3>💬 Séquence de message</h3>
+						<ol style="text-align: left; padding-left: 1rem;">
+							<li><strong>Client → Serveur</strong> : NEW_MESSAGE
+								<div class="code-block">
+									<pre><code>{
+  "type": "NEW_MESSAGE",
+  "data": {
+    "idClient": "user_456",
+    "idCanal": "general",
+    "contenu": "Salut tout le monde !"
+  }
+}</code></pre>
+								</div>
+							</li>
+							<li><strong>Serveur → Tous les clients</strong> : MESSAGE
+								<div class="code-block">
+									<pre><code>{
+  "type": "MESSAGE",
+  "data": {
+    "idClient": "user_456",
+    "pseudo": "alice",
+    "contenu": "Salut tout le monde !",
+    "date": "2024-11-11T15:30:45Z"
+  }
+}</code></pre>
+								</div>
+							</li>
+						</ol>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Gestion d'erreurs -->
+		<section class="section section-alt">
+			<div class="container">
+				<div class="section-title">
+					<h2>Gestion d'erreurs et bonnes pratiques</h2>
+					<p>Comment le protocole gère les erreurs et assure la robustesse</p>
+				</div>
+
+				<div class="grid grid-3">
+					<div class="card">
+						<span class="card-icon">⚠️</span>
+						<h3>Types d'erreurs</h3>
+						<ul style="text-align: left;">
+							<li><strong>Authentification échouée</strong></li>
+							<li><strong>Données manquantes</strong></li>
+							<li><strong>Format JSON invalide</strong></li>
+							<li><strong>Type d'événement non reconnu</strong></li>
+							<li><strong>Erreur serveur</strong></li>
+						</ul>
+					</div>
+
+					<div class="card">
+						<span class="card-icon">🔍</span>
+						<h3>Validation</h3>
+						<p>Le protocole valide automatiquement :</p>
+						<ul style="text-align: left;">
+							<li>Structure JSON correcte</li>
+							<li>Présence du champ type</li>
+							<li>Clés requises selon EventEnum</li>
+							<li>Types de données cohérents</li>
+						</ul>
+					</div>
+
+					<div class="card">
+						<span class="card-icon">✅</span>
+						<h3>Bonnes pratiques</h3>
+						<ul style="text-align: left;">
+							<li>Toujours vérifier le type d'événement</li>
+							<li>Gérer les erreurs côté client</li>
+							<li>Utiliser les constructors adaptés</li>
+							<li>Valider les données avant envoi</li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="alert alert-warning mt-4">
+					<h4>⚠️ Important</h4>
+					<p>Tous les échanges doivent respecter la structure ChatEventDTO. Les messages mal formés seront
+						rejetés par le serveur avec un événement ERROR contenant les détails de l'erreur.</p>
+				</div>
+			</div>
+		</section>
+	</main>
+
+	<!-- Footer -->
+	<footer class="footer">
+		<div class="container">
+			<div class="footer-content">
+				<div class="footer-section">
+					<h3>MateZone</h3>
+					<p>Application de messagerie temps réel avec architecture hexagonale et WebSocket.</p>
+				</div>
+				<div class="footer-section">
+					<h4>Liens rapides</h4>
+					<ul>
+						<li><a href="index.html">Accueil</a></li>
+						<li><a href="architecture.html">Architecture</a></li>
+						<li><a href="protocol.html">Protocole</a></li>
+						<li><a href="documentation.html">Documentation</a></li>
+					</ul>
+				</div>
+				<div class="footer-section">
+					<h4>Développement</h4>
+					<ul>
+						<li><a href="https://github.com/Joshua-Hermilly/MateZone" target="_blank"
+								rel="noopener">GitHub</a></li>
+						<li><a href="docs/index.html" target="_blank">Javadoc</a></li>
+						<li><a href="contact.html">Contact</a></li>
+					</ul>
+				</div>
+				<div class="footer-section">
+					<h4>Technologies</h4>
+					<ul>
+						<li>Java 25 ☕</li>
+						<li>WebSocket 🔌</li>
+						<li>PostgreSQL 🗄️</li>
+						<li>Gson 📦</li>
+					</ul>
+				</div>
+			</div>
+			<div class="footer-bottom">
+				<p>&copy; 2024 MateZone Team. Projet éducatif - Joshua Hermilly & Donovan Prévost</p>
+			</div>
+		</div>
+	</footer>
+
+	<script src="js/script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Guide d'utilisation - MateZone</title>
+	<meta name="description" content="Guide complet d'installation, configuration et utilisation de MateZone.">
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="icon"
+		href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+</head>
+
+<body>
+	<!-- Navigation -->
+	<nav class="navbar">
+		<div class="nav-container">
+			<a href="index.html" class="logo">MateZone</a>
+			<ul class="nav-menu">
+				<li><a href="index.html" class="nav-link">Accueil</a></li>
+				<li><a href="architecture.html" class="nav-link">Architecture</a></li>
+				<li><a href="database.html" class="nav-link">Base de données</a></li>
+				<li><a href="protocol.html" class="nav-link">Protocole</a></li>
+				<li><a href="guide.html" class="nav-link active">Guide d'utilisation</a></li>
+				<li><a href="documentation.html" class="nav-link">Documentation</a></li>
+				<li><a href="contact.html" class="nav-link">Contact</a></li>
+			</ul>
+			<div class="hamburger">
+				<span></span>
+				<span></span>
+				<span></span>
+			</div>
+		</div>
+	</nav>
+
+	<main>
+		<!-- Breadcrumbs -->
+		<section class="breadcrumbs">
+			<div class="container">
+				<ol>
+					<li><a href="index.html">Accueil</a></li>
+					<li>Guide d'utilisation</li>
+				</ol>
+			</div>
+		</section>
+
+		<!-- Header -->
+		<section class="hero">
+			<div class="container">
+				<div class="hero-content">
+					<h1>Guide d'utilisation MateZone</h1>
+					<p>Guide complet pour installer, configurer et utiliser MateZone de A à Z.</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- Table des matières -->
+		<section class="section">
+			<div class="container">
+				<div class="card">
+					<h2>📋 Table des matières</h2>
+					<div class="grid grid-3">
+						<div>
+							<h4>Installation</h4>
+							<ul style="text-align: left;">
+								<li><a href="#prerequis">Prérequis</a></li>
+								<li><a href="#installation">Installation</a></li>
+								<li><a href="#configuration">Configuration</a></li>
+							</ul>
+						</div>
+						<div>
+							<h4>Utilisation</h4>
+							<ul style="text-align: left;">
+								<li><a href="#premiers-pas">Premiers pas</a></li>
+								<li><a href="#messagerie">Messagerie</a></li>
+								<li><a href="#canaux">Gestion des canaux</a></li>
+							</ul>
+						</div>
+						<div>
+							<h4>Administration</h4>
+							<ul style="text-align: left;">
+								<li><a href="#serveur">Serveur</a></li>
+								<li><a href="#maintenance">Maintenance</a></li>
+								<li><a href="#troubleshooting">Dépannage</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Prérequis -->
+		<section id="prerequis" class="section section-alt">
+			<div class="container">
+				<div class="section-title">
+					<h2>🔧 Prérequis</h2>
+					<p>Ce dont vous avez besoin avant d'installer MateZone</p>
+				</div>
+
+				<div class="grid grid-2">
+					<div class="card">
+						<h3>💻 Configuration système</h3>
+						<div class="table-container">
+							<table class="table">
+								<thead>
+									<tr>
+										<th>Composant</th>
+										<th>Minimum requis</th>
+										<th>Recommandé</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td><strong>OS</strong></td>
+										<td>Windows 10, Linux, macOS</td>
+										<td>OS récent avec mises à jour</td>
+									</tr>
+									<tr>
+										<td><strong>RAM</strong></td>
+										<td>2 GB</td>
+										<td>4 GB ou plus</td>
+									</tr>
+									<tr>
+										<td><strong>Stockage</strong></td>
+										<td>100 MB</td>
+										<td>1 GB pour logs et données</td>
+									</tr>
+									<tr>
+										<td><strong>Réseau</strong></td>
+										<td>Connexion internet</td>
+										<td>Bande passante stable</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+
+					<div class="card">
+						<h3>⚙️ Logiciels requis</h3>
+						<div class="table-container">
+							<table class="table">
+								<thead>
+									<tr>
+										<th>Logiciel</th>
+										<th>Version</th>
+										<th>Notes</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td><strong>Java JDK</strong></td>
+										<td>11 ou supérieur</td>
+										<td>Développé avec JDK 25</td>
+									</tr>
+									<tr>
+										<td><strong>MySQL</strong></td>
+										<td>8.0+</td>
+										<td>Pour la persistance des données</td>
+									</tr>
+									<tr>
+										<td><strong>Git</strong></td>
+										<td>Dernière version</td>
+										<td>Pour cloner le repository</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+
+						<div class="alert alert-info mt-3">
+							<strong>Note :</strong> Vérifiez les installations avec les commandes
+							<code>java -version</code>, <code>mysql --version</code> et <code>git --version</code>.
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Installation -->
+		<section id="installation" class="section">
+			<div class="container">
+				<div class="section-title">
+					<h2>📦 Installation</h2>
+					<p>Étapes détaillées pour installer MateZone sur votre système</p>
+				</div>
+
+				<div class="card mb-4">
+					<h3>1️⃣ Clonage du repository</h3>
+					<p>Récupérez le code source depuis GitHub :</p>
+					<div class="code-block">
+						<pre># Cloner le repository
+git clone https://github.com/Joshua-Hermilly/MateZone.git
+
+# Accéder au dossier
+cd MateZone
+
+# Vérifier les fichiers
+ls -la</pre>
+					</div>
+				</div>
+
+				<div class="card mb-4">
+					<h3>2️⃣ Configuration de la base de données</h3>
+					<p>Préparez la base de données MySQL :</p>
+
+					<div class="grid grid-2">
+						<div>
+							<h4>Création de la base</h4>
+							<div class="code-block">
+								<pre># Connexion à MySQL
+mysql -u root -p
+
+# Création de la base de données
+CREATE DATABASE matezone CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+# Création d'un utilisateur dédié (optionnel)
+CREATE USER 'matezone_user'@'localhost' IDENTIFIED BY 'votre_mot_de_passe';
+GRANT ALL PRIVILEGES ON matezone.* TO 'matezone_user'@'localhost';
+FLUSH PRIVILEGES;</pre>
+							</div>
+						</div>
+
+						<div>
+							<h4>Import du schéma</h4>
+							<div class="code-block">
+								<pre># Importer le schéma de base
+mysql -u root -p matezone < src/server/bd/SQL/MateZone.sql
+
+# Vérifier l'import
+mysql -u root -p matezone
+> SHOW TABLES;
+> DESCRIBE utilisateurs;</pre>
+							</div>
+						</div>
+					</div>
+
+					<div class="alert alert-warning mt-3">
+						<strong>Sécurité :</strong> Utilisez un mot de passe fort pour l'utilisateur de base de données
+						et notez-le pour la configuration.
+					</div>
+				</div>
+
+				<div class="card mb-4">
+					<h3>3️⃣ Configuration de l'application</h3>
+					<p>Configurez les paramètres de connexion :</p>
+
+					<div class="code-block">
+						<pre># Copier le fichier de configuration
+cd serveur-exec
+cp config.properties.example config.properties
+
+# Éditer le fichier de configuration
+nano config.properties  # ou votre éditeur préféré</pre>
+					</div>
+
+					<p>Contenu du fichier <code>config.properties</code> :</p>
+					<div class="code-block">
+						<pre># Configuration de base de données
+db.url=jdbc:mysql://localhost:3306/matezone
+db.username=matezone_user
+db.password=votre_mot_de_passe
+
+# Paramètres serveur
+server.port=8080
+server.host=localhost
+
+# Paramètres de performance
+db.maxConnections=10
+db.connectionTimeout=30000</pre>
+					</div>
+
+					<div class="alert alert-error mt-3">
+						<strong>Important :</strong> Ne jamais committer le fichier <code>config.properties</code> ! Il
+						est dans le .gitignore pour votre sécurité.
+					</div>
+				</div>
+
+				<div class="card">
+					<h3>4️⃣ Compilation du projet</h3>
+					<p>Compilez et préparez l'application :</p>
+
+					<div class="grid grid-2">
+						<div>
+							<h4>Linux/macOS</h4>
+							<div class="code-block">
+								<pre># Rendre le script exécutable
+chmod +x run.sh
+
+# Lancer la compilation
+./run.sh
+
+# Vérifier la compilation
+ls -la bin/</pre>
+							</div>
+						</div>
+
+						<div>
+							<h4>Windows</h4>
+							<div class="code-block">
+								<pre># Lancer la compilation
+run.bat
+
+# Vérifier la compilation
+dir bin\</pre>
+							</div>
+						</div>
+					</div>
+
+					<div class="alert alert-success mt-3">
+						<strong>Succès :</strong> Si la compilation réussit, vous devriez voir les fichiers .class dans
+						le dossier <code>bin/</code>.
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Premiers pas -->
+		<section id="premiers-pas" class="section section-alt">
+			<div class="container">
+				<div class="section-title">
+					<h2>🚀 Premiers pas</h2>
+					<p>Comment démarrer et utiliser MateZone pour la première fois</p>
+				</div>
+
+				<div class="grid grid-2">
+					<div class="card">
+						<h3>1️⃣ Démarrer le serveur</h3>
+						<p>Lancez d'abord le serveur MateZone :</p>
+
+						<div class="code-block">
+							<pre># Depuis le dossier racine du projet
+java -cp "bin:lib/*" server.MainServer
+
+# Ou avec un script dédié (si disponible)
+./start-server.sh</pre>
+						</div>
+
+						<p>Messages attendus au démarrage :</p>
+						<div class="code-block">
+							<pre>🚀 MateZone Server démarré
+📡 WebSocket serveur sur ws://localhost:8080
+🗄️  Base de données connectée
+✅ Serveur prêt à accepter les connexions</pre>
+						</div>
+
+						<div class="alert alert-info mt-3">
+							<strong>Port occupé ?</strong> Modifiez le port dans <code>config.properties</code> si le
+							port 8080 est déjà utilisé.
+						</div>
+					</div>
+
+					<div class="card">
+						<h3>2️⃣ Lancer le client</h3>
+						<p>Dans un nouveau terminal, lancez l'interface client :</p>
+
+						<div class="code-block">
+							<pre># Depuis le dossier racine du projet
+java -cp "bin:lib/*" client.MainClient
+
+# Ou avec un script dédié (si disponible)
+./start-client.sh</pre>
+						</div>
+
+						<p>La fenêtre de connexion devrait s'ouvrir automatiquement.</p>
+
+						<div class="alert alert-success mt-3">
+							<strong>Astuce :</strong> Vous pouvez lancer plusieurs instances du client pour tester les
+							conversations multi-utilisateurs.
+						</div>
+					</div>
+				</div>
+
+				<div class="card mt-4">
+					<h3>3️⃣ Première connexion</h3>
+					<div class="grid grid-2">
+						<div>
+							<h4>Créer un compte</h4>
+							<ol style="text-align: left;">
+								<li>Cliquez sur "S'inscrire" dans la fenêtre de connexion</li>
+								<li>Saisissez un pseudo unique</li>
+								<li>Choisissez un mot de passe sécurisé</li>
+								<li>Confirmez votre mot de passe</li>
+								<li>Optionnel : Ajoutez une adresse email</li>
+								<li>Cliquez sur "Créer le compte"</li>
+							</ol>
+
+							<div class="alert alert-info mt-3">
+								<strong>Pseudo :</strong> Doit être unique et contenir entre 3 et 50 caractères.
+							</div>
+						</div>
+
+						<div>
+							<h4>Se connecter</h4>
+							<ol style="text-align: left;">
+								<li>Saisissez votre pseudo</li>
+								<li>Entrez votre mot de passe</li>
+								<li>Cliquez sur "Se connecter"</li>
+							</ol>
+
+							<p>Une fois connecté, l'interface principale s'affiche avec :</p>
+							<ul style="text-align: left;">
+								<li>La liste des canaux disponibles</li>
+								<li>L'historique des messages</li>
+								<li>La zone de saisie de messages</li>
+								<li>La liste des utilisateurs connectés</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Messagerie -->
+		<section id="messagerie" class="section">
+			<div class="container">
+				<div class="section-title">
+					<h2>💬 Utilisation de la messagerie</h2>
+					<p>Comment communiquer efficacement avec MateZone</p>
+				</div>
+
+				<div class="grid grid-3">
+					<div class="card">
+						<h3>📝 Envoyer des messages</h3>
+						<ol style="text-align: left;">
+							<li>Sélectionnez un canal dans la liste</li>
+							<li>Tapez votre message dans la zone de saisie</li>
+							<li>Appuyez sur <kbd>Entrée</kbd> ou cliquez sur "Envoyer"</li>
+						</ol>
+
+						<div class="alert alert-info mt-3">
+							<strong>Raccourci :</strong> <kbd>Maj + Entrée</kbd> pour ajouter une nouvelle ligne sans
+							envoyer.
+						</div>
+
+						<h4>Formatage basique</h4>
+						<ul style="text-align: left;">
+							<li><strong>Gras</strong> : Utilisez les majuscules</li>
+							<li><em>Italique</em> : Utilisez des caractères spéciaux</li>
+							<li>Emojis : Tapez des emoticons :) :( :D</li>
+						</ul>
+					</div>
+
+					<div class="card">
+						<h3>👀 Lire les messages</h3>
+						<ul style="text-align: left;">
+							<li><strong>Défilement</strong> : Utilisez la molette ou les barres de défilement</li>
+							<li><strong>Historique</strong> : Les 50 derniers messages sont chargés automatiquement</li>
+							<li><strong>Horodatage</strong> : Chaque message affiche l'heure d'envoi</li>
+							<li><strong>Auteur</strong> : Le pseudo de l'expéditeur est toujours visible</li>
+						</ul>
+
+						<div class="alert alert-success mt-3">
+							<strong>Temps réel :</strong> Les nouveaux messages apparaissent instantanément sans
+							rafraîchissement.
+						</div>
+					</div>
+
+					<div class="card">
+						<h3>🔍 Fonctionnalités avancées</h3>
+						<ul style="text-align: left;">
+							<li><strong>Notifications</strong> : Alertes visuelles pour nouveaux messages</li>
+							<li><strong>Statut utilisateurs</strong> : Voir qui est en ligne</li>
+							<li><strong>Messages système</strong> : Notifications de connexion/déconnexion</li>
+							<li><strong>Persistance</strong> : L'historique est sauvegardé</li>
+						</ul>
+
+						<div class="alert alert-warning mt-3">
+							<strong>Attention :</strong> Les messages ne peuvent pas être modifiés ou supprimés après
+							envoi.
+						</div>
+					</div>
+				</div>
+
+				<div class="card mt-4">
+					<h3>🎯 Bonnes pratiques</h3>
+					<div class="grid grid-2">
+						<div>
+							<h4>Communication efficace</h4>
+							<ul style="text-align: left;">
+								<li>Soyez clair et concis</li>
+								<li>Utilisez des canaux appropriés</li>
+								<li>Respectez les autres utilisateurs</li>
+								<li>Évitez le spam de messages courts</li>
+							</ul>
+						</div>
+						<div>
+							<h4>Étiquette du chat</h4>
+							<ul style="text-align: left;">
+								<li>Présentez-vous lors de votre première connexion</li>
+								<li>Utilisez un langage approprié</li>
+								<li>Respectez la thématique des canaux</li>
+								<li>Aidez les nouveaux utilisateurs</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Gestion des canaux -->
+		<section id="canaux" class="section section-alt">
+			<div class="container">
+				<div class="section-title">
+					<h2>🏷️ Gestion des canaux</h2>
+					<p>Organisez vos conversations en canaux thématiques</p>
+				</div>
+
+				<div class="grid grid-2">
+					<div class="card">
+						<h3>➕ Créer un canal</h3>
+						<ol style="text-align: left;">
+							<li>Cliquez sur "Nouveau canal" ou utilisez le menu</li>
+							<li>Choisissez un nom descriptif et unique</li>
+							<li>Ajoutez une description (optionnel)</li>
+							<li>Sélectionnez le type de canal :
+								<ul>
+									<li><strong>Public</strong> : Visible par tous</li>
+									<li><strong>Privé</strong> : Sur invitation seulement</li>
+									<li><strong>Direct</strong> : Conversation privée</li>
+								</ul>
+							</li>
+							<li>Confirmez la création</li>
+						</ol>
+
+						<div class="alert alert-info mt-3">
+							<strong>Nom du canal :</strong> Doit être unique et contenir entre 3 et 100 caractères.
+						</div>
+					</div>
+
+					<div class="card">
+						<h3>👥 Rejoindre un canal</h3>
+						<ul style="text-align: left;">
+							<li><strong>Canaux publics</strong> : Visibles dans la liste, clic pour rejoindre</li>
+							<li><strong>Canaux privés</strong> : Nécessitent une invitation</li>
+							<li><strong>Recherche</strong> : Utilisez la fonction de recherche de canaux</li>
+							<li><strong>Invitation</strong> : Demandez à un membre du canal</li>
+						</ul>
+
+						<div class="alert alert-success mt-3">
+							<strong>Accès immédiat :</strong> Une fois membre, vous avez accès à l'historique complet du
+							canal.
+						</div>
+					</div>
+				</div>
+
+				<div class="card mt-4">
+					<h3>⚙️ Administration des canaux</h3>
+					<p>Fonctionnalités disponibles pour les créateurs et modérateurs de canaux :</p>
+
+					<div class="grid grid-3">
+						<div>
+							<h4>👑 Créateur</h4>
+							<ul style="text-align: left;">
+								<li>Modifier les paramètres du canal</li>
+								<li>Inviter/exclure des membres</li>
+								<li>Nommer des modérateurs</li>
+								<li>Supprimer le canal</li>
+								<li>Archiver/désarchiver</li>
+							</ul>
+						</div>
+
+						<div>
+							<h4>🛡️ Modérateur</h4>
+							<ul style="text-align: left;">
+								<li>Inviter de nouveaux membres</li>
+								<li>Gérer les permissions</li>
+								<li>Modérer les discussions</li>
+								<li>Éditer la description</li>
+							</ul>
+						</div>
+
+						<div>
+							<h4>👤 Membre</h4>
+							<ul style="text-align: left;">
+								<li>Envoyer des messages</li>
+								<li>Lire l'historique</li>
+								<li>Quitter le canal</li>
+								<li>Voir les autres membres</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Administration serveur -->
+		<section id="serveur" class="section">
+			<div class="container">
+				<div class="section-title">
+					<h2>🖥️ Administration du serveur</h2>
+					<p>Guide pour les administrateurs système</p>
+				</div>
+
+				<div class="grid grid-2">
+					<div class="card">
+						<h3>🚀 Démarrage en production</h3>
+						<p>Configuration recommandée pour un environnement de production :</p>
+
+						<div class="code-block">
+							<pre># Script de démarrage avec paramètres JVM optimisés
+#!/bin/bash
+java -Xms512m -Xmx2g \
+     -XX:+UseG1GC \
+     -XX:+UseStringDeduplication \
+     -Djava.awt.headless=true \
+     -Dfile.encoding=UTF-8 \
+     -cp "bin:lib/*" \
+     server.MainServer</pre>
+						</div>
+
+						<h4>Variables d'environnement</h4>
+						<div class="code-block">
+							<pre># Configuration via variables d'environnement
+export DB_HOST=localhost
+export DB_PORT=3306
+export DB_NAME=matezone
+export DB_USER=matezone_user
+export DB_PASSWORD=secure_password
+export SERVER_PORT=8080</pre>
+						</div>
+					</div>
+
+					<div class="card">
+						<h3>📊 Surveillance et logs</h3>
+						<p>Monitoring et journalisation pour la production :</p>
+
+						<h4>Fichiers de logs</h4>
+						<ul style="text-align: left;">
+							<li><code>logs/server.log</code> - Logs généraux du serveur</li>
+							<li><code>logs/error.log</code> - Erreurs et exceptions</li>
+							<li><code>logs/access.log</code> - Connexions et déconnexions</li>
+							<li><code>logs/db.log</code> - Requêtes base de données</li>
+						</ul>
+
+						<h4>Métriques importantes</h4>
+						<ul style="text-align: left;">
+							<li>Nombre de connexions actives</li>
+							<li>Messages par seconde</li>
+							<li>Utilisation mémoire</li>
+							<li>Temps de réponse base de données</li>
+							<li>Erreurs de connexion</li>
+						</ul>
+
+						<div class="alert alert-info mt-3">
+							<strong>Rotation des logs :</strong> Configurez logrotate pour éviter que les logs prennent
+							trop d'espace disque.
+						</div>
+					</div>
+				</div>
+
+				<div class="card mt-4">
+					<h3>🔧 Configuration avancée</h3>
+					<div class="grid grid-2">
+						<div>
+							<h4>Paramètres de performance</h4>
+							<div class="code-block">
+								<pre># config.properties - Section performance
+server.maxConnections=100
+server.threadPool=20
+websocket.bufferSize=8192
+db.connectionPool=15
+db.maxIdleTime=300000</pre>
+							</div>
+						</div>
+
+						<div>
+							<h4>Paramètres de sécurité</h4>
+							<div class="code-block">
+								<pre># config.properties - Section sécurité
+security.sessionTimeout=3600
+security.maxLoginAttempts=5
+security.passwordMinLength=8
+security.enableSSL=true
+security.sslPort=8443</pre>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Maintenance -->
+		<section id="maintenance" class="section section-alt">
+			<div class="container">
+				<div class="section-title">
+					<h2>🛠️ Maintenance</h2>
+					<p>Tâches de maintenance régulières pour garantir le bon fonctionnement</p>
+				</div>
+
+				<div class="grid grid-3">
+					<div class="card">
+						<h3>📊 Maintenance base de données</h3>
+						<ul style="text-align: left;">
+							<li><strong>Sauvegarde quotidienne</strong>
+								<div class="code-block mt-2">
+									<pre>mysqldump -u root -p matezone > backup_$(date +%Y%m%d).sql</pre>
+								</div>
+							</li>
+							<li><strong>Optimisation des tables</strong>
+								<div class="code-block mt-2">
+									<pre>OPTIMIZE TABLE messages, utilisateurs, canaux;</pre>
+								</div>
+							</li>
+							<li><strong>Nettoyage des logs</strong>
+								<div class="code-block mt-2">
+									<pre>DELETE FROM messages WHERE timestamp < DATE_SUB(NOW(), INTERVAL 1 YEAR);</pre>
+								</div>
+							</li>
+						</ul>
+					</div>
+
+					<div class="card">
+						<h3>🧹 Nettoyage système</h3>
+						<ul style="text-align: left;">
+							<li><strong>Rotation des logs</strong>
+								<div class="code-block mt-2">
+									<pre># /etc/logrotate.d/matezone
+/var/log/matezone/*.log {
+    daily
+    rotate 30
+    compress
+    delaycompress
+    missingok
+    notifempty
+}</pre>
+								</div>
+							</li>
+							<li><strong>Nettoyage des fichiers temporaires</strong></li>
+							<li><strong>Vérification de l'espace disque</strong></li>
+						</ul>
+					</div>
+
+					<div class="card">
+						<h3>🔄 Mises à jour</h3>
+						<ul style="text-align: left;">
+							<li><strong>Mise à jour du code</strong>
+								<div class="code-block mt-2">
+									<pre>git pull origin main
+./run.sh
+systemctl restart matezone</pre>
+								</div>
+							</li>
+							<li><strong>Mise à jour des dépendances</strong></li>
+							<li><strong>Patch de sécurité</strong></li>
+							<li><strong>Tests de non-régression</strong></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Dépannage -->
+		<section id="troubleshooting" class="section">
+			<div class="container">
+				<div class="section-title">
+					<h2>🔍 Dépannage</h2>
+					<p>Solutions aux problèmes courants</p>
+				</div>
+
+				<div class="grid grid-2">
+					<div class="card">
+						<h3>❌ Problèmes de connexion</h3>
+
+						<h4>Le serveur ne démarre pas</h4>
+						<ul style="text-align: left;">
+							<li>Vérifiez que Java est installé : <code>java -version</code></li>
+							<li>Contrôlez la configuration : <code>config.properties</code></li>
+							<li>Vérifiez que le port n'est pas occupé : <code>netstat -an | grep 8080</code></li>
+							<li>Consultez les logs d'erreur</li>
+						</ul>
+
+						<h4>Impossible de se connecter à la base</h4>
+						<ul style="text-align: left;">
+							<li>Vérifiez que MySQL est démarré : <code>systemctl status mysql</code></li>
+							<li>Testez la connexion : <code>mysql -u username -p -h localhost</code></li>
+							<li>Vérifiez les permissions utilisateur</li>
+							<li>Contrôlez l'URL de connexion</li>
+						</ul>
+
+						<div class="code-block">
+							<pre># Test de connexion base de données
+mysql -u matezone_user -p -h localhost matezone
+> SELECT COUNT(*) FROM utilisateurs;</pre>
+						</div>
+					</div>
+
+					<div class="card">
+						<h3>🐛 Problèmes client</h3>
+
+						<h4>L'interface ne s'affiche pas</h4>
+						<ul style="text-align: left;">
+							<li>Vérifiez la version Java (Swing support)</li>
+							<li>Contrôlez les variables d'environnement d'affichage</li>
+							<li>Testez avec <code>java -Djava.awt.headless=false</code></li>
+							<li>Vérifiez les logs client</li>
+						</ul>
+
+						<h4>Messages non reçus</h4>
+						<ul style="text-align: left;">
+							<li>Vérifiez la connexion WebSocket</li>
+							<li>Contrôlez les firewalls</li>
+							<li>Testez la latence réseau</li>
+							<li>Redémarrez le client</li>
+						</ul>
+
+						<div class="code-block">
+							<pre># Test de connectivité WebSocket
+telnet localhost 8080
+# Ou
+curl -i -N -H "Connection: Upgrade" \
+     -H "Upgrade: websocket" \
+     -H "Host: localhost:8080" \
+     http://localhost:8080</pre>
+						</div>
+					</div>
+				</div>
+
+				<div class="card mt-4">
+					<h3>📋 Diagnostic système</h3>
+					<p>Script de diagnostic automatique :</p>
+					<div class="code-block">
+						<pre>#!/bin/bash
+echo "=== Diagnostic MateZone ==="
+
+# Vérification Java
+echo "Java version:"
+java -version
+
+# Vérification MySQL
+echo "MySQL status:"
+systemctl status mysql --no-pager -l
+
+# Vérification des ports
+echo "Ports utilisés:"
+netstat -tlnp | grep -E ':(8080|3306)'
+
+# Vérification de l'espace disque
+echo "Espace disque:"
+df -h
+
+# Vérification des logs récents
+echo "Logs récents:"
+tail -20 logs/server.log
+
+echo "=== Fin du diagnostic ==="</pre>
+					</div>
+				</div>
+
+				<div class="card mt-4">
+					<h3>📞 Support et communauté</h3>
+					<div class="grid grid-2">
+						<div>
+							<h4>Ressources d'aide</h4>
+							<ul style="text-align: left;">
+								<li><a href="https://github.com/Joshua-Hermilly/MateZone/issues" target="_blank">Issues
+										GitHub</a></li>
+								<li><a href="../docs/index.html" target="_blank">Documentation Javadoc</a></li>
+								<li><a href="contact.html">Formulaire de contact</a></li>
+								<li>Logs d'erreur détaillés</li>
+							</ul>
+						</div>
+
+						<div>
+							<h4>Avant de signaler un bug</h4>
+							<ul style="text-align: left;">
+								<li>Reproduisez le problème</li>
+								<li>Collectez les logs pertinents</li>
+								<li>Notez votre configuration système</li>
+								<li>Vérifiez les issues existantes</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</main>
+
+	<!-- Footer -->
+	<footer class="footer">
+		<div class="container">
+			<div class="footer-content">
+				<div class="footer-section">
+					<h3>MateZone</h3>
+					<p>Guide d'utilisation complet pour installer, configurer et utiliser MateZone efficacement.</p>
+				</div>
+
+				<div class="footer-section">
+					<h3>Navigation</h3>
+					<p><a href="index.html">Accueil</a></p>
+					<p><a href="architecture.html">Architecture</a></p>
+					<p><a href="database.html">Base de données</a></p>
+					<p><a href="guide.html">Guide d'utilisation</a></p>
+				</div>
+
+				<div class="footer-section">
+					<h3>Ressources</h3>
+					<p><a href="documentation.html">Documentation</a></p>
+					<p><a href="../docs/index.html" target="_blank">Javadoc</a></p>
+					<p><a href="https://github.com/Joshua-Hermilly/MateZone" target="_blank">Code source</a></p>
+				</div>
+
+				<div class="footer-section">
+					<h3>Support</h3>
+					<p><a href="contact.html">Nous contacter</a></p>
+					<p><a href="https://github.com/Joshua-Hermilly/MateZone/issues" target="_blank">Signaler un bug</a>
+					</p>
+				</div>
+			</div>
+
+			<div class="footer-bottom">
+				<p>&copy; 2024 MateZone. Tous droits réservés.</p>
+			</div>
+		</div>
+	</footer>
+
+	<script src="js/script.js"></script>
+</body>
+
+</html>
