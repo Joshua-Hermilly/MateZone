@@ -2,8 +2,13 @@ package server;
 
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpExchange;
+
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.sql.Connection;
+import java.util.Properties;
 
 import server.bd.ConnexionBD;
 import server.bd.repository.*;
@@ -14,11 +19,63 @@ import server.metier.interfaces.*;
 import server.metier.service.*;
 
 /**
- * Point d'entrée du serveur MateZone.
- * Initialise la BD, les services, le WebSocket et le serveur HTTP avatar.
+ * Point d'entrée principal du serveur MateZone.
+ * Cette classe initialise et orchestre tous les composants serveur de
+ * l'application :
+ * - Connexion à la base de données
+ * - Initialisation des repositories et services métier
+ * - Démarrage du serveur WebSocket pour le chat temps réel
+ * - Démarrage du serveur HTTP pour servir les avatars utilisateur
+ * 
+ * Le serveur suit une architecture en couches avec séparation des
+ * responsabilités.
+ * 
+ * @author MateZone Team
+ * @author Joshua Hermilly
+ * @author Prévost Donovan
+ * @version V1
+ * @date 08/11/25
  */
-public class MainServer 
+public class MainServer
 {
+
+	/** Paramètres des Serveurs */
+		private static int PORTMESS;
+		private static int PORTWEB;
+	
+	/** Chargement statique de la configuration */
+	static 
+	{
+		try 
+		{
+			Properties props = new Properties();
+			FileInputStream fis = new FileInputStream("src/server/config.properties");
+			props.load(fis);
+			fis.close();
+			
+			PORTMESS = Integer.parseInt(props.getProperty("server.port"));
+			PORTWEB  = Integer.parseInt(props.getProperty("web.port"   ));
+			
+		} 
+		catch (IOException e) 
+		{
+			System.err.println("ERREUR : Impossible de charger le fichier config.properties du serveur!");
+			e.printStackTrace();
+			System.exit(1);
+		}
+	}
+
+
+
+	/**
+	 * Méthode principale du serveur MateZone.
+	 * Initialise dans l'ordre : base de données, repositories, services, serveurs
+	 * WebSocket et HTTP.
+	 * 
+	 * @param args arguments de ligne de commande (non utilisés)
+	 * @throws Exception si une erreur survient lors de l'initialisation des
+	 *                   serveurs
+	 */
 	public static void main(String[] args) throws Exception 
 	{
 		/*--------------------------------------------*/
@@ -37,34 +94,40 @@ public class MainServer
 		/* 3) Services Métier                         */
 		/*--------------------------------------------*/
 		ClientService userService = new ClientService(userRepo, messageRepo);
-		//MessageService messageService = new MessageService(messageRepo); // si besoin
+		// MessageService messageService = new MessageService(messageRepo); // si besoin
 
 		/*--------------------------------------------*/
 		/* 4) Serveur WebSocket                       */
 		/*--------------------------------------------*/
-		int websocketPort = 8080;
-		WebSocketMateZone wsServer = new WebSocketMateZone(websocketPort, userService);
+		WebSocketMateZone wsServer = new WebSocketMateZone(MainServer.PORTMESS, userService);
 		wsServer.start();
-
-		System.out.println("Serveur WebSocket démarré sur ws://127.0.0.1:" + websocketPort);
+		IWebSocketMateZone iWebSocketMateZone = wsServer;
+		userService.setIWebSocketMateZone(iWebSocketMateZone);
 
 		/*--------------------------------------------*/
 		/* 5) Serveur HTTP avatar                     */
 		/*--------------------------------------------*/
-		MainServer.startAvatarServer(userRepo); // Port 8081
+		MainServer.startAvatarServer(userRepo);
+
+			System.out.println("Serveur WebSocket démarré sur ws://127.0.0.1:" + MainServer.PORTMESS + " et WebServer démarré sur http://127.0.0.1:" + MainServer.PORTWEB);
 	}
 
-
 	/**
-	 * Démarre un serveur HTTP minimaliste servant les avatars stockés en BD.
+	 * Démarre un serveur HTTP minimaliste pour servir les avatars utilisateur.
+	 * Le serveur écoute sur le port 8081 et répond aux requêtes GET /avatar?id=X
+	 * en récupérant l'image d'avatar depuis la base de données.
+	 * 
+	 * @param repo le repository utilisateur pour accéder aux avatars en base de
+	 *             données
+	 * @throws Exception si une erreur survient lors du démarrage du serveur HTTP
 	 */
 	public static void startAvatarServer(IUtilisateurRepository repo) throws Exception 
 	{
 
-		int httpPort = 8081;
-		HttpServer http = HttpServer.create(new InetSocketAddress(httpPort), 0);
+		HttpServer http = HttpServer.create(new InetSocketAddress(MainServer.PORTWEB), 0);
 
-		http.createContext("/avatar", (HttpExchange exchange) -> {
+		http.createContext("/avatar", (HttpExchange exchange) -> 
+		{
 			try 
 			{
 				String query = exchange.getRequestURI().getQuery(); // ex: id=3
@@ -74,20 +137,21 @@ public class MainServer
 
 				exchange.getResponseHeaders().set("Content-Type", "image/png");
 
-				if (img == null) {
+				if (img == null) 
+				{
 					exchange.sendResponseHeaders(404, -1);
 					return;
 				}
 
 				exchange.sendResponseHeaders(200, img.length);
-				try (OutputStream os = exchange.getResponseBody()) {
+				try (OutputStream os = exchange.getResponseBody()) 
+				{
 					os.write(img);
 				}
 
-			} catch (Exception e) {  exchange.sendResponseHeaders(500, -1);  }
+			} catch (Exception e) { exchange.sendResponseHeaders(500, -1); }
 		});
 
 		http.start();
-		System.out.println("Serveur HTTP Avatar prêt sur http://127.0.0.1:" + httpPort + "/avatar?id=1");
 	}
 }
