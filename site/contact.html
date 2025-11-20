@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Contact - MateZone</title>
+	<meta name="description"
+		content="Contactez l'équipe de développement de MateZone pour vos questions, suggestions ou signaler des bugs.">
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="icon"
+		href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+</head>
+
+<body>
+	<!-- Navigation -->
+	<nav class="navbar">
+		<div class="nav-container">
+			<a href="index.html" class="logo">MateZone</a>
+			<ul class="nav-menu">
+				<li><a href="index.html" class="nav-link">Accueil</a></li>
+				<li><a href="architecture.html" class="nav-link">Architecture</a></li>
+				<li><a href="database.html" class="nav-link">Base de données</a></li>
+				<li><a href="protocol.html" class="nav-link">Protocole</a></li>
+				<li><a href="guide.html" class="nav-link">Guide d'utilisation</a></li>
+				<li><a href="documentation.html" class="nav-link">Documentation</a></li>
+				<li><a href="contact.html" class="nav-link active">Contact</a></li>
+			</ul>
+			<div class="hamburger">
+				<span></span>
+				<span></span>
+				<span></span>
+			</div>
+		</div>
+	</nav>
+
+	<main>
+		<!-- Breadcrumbs -->
+		<section class="breadcrumbs">
+			<div class="container">
+				<ol>
+					<li><a href="index.html">Accueil</a></li>
+					<li>Contact</li>
+				</ol>
+			</div>
+		</section>
+
+		<!-- Header -->
+		<section class="hero">
+			<div class="container">
+				<div class="hero-content">
+					<h1>Nous contacter</h1>
+					<p>Vous avez une question, une suggestion ou un problème ? L'équipe MateZone est là pour vous aider.
+					</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- Options de contact -->
+		<section class="section">
+			<div class="container">
+				<div class="section-title">
+					<h2>💬 Comment nous joindre</h2>
+					<p>Plusieurs moyens de communication sont à votre disposition</p>
+				</div>
+
+				<div class="grid grid-3">
+					<div class="card">
+						<span class="card-icon">🐛</span>
+						<h3>Signaler un bug</h3>
+						<p>Vous avez trouvé un problème dans MateZone ? Aidez-nous à l'améliorer en le signalant.</p>
+						<a href="https://github.com/Joshua-Hermilly/MateZone/issues/new?template=bug_report.md"
+							class="btn btn-accent mt-2" target="_blank">Signaler un bug</a>
+					</div>
+
+					<div class="card">
+						<span class="card-icon">✨</span>
+						<h3>Proposer une fonctionnalité</h3>
+						<p>Une idée d'amélioration ? Partagez votre suggestion avec la communauté des développeurs.</p>
+						<a href="https://github.com/Joshua-Hermilly/MateZone/issues/new?template=feature_request.md"
+							class="btn btn-primary mt-2" target="_blank">Nouvelle fonctionnalité</a>
+					</div>
+
+					<div class="card">
+						<span class="card-icon">❓</span>
+						<h3>Poser une question</h3>
+						<p>Besoin d'aide pour installer ou utiliser MateZone ? Consultez la documentation ou posez votre
+							question.</p>
+						<a href="https://github.com/Joshua-Hermilly/MateZone/discussions" class="btn btn-secondary mt-2"
+							target="_blank">Discussions</a>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Formulaire de contact -->
+		<section class="section section-alt">
+			<div class="container">
+				<div class="section-title">
+					<h2>📧 Formulaire de contact</h2>
+					<p>Envoyez-nous un message directement via ce formulaire</p>
+				</div>
+
+				<div class="grid grid-2">
+					<div class="card">
+						<form id="contactForm" action="#" method="post">
+							<div class="form-group">
+								<label for="name" class="form-label">Nom complet *</label>
+								<input type="text" id="name" name="name" class="form-input" required>
+							</div>
+
+							<div class="form-group">
+								<label for="email" class="form-label">Adresse email *</label>
+								<input type="email" id="email" name="email" class="form-input" required>
+							</div>
+
+							<div class="form-group">
+								<label for="subject" class="form-label">Sujet *</label>
+								<select id="subject" name="subject" class="form-select" required>
+									<option value="">Sélectionnez un sujet</option>
+									<option value="bug">🐛 Signalement de bug</option>
+									<option value="feature">✨ Demande de fonctionnalité</option>
+									<option value="support">❓ Demande de support</option>
+									<option value="documentation">📖 Question sur la documentation</option>
+									<option value="contribution">🤝 Contribution au projet</option>
+									<option value="other">💬 Autre</option>
+								</select>
+							</div>
+
+							<div class="form-group">
+								<label for="message" class="form-label">Message *</label>
+								<textarea id="message" name="message" class="form-textarea" rows="6" required
+									placeholder="Décrivez votre question, problème ou suggestion en détail..."></textarea>
+							</div>
+
+							<div class="form-group">
+								<label for="version" class="form-label">Version de MateZone (si applicable)</label>
+								<input type="text" id="version" name="version" class="form-input"
+									placeholder="Ex: v1.0.0">
+							</div>
+
+							<div class="form-group">
+								<label for="os" class="form-label">Système d'exploitation (si applicable)</label>
+								<input type="text" id="os" name="os" class="form-input"
+									placeholder="Ex: Windows 11, Ubuntu 22.04, macOS 14">
+							</div>
+
+							<button type="submit" class="btn btn-primary">Envoyer le message</button>
+						</form>
+					</div>
+
+					<div class="card">
+						<h3>📋 Conseils pour un message efficace</h3>
+
+						<h4>🐛 Pour un bug :</h4>
+						<ul style="text-align: left;">
+							<li>Décrivez les étapes pour reproduire le problème</li>
+							<li>Indiquez le comportement attendu vs observé</li>
+							<li>Ajoutez des captures d'écran si pertinent</li>
+							<li>Mentionnez votre système d'exploitation</li>
+							<li>Copiez les messages d'erreur exacts</li>
+						</ul>
+
+						<h4>❓ Pour une question :</h4>
+						<ul style="text-align: left;">
+							<li>Vérifiez d'abord la <a href="documentation.html">documentation</a></li>
+							<li>Consultez le <a href="guide.html">guide d'utilisation</a></li>
+							<li>Recherchez dans les <a href="https://github.com/Joshua-Hermilly/MateZone/issues"
+									target="_blank">issues existantes</a></li>
+							<li>Soyez précis dans votre question</li>
+						</ul>
+
+						<h4>✨ Pour une suggestion :</h4>
+						<ul style="text-align: left;">
+							<li>Expliquez le problème que cela résoudrait</li>
+							<li>Décrivez la solution proposée</li>
+							<li>Mentionnez des alternatives considérées</li>
+							<li>Évaluez l'impact sur les utilisateurs existants</li>
+						</ul>
+
+						<div class="alert alert-info mt-4">
+							<strong>Temps de réponse :</strong> Nous nous efforçons de répondre dans les 48 heures
+							ouvrables. Pour les bugs critiques, utilisez directement GitHub Issues.
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Équipe de développement -->
+		<section class="section">
+			<div class="container">
+				<div class="section-title">
+					<h2>👥 L'équipe MateZone</h2>
+					<p>Rencontrez les développeurs derrière MateZone</p>
+				</div>
+
+				<div class="grid grid-2">
+					<div class="card text-center">
+						<span class="card-icon">⚙️</span>
+						<h3>DNB_Dono530</h3>
+						<p><strong>Développeur Backend</strong></p>
+						<p>Responsable de l'architecture serveur, de la base de données et de l'infrastructure
+							WebSocket. Expert en Java et développement backend.</p>
+
+						<div class="mt-3">
+							<h4>Spécialités :</h4>
+							<ul style="text-align: left; max-width: 300px; margin: 0 auto;">
+								<li>Architecture serveur Java</li>
+								<li>Base de données MySQL</li>
+								<li>WebSockets et communication temps réel</li>
+								<li>Patterns de conception</li>
+								<li>Sécurité et authentification</li>
+							</ul>
+						</div>
+
+						<a href="https://github.com/Joshua-Hermilly" class="btn btn-secondary mt-3"
+							target="_blank">Profil GitHub</a>
+					</div>
+
+					<div class="card text-center">
+						<span class="card-icon">🎨</span>
+						<h3>Yuriko</h3>
+						<p><strong>Développeur Frontend</strong></p>
+						<p>Créateur de l'interface utilisateur et de l'expérience utilisateur. Spécialiste en Java Swing
+							et design d'interfaces.</p>
+
+						<div class="mt-3">
+							<h4>Spécialités :</h4>
+							<ul style="text-align: left; max-width: 300px; margin: 0 auto;">
+								<li>Interface utilisateur Java Swing</li>
+								<li>Expérience utilisateur (UX/UI)</li>
+								<li>Architecture MVC client</li>
+								<li>Gestion des événements</li>
+								<li>Design et ergonomie</li>
+							</ul>
+						</div>
+
+						<a href="https://github.com/Joshua-Hermilly" class="btn btn-secondary mt-3"
+							target="_blank">Profil GitHub</a>
+					</div>
+				</div>
+
+				<div class="card mt-4">
+					<h3>🤝 Collaboration ouverte</h3>
+					<p>MateZone est un projet open source accueillant les contributions de la communauté. Que vous soyez
+						développeur expérimenté ou débutant, vos contributions sont les bienvenues !</p>
+
+					<div class="grid grid-3 mt-3">
+						<div>
+							<h4>💻 Développeurs</h4>
+							<p>Contribuez au code, proposez de nouvelles fonctionnalités, corrigez des bugs.</p>
+						</div>
+
+						<div>
+							<h4>📝 Rédacteurs</h4>
+							<p>Améliorez la documentation, rédigez des tutoriels, traduisez le contenu.</p>
+						</div>
+
+						<div>
+							<h4>🧪 Testeurs</h4>
+							<p>Testez les nouvelles versions, signalez des bugs, proposez des améliorations UX.</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Ressources utiles -->
+		<section class="section section-alt">
+			<div class="container">
+				<div class="section-title">
+					<h2>🔗 Ressources utiles</h2>
+					<p>Liens rapides vers les ressources importantes</p>
+				</div>
+
+				<div class="grid grid-4">
+					<div class="card text-center">
+						<span class="card-icon">📚</span>
+						<h3>Documentation</h3>
+						<p>Guide complet d'installation, utilisation et développement</p>
+						<a href="documentation.html" class="btn btn-primary mt-2">Voir la doc</a>
+					</div>
+
+					<div class="card text-center">
+						<span class="card-icon">🚀</span>
+						<h3>Guide démarrage</h3>
+						<p>Instructions pas à pas pour installer et configurer MateZone</p>
+						<a href="guide.html" class="btn btn-primary mt-2">Commencer</a>
+					</div>
+
+					<div class="card text-center">
+						<span class="card-icon">💻</span>
+						<h3>Code source</h3>
+						<p>Repository GitHub avec tout le code source du projet</p>
+						<a href="https://github.com/Joshua-Hermilly/MateZone" class="btn btn-primary mt-2"
+							target="_blank">GitHub</a>
+					</div>
+
+					<div class="card text-center">
+						<span class="card-icon">📖</span>
+						<h3>Javadoc</h3>
+						<p>Documentation technique complète du code Java</p>
+						<a href="../docs/index.html" class="btn btn-primary mt-2" target="_blank">Javadoc</a>
+					</div>
+				</div>
+
+				<div class="card mt-4">
+					<h3>📬 Autres moyens de contact</h3>
+					<div class="grid grid-3">
+						<div>
+							<h4>GitHub Issues</h4>
+							<p>Pour les bugs, demandes de fonctionnalités et discussions techniques</p>
+							<a href="https://github.com/Joshua-Hermilly/MateZone/issues" target="_blank">→ GitHub
+								Issues</a>
+						</div>
+
+						<div>
+							<h4>GitHub Discussions</h4>
+							<p>Pour les questions générales, idées et discussions communautaires</p>
+							<a href="https://github.com/Joshua-Hermilly/MateZone/discussions" target="_blank">→
+								Discussions</a>
+						</div>
+
+						<div>
+							<h4>Pull Requests</h4>
+							<p>Pour contribuer directement au code et proposer des améliorations</p>
+							<a href="https://github.com/Joshua-Hermilly/MateZone/pulls" target="_blank">→ Pull
+								Requests</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- FAQ rapide -->
+		<section class="section">
+			<div class="container">
+				<div class="section-title">
+					<h2>❓ Questions fréquentes</h2>
+					<p>Réponses rapides aux questions les plus courantes</p>
+				</div>
+
+				<div class="grid grid-2">
+					<div class="card">
+						<h3>🔧 Installation et configuration</h3>
+
+						<h4>MateZone ne démarre pas</h4>
+						<p>Vérifiez que vous avez Java 11+ et MySQL installés. Consultez le <a
+								href="guide.html#troubleshooting">guide de dépannage</a> pour plus de détails.</p>
+
+						<h4>Erreur de connexion à la base de données</h4>
+						<p>Vérifiez votre fichier <code>config.properties</code> et que MySQL est démarré. Voir la
+							section <a href="guide.html#configuration">configuration</a>.</p>
+
+						<h4>Le client ne se connecte pas au serveur</h4>
+						<p>Assurez-vous que le serveur est démarré et que le port (8080 par défaut) n'est pas bloqué par
+							un firewall.</p>
+					</div>
+
+					<div class="card">
+						<h3>💻 Utilisation et fonctionnalités</h3>
+
+						<h4>Comment créer un nouveau canal ?</h4>
+						<p>Une fois connecté, utilisez le bouton "Nouveau canal" ou le menu contextuel. Voir le <a
+								href="guide.html#canaux">guide des canaux</a>.</p>
+
+						<h4>Puis-je modifier ou supprimer mes messages ?</h4>
+						<p>Actuellement, MateZone ne permet pas de modifier ou supprimer les messages après envoi. Cette
+							fonctionnalité est en cours de développement.</p>
+
+						<h4>Les messages sont-ils sauvegardés ?</h4>
+						<p>Oui, tous les messages sont sauvegardés dans la base de données MySQL et l'historique est
+							conservé.</p>
+					</div>
+				</div>
+
+				<div class="text-center mt-4">
+					<p>Vous ne trouvez pas votre réponse ? <a href="#contactForm">Contactez-nous</a> ou consultez la <a
+							href="documentation.html">documentation complète</a>.</p>
+				</div>
+			</div>
+		</section>
+	</main>
+
+	<!-- Footer -->
+	<footer class="footer">
+		<div class="container">
+			<div class="footer-content">
+				<div class="footer-section">
+					<h3>MateZone</h3>
+					<p>Nous sommes là pour vous aider ! N'hésitez pas à nous contacter pour toute question ou
+						suggestion.</p>
+				</div>
+
+				<div class="footer-section">
+					<h3>Contact rapide</h3>
+					<p><a href="#contactForm">Formulaire de contact</a></p>
+					<p><a href="https://github.com/Joshua-Hermilly/MateZone/issues" target="_blank">Signaler un bug</a>
+					</p>
+					<p><a href="https://github.com/Joshua-Hermilly/MateZone/discussions" target="_blank">Discussions</a>
+					</p>
+				</div>
+
+				<div class="footer-section">
+					<h3>Ressources d'aide</h3>
+					<p><a href="guide.html">Guide d'utilisation</a></p>
+					<p><a href="documentation.html">Documentation</a></p>
+					<p><a href="../docs/index.html" target="_blank">Javadoc</a></p>
+				</div>
+
+				<div class="footer-section">
+					<h3>Projet</h3>
+					<p><a href="https://github.com/Joshua-Hermilly/MateZone" target="_blank">Code source</a></p>
+					<p><a href="https://github.com/Joshua-Hermilly/MateZone/releases" target="_blank">Releases</a></p>
+					<p><a href="index.html">À propos</a></p>
+				</div>
+			</div>
+
+			<div class="footer-bottom">
+				<p>&copy; 2024 MateZone. Projet open source sous licence MIT.</p>
+			</div>
+		</div>
+	</footer>
+
+	<script src="js/script.js"></script>
+	<script>
+		// Gestion du formulaire de contact
+		document.getElementById('contactForm').addEventListener('submit', function (e) {
+			e.preventDefault();
+
+			// Simulation d'envoi (remplacer par vraie implémentation)
+			const formData = new FormData(this);
+			const data = Object.fromEntries(formData);
+
+			// Ici vous pourriez envoyer les données à un service backend
+			console.log('Données du formulaire:', data);
+
+			// Afficher un message de confirmation
+			const alert = document.createElement('div');
+			alert.className = 'alert alert-success';
+			alert.innerHTML = `
+                <strong>Message envoyé !</strong> 
+                Merci pour votre message. Nous vous répondrons dans les plus brefs délais.
+            `;
+
+			this.parentNode.insertBefore(alert, this);
+			this.reset();
+
+			// Faire défiler vers le message
+			alert.scrollIntoView({ behavior: 'smooth' });
+
+			// Supprimer l'alerte après 5 secondes
+			setTimeout(() => {
+				alert.remove();
+			}, 5000);
+		});
+	</script>
+</body>
+
+</html>
