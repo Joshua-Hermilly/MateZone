@@ -132,8 +132,28 @@ public class Metier
 		this.connecterAuClient(pseudo, mdp);
 	}
 
+
 	/*-----------------------*/
-	/* Envoyer Message */
+	/* Channel               */
+	/*-----------------------*/
+	/**
+	 * Change le channel courant.
+	 * 
+	 * @param idChannel l'id du nouveau Channel
+	 */
+	public void changerChannel( int idChannel )
+	{
+		// Création du message eventDTO
+		ChatEventDTO event = new ChatEventDTO(EventEnum.CHANGER_CHANNEL)
+				.add(EventEnum.CHANGER_CHANNEL.getKeyIndex(0), idChannel);
+
+		System.out.println(event);
+		this.iEnvoyeur.envoyer(event);
+	}
+
+
+	/*-----------------------*/
+	/* Envoyer Message       */
 	/*-----------------------*/
 	/**
 	 * Envoie un message texte dans le canal de chat actuel.
@@ -229,9 +249,17 @@ public class Metier
 		// - - - - - - -
 		if (event.getType().equals(EventEnum.PERMS_CHANNELS)) 
 		{
+			this.iNotifieur.afficherListChannel(ChatEventDTO.jsonToLstEventDTO(event.toJson()));
 			System.out.println("Canaux disponibles reçus : " + event.getLstEventDTO().size() + " canaux");
 			return;
 		}
+
+		if (event.getType().equals(EventEnum.PERM_CHANNEL)) 
+		{
+			this.iNotifieur.afficherNvChannel(event);
+			return;
+		}
+		
 
 		// ERREUR
 		// - - - - - - -
