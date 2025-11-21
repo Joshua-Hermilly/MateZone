@@ -132,6 +132,16 @@ public class Controleur implements INotifieur
 	}
 
 	/**
+	 * Change le channel courant.
+	 * 
+	 * @param idChannel l'id du nouveau Channel
+	 */
+	public void changerChannel( int idChannel )
+	{
+		this.metier.changerChannel( idChannel );
+	}
+
+	/**
 	 * Envoie un message texte dans le chat en appelant le méthode dans le métier.
 	 * 
 	 * @param message le contenu du message à envoyer
@@ -239,6 +249,26 @@ public class Controleur implements INotifieur
 	public void afficherNvMessage(ChatEventDTO eventDTO) 
 	{
 		this.ihmGui.afficherNvMessage( eventDTO );
+	}
+
+	/**
+	 * Affiche une liste de channel dans l'interface utilisateur.
+	 * 
+	 * @param lstEventDTO l'événement contenant la liste des channel à afficher
+	 */
+	public void afficherListChannel(ChatEventDTO lstEventDTO) 
+	{
+		this.ihmGui.afficherListChannel( lstEventDTO );
+	}
+
+	/**
+	 * Affiche un nouveau channel dans l'interface utilisateur.
+	 * 
+	 * @param eventDTO l'événement contenant le nouveau channel à afficher
+	 */
+	public void afficherNvChannel(ChatEventDTO eventDTO) 
+	{
+		this.ihmGui.afficherNvChannel( eventDTO );
 	}
 
 	/*---------------------------*/

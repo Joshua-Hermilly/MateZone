@@ -66,6 +66,22 @@ public class IhmGui
 
 
 	/*-------------------------------*/
+	/* Affciher les channels         */
+	/*-------------------------------*/
+	public void afficherListChannel(ChatEventDTO eventDTO) 
+	{
+		if (this.mateZoneFrame != null) 
+			Platform.runLater( () -> this.mateZoneFrame.afficherListChannel(eventDTO) );
+	}
+
+	public void afficherNvChannel(ChatEventDTO eventDTO) 
+	{
+		if (this.mateZoneFrame != null)
+			Platform.runLater( () -> this.mateZoneFrame.afficherNvChannel(eventDTO) );
+	}
+
+
+	/*-------------------------------*/
 	/* Affciher les messages         */
 	/*-------------------------------*/
 	public void afficherListMessage(ChatEventDTO eventDTO) 

@@ -67,6 +67,12 @@ public class JavaFXApplicationManager
 				ConnexionFrame connexionFrame = new ConnexionFrame( controleur );
 				connexionFrame.start( connexionStage );
 
+				this.connexionStage.setOnCloseRequest(event ->
+				{
+					Platform.exit();
+					System.exit(0);
+				});
+	
 			} catch (Exception e) { e.printStackTrace(); }
 		});
 	}

@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.List;
 
 import client.controleur.Controleur;
-import client.ihm.panel.affichage.MessagePanel;
+import client.ihm.panel.affichage.*;
 import common.dto.ChatEventDTO;
 
 import javafx.application.Platform;
@@ -46,7 +46,9 @@ public class MateZoneFrame
 	/*-------------------------------*/
 	@FXML private Label      lblChannelName;
 	@FXML private ScrollPane scrollPaneMessages;
+	@FXML private ScrollPane scrollPaneChannel;
 	@FXML private VBox       messagesContainer;
+	@FXML private VBox       channelContainer;
 	@FXML private TextField  txtMessage;
 	@FXML private Button     btnEnvoyer;
 	@FXML private Button     btnPieceJointe;
@@ -84,9 +86,14 @@ public class MateZoneFrame
 		this.txtMessage    .setOnAction( e -> this.envoyerMessage    () );
 
 		// Configuration du scroll automatique
-		messagesContainer.heightProperty().addListener( (obs, oldVal, newVal) -> 
+		this.messagesContainer.heightProperty().addListener( (obs, oldVal, newVal) -> 
 		{
-			Platform.runLater( () -> scrollPaneMessages.setVvalue(1.0)) ;
+			Platform.runLater( () -> this.scrollPaneMessages.setVvalue(1.0)) ;
+		});
+
+		this.channelContainer.heightProperty().addListener( (obs, oldVal, newVal) -> 
+		{
+			Platform.runLater( () -> this.scrollPaneChannel.setVvalue(1.0)) ;
 		});
 	}
 
@@ -105,9 +112,16 @@ public class MateZoneFrame
 		this.stage.setTitle("MateZone");                                   // Titre
 		this.stage.getIcons().add(new Image("file:./logo/MateZone.png"));  // Îcone
 		this.stage.setScene(new Scene(loader.load(), 800, 600));           // Créer et définir la scène
+
+		this.stage.setOnCloseRequest(event -> { System.exit(0); }  );     //Fermer  X
+
 		this.stage.show();                                                 // Afficher
 	}
 
+
+	/*-------------------------------*/
+	/* Messages                     */
+	/*-------------------------------*/
 	/**
 	 * Affiche une liste de messages dans le salon de chat.
 	 * 
@@ -134,6 +148,40 @@ public class MateZoneFrame
 			{
 				MessagePanel messagePanel = new MessagePanel(eventDTO, this.controleur.getAdrServImg());
 				messagesContainer.getChildren().add(messagePanel.getParent());
+
+			}  catch (Exception e) { e.printStackTrace(); }
+		});
+	}
+
+	/*-------------------------------*/
+	/* Channels                      */
+	/*-------------------------------*/
+	/**
+	 * Affiche une liste de channels.
+	 * 
+	 * @param eventDTO l'événement contenant la liste des channels à afficher
+	 */
+	public void afficherListChannel(ChatEventDTO eventDTO) 
+	{
+		List<ChatEventDTO> lstEvent = eventDTO.getLstEventDTO();
+
+		for (ChatEventDTO chatEventDTO : lstEvent)
+			this.afficherNvChannel(chatEventDTO);
+	}
+
+	/**
+	 * Affiche un nouveau channels.
+	 * 
+	 * @param eventDTO l'événement contenant le nouveau channels à afficher
+	 */
+	public void afficherNvChannel(ChatEventDTO eventDTO) 
+	{
+		Platform.runLater(() -> 
+		{
+			try 
+			{
+				ChannelPanel channelPanel = new ChannelPanel( this.controleur, eventDTO );
+				this.channelContainer.getChildren().add( channelPanel.getParent()) ;
 
 			}  catch (Exception e) { e.printStackTrace(); }
 		});
@@ -168,7 +216,7 @@ public class MateZoneFrame
 		File selectedFile = chooser.showOpenDialog(this.stage);
 		if (selectedFile != null) 
 		{
-			controleur.envoyerPieceJoint(selectedFile.getAbsolutePath());
+			this.controleur.envoyerPieceJoint(selectedFile.getAbsolutePath());
 		}
 	}
 }

@@ -102,7 +102,13 @@ public enum EventEnum {
 	 * Événement représentant un canal spécifique avec ses permissions.
 	 * Clés requises : identifiant du canal, nom du canal
 	 */
-	PERM_CHANNEL(List.of("idChannel", "nomChannel"));
+	PERM_CHANNEL(List.of("idChannel", "nomChannel")),
+
+	/**
+	 * Événement représentant le changement d'un canal côté client.
+	 */
+	CHANGER_CHANNEL(List.of("idChannel"));
+
 
 	/*--------------------------*/
 	/* Attribut */

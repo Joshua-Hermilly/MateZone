@@ -33,8 +33,8 @@
 		<!--        BOUTTONS       -->
 		<!-- - - - - - - - - - - - -->
 		<HBox spacing="10" alignment="CENTER">
-			<Button fx:id="btnConnecter"   text="Se connecter"  style="-fx-background-color: #007aff; -fx-text-fill: white; -fx-padding: 10 30; -fx-font-weight: bold;" />
-			<Button fx:id="btnEnregistrer" text="S'enregistrer" style="-fx-background-color: #1e1e1e; -fx-text-fill: #007aff; -fx-padding: 10 30;" />
+			<Button fx:id="btnConnecter"   text="Se connecter"  style="-fx-background-color: #0f355eff; -fx-text-fill: white; -fx-padding: 10 30; -fx-font-weight: bold;" />
+			<Button fx:id="btnEnregistrer" text="S'enregistrer" style="-fx-background-color: #19023fff; -fx-text-fill: #007aff; -fx-padding: 10 30;" />
 		</HBox>
 	</VBox>
 </AnchorPane>
