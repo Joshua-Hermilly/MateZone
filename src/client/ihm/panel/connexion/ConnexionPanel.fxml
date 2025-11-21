@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Pos?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.ihm.panel.connexion.ConnexionPanel">
+	<VBox alignment="CENTER" spacing="20" style="-fx-background-color: #1e1e1e; -fx-padding: 30;">
+	   
+		<!-- - - - - - - - - - - - -->
+		<!--         TITRE         -->
+		<!-- - - - - - - - - - - - -->
+		<Label text="Connexion" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;" />
+
+		<!-- - - - - - - - - - - - -->
+		<!--         SAISIE        -->
+		<!-- - - - - - - - - - - - -->
+		<!-- pseudo -->
+		<VBox spacing="10" alignment="CENTER">
+			<Label text="Pseudo" style="-fx-font-size: 12px; -fx-text-fill: #b4b4b4;" />
+			<TextField fx:id="txtPseudo" promptText="Entrez votre pseudo" prefWidth="200" style="-fx-background-color: #2c2c2c; -fx-text-fill: white;" />
+		</VBox>
+
+		<!-- mdp -->
+		<VBox spacing="10" alignment="CENTER">
+			<Label text="Mot de passe" style="-fx-font-size: 12px; -fx-text-fill: #b4b4b4;" />
+			<PasswordField fx:id="pwdMdp" promptText="Entrez votre mot de passe" prefWidth="200" style="-fx-background-color: #2c2c2c; -fx-text-fill: white;" />
+		</VBox>
+
+		<!-- - - - - - - - - - - - -->
+		<!--        BOUTTONS       -->
+		<!-- - - - - - - - - - - - -->
+		<HBox spacing="10" alignment="CENTER">
+			<Button fx:id="btnConnecter"   text="Se connecter"  style="-fx-background-color: #007aff; -fx-text-fill: white; -fx-padding: 10 30; -fx-font-weight: bold;" />
+			<Button fx:id="btnEnregistrer" text="S'enregistrer" style="-fx-background-color: #1e1e1e; -fx-text-fill: #007aff; -fx-padding: 10 30;" />
+		</HBox>
+	</VBox>
+</AnchorPane>

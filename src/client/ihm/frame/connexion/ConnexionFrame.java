@@ -1,65 +1,52 @@
 package client.ihm.frame.connexion;
 
-import java.awt.Toolkit;
-import javax.swing.JFrame;
-
 import client.controleur.Controleur;
-import client.ihm.panel.connexion.ConnexionPanel;
+import client.ihm.panel.connexion.*;
 
-/*-------------------------------*/
-/* Class ConnexionFrame          */
-/*-------------------------------*/
-/**
- * Fenêtre de connexion qui étend JFrame et sert d'interface principale pour
- * l'authentification.
- * Cette fenêtre contient le panneau ConnexionPanel et configure l'apparence
- * générale de la fenêtre.
- * Elle est affichée au lancement de l'application pour permettre à
- * l'utilisateur de se connecter ou s'enregistrer.
- *
- * @author Joshua Hermilly
- * @version V1
- * @date 08/11/25
- */
-public class ConnexionFrame extends JFrame
+import java.io.IOException;
+import java.net.URL;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.stage.Stage;
+
+/*--------------------------------*/
+/* Class ConnexionFrame           */
+/*--------------------------------*/
+public class ConnexionFrame extends Application 
 {
-	/*--------------------------*/
-	/* Attributs                */
-	/*--------------------------*/
-	/**
-	 * Panneau de connexion contenant les éléments d'interface utilisateur.
-	 * Gère la saisie des identifiants et les boutons d'action.
-	 */
-	private ConnexionPanel panelConnexion;
+	/*-------------------------------*/
+	/* Attributs                     */
+	/*-------------------------------*/
+	private Controleur controleur;
 
-	/*--------------------------*/
-	/* Constructeur             */
-	/*--------------------------*/
-	/**
-	 * Constructeur de la fenêtre de connexion.
-	 * Configure les propriétés de la fenêtre (titre, icône, taille) et initialise
-	 * le panneau de connexion.
-	 * La fenêtre est centrée sur l'écran et non redimensionnable.
-	 * 
-	 * @param controleur le contrôleur principal de l'application
-	 */
+	/*-------------------------------*/
+	/* Constructeur                  */
+	/*-------------------------------*/
 	public ConnexionFrame(Controleur controleur) 
 	{
-		this.setTitle("Connexion");
-		this.setResizable(false);
-		this.setIconImage(Toolkit.getDefaultToolkit().getImage("./image/image_1762797388911.png"));
+		this.controleur = controleur;
+	}
 
-		/*-------------------------------*/
-		/* Création des composants       */
-		/*-------------------------------*/
-		this.panelConnexion = new ConnexionPanel(controleur);
+	/*-------------------------------*/
+	/* Lancment de la frame          */
+	/*-------------------------------*/
+	@Override
+	public void start(Stage scenePrincipale) throws IOException
+	{
+		// Charger l'interface utilisateur via FXML
+		String     lienFic   = "/client/ihm/panel/connexion/ConnexionPanel.fxml";             // Adresse du fichier FXML
+		URL        urlFic    = getClass().getResource( lienFic);                              // URL du fichier FXML pour FXMLLoader
+		FXMLLoader loader    = new FXMLLoader( urlFic );                                      // Création du loader FXML
+		loader.setControllerFactory( c -> new ConnexionPanel(controleur) );                   // Passer controleur au panel
 
-		/*-------------------------------*/
-		/* Positionnement des composants */
-		/*-------------------------------*/
-		this.add(this.panelConnexion);
+		scenePrincipale.setTitle( "Connexion" );                                              // Titre
+		scenePrincipale.getIcons().add( new Image("file:./image/image_1762797388911.png") );  // Îcone
+		scenePrincipale.setResizable(false);                                                  // Redimensionnement desactivé
+		scenePrincipale.setScene( new Scene(loader.load()) );                                 // Créer et définir la scène
 
-		this.pack();
-		this.setLocationRelativeTo(null);
+		scenePrincipale.centerOnScreen();                                                     // Centrer
+		scenePrincipale.show();                                                               // Afficher
 	}
 }
