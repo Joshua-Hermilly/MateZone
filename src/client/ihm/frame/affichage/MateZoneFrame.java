@@ -44,18 +44,12 @@ public class MateZoneFrame
 	/*-------------------------------*/
 	/* Attributs FXML                */
 	/*-------------------------------*/
-	@FXML
-	private Label      lblChannelName;
-	@FXML
-	private ScrollPane scrollPaneMessages;
-	@FXML
-	private VBox       messagesContainer;
-	@FXML
-	private TextField  txtMessage;
-	@FXML
-	private Button     btnEnvoyer;
-	@FXML
-	private Button     btnPieceJointe;
+	@FXML private Label      lblChannelName;
+	@FXML private ScrollPane scrollPaneMessages;
+	@FXML private VBox       messagesContainer;
+	@FXML private TextField  txtMessage;
+	@FXML private Button     btnEnvoyer;
+	@FXML private Button     btnPieceJointe;
 
 	/*-------------------------------*/
 	/* Constructeur                  */
