@@ -42,7 +42,7 @@ public class ConnexionFrame extends Application
 		loader.setControllerFactory( c -> new ConnexionPanel(controleur) );                   // Passer controleur au panel
 
 		scenePrincipale.setTitle( "Connexion" );                                              // Titre
-		scenePrincipale.getIcons().add( new Image("file:./image/image_1762797388911.png") );  // Îcone
+		scenePrincipale.getIcons().add( new Image("file:./logo/MateZone.png") );  // Îcone
 		scenePrincipale.setResizable(false);                                                  // Redimensionnement desactivé
 		scenePrincipale.setScene( new Scene(loader.load()) );                                 // Créer et définir la scène
 
