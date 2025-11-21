@@ -21,9 +21,10 @@ import common.protocol.EventEnum;
  * @version V1
  * @date 08/11/25
  */
-public class Metier {
+public class Metier 
+{
 	/*--------------------------*/
-	/* Attributs */
+	/* Attributs                */
 	/*--------------------------*/
 	/**
 	 * Interface d'envoi pour communiquer avec le serveur.
@@ -63,16 +64,17 @@ public class Metier {
 	 * @param iEnvoyeur  interface d'envoi pour communiquer avec le serveur
 	 * @param iNotifieur interface de notification pour communiquer avec l'IHM
 	 */
-	public Metier(IEnvoyeur iEnvoyeur, INotifieur iNotifieur) {
-		this.iEnvoyeur = iEnvoyeur;
+	public Metier(IEnvoyeur iEnvoyeur, INotifieur iNotifieur) 
+	{
+		this.iEnvoyeur  = iEnvoyeur;
 		this.iNotifieur = iNotifieur;
 	}
 
 	/*-----------------------------------*/
-	/* METIER */
+	/* METIER                            */
 	/*-----------------------------------*/
 	/*--------------------------*/
-	/* Client */
+	/* Client                   */
 	/*--------------------------*/
 	/**
 	 * Configure les informations du client après une connexion réussie.
@@ -82,8 +84,9 @@ public class Metier {
 	 * @param idClient     l'identifiant unique attribué au client par le serveur
 	 * @param pseudoClient le pseudonyme du client connecté
 	 */
-	public void setClient(int idClient, String pseudoClient) {
-		this.idClient = idClient;
+	public void setClient(int idClient, String pseudoClient) 
+	{
+		this.idClient     = idClient;
 		this.pseudoClient = pseudoClient;
 
 		this.iNotifieur.succesLogin(this.pseudoClient);
@@ -100,7 +103,8 @@ public class Metier {
 	 * @param pseudo le pseudonyme du client
 	 * @param mdp    le mot de passe du client
 	 */
-	public void connecterAuClient(String pseudo, String mdp) {
+	public void connecterAuClient(String pseudo, String mdp) 
+	{
 		// Création du message eventDTO
 		ChatEventDTO event = new ChatEventDTO(EventEnum.LOGIN)
 				.add(EventEnum.LOGIN.getKeyIndex(0), pseudo)
@@ -117,7 +121,8 @@ public class Metier {
 	 * @param pseudo le pseudonyme souhaité pour le nouvel utilisateur
 	 * @param mdp    le mot de passe souhaité pour le nouvel utilisateur
 	 */
-	public void enregistrerUtilisateur(String pseudo, String mdp) {
+	public void enregistrerUtilisateur(String pseudo, String mdp) 
+	{
 		// Création du message eventDTO
 		ChatEventDTO event = new ChatEventDTO(EventEnum.SIGNUP)
 				.add(EventEnum.SIGNUP.getKeyIndex(0), pseudo)
@@ -139,7 +144,8 @@ public class Metier {
 	 * 
 	 * @param texte le contenu du message à envoyer
 	 */
-	public void envoyerMessage(String texte) {
+	public void envoyerMessage(String texte) 
+	{
 		// Création du message eventDTO
 		ChatEventDTO event = new ChatEventDTO(EventEnum.NEW_MESSAGE)
 				.add(EventEnum.NEW_MESSAGE.getKeyIndex(0), this.idClient)
@@ -156,7 +162,8 @@ public class Metier {
 	 * 
 	 * @param bytes les données binaires de la pièce jointe à envoyer
 	 */
-	public void envoyerPieceJoint(byte[] bytes) {
+	public void envoyerPieceJoint(byte[] bytes)
+	{
 		// Création du message eventDTO NEW_MESSAGE_IMG ( List.of( "IdGroupe" ,
 		// "idClient", "byte" ) ),
 		ChatEventDTO event = new ChatEventDTO(EventEnum.NEW_MESSAGE_IMG)
@@ -168,7 +175,7 @@ public class Metier {
 	}
 
 	/*-----------------------------------*/
-	/* INotificateur */
+	/* INotificateur                     */
 	/*-----------------------------------*/
 	/**
 	 * Traite les événements de notification reçus du serveur.
