@@ -1,96 +1,176 @@
 package client.ihm.frame.affichage;
 
-import java.awt.BorderLayout;
-
-import javax.swing.JFrame;
+import java.io.File;
+import java.util.List;
 
 import client.controleur.Controleur;
-import client.ihm.panel.affichage.SaisieMessagePanel;
-import client.ihm.panel.affichage.SalonPanel;
+import client.ihm.panel.affichage.MessagePanel;
 import common.dto.ChatEventDTO;
+
+import javafx.application.Platform;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 /*-------------------------------*/
 /* Class MateZoneFrame           */
 /*-------------------------------*/
 /**
- * Fenêtre principale de MateZone qui étend JFrame et sert d'interface de chat.
- * Cette fenêtre contient le panneau d'affichage des messages (SalonPanel) et
- * le panneau de saisie des messages (SaisieMessagePanel).
+ * Fenêtre principale de MateZone utilisant JavaFX et FXML.
+ * Cette fenêtre contient l'affichage des messages et la zone de saisie.
  * Elle est affichée après une connexion réussie de l'utilisateur.
  *
  * @author Joshua Hermilly
- * @version V1
- * @date 08/11/25
+ * @version V2 - JavaFX
+ * @date 21/11/25
  */
-public class MateZoneFrame extends JFrame 
+public class MateZoneFrame 
 {
 	/*--------------------------*/
 	/* Attributs                */
 	/*--------------------------*/
-	/**
-	 * Panneau de saisie des messages situé en bas de la fenêtre.
-	 * Permet à l'utilisateur de taper et envoyer des messages ou pièces jointes.
-	 */
-	private SaisieMessagePanel saisieMessagePanel;
+	private Controleur controleur;
+	private Stage      stage;
+	private String     channelName;
 
-	/**
-	 * Panneau d'affichage des messages situé au centre de la fenêtre.
-	 * Affiche l'historique et les nouveaux messages du chat.
-	 */
-	private SalonPanel salonPanel;
+	/*--------------------------*/
+	/* Attributs FXML           */
+	/*--------------------------*/
+	@FXML private Label      lblChannelName;
+	@FXML private ScrollPane scrollPaneMessages;
+	@FXML private VBox       messagesContainer;
+	@FXML private TextField  txtMessage;
+	@FXML private Button     btnEnvoyer;
+	@FXML private Button     btnPieceJointe;
+
 
 	/*--------------------------*/
 	/* Constructeur             */
 	/*--------------------------*/
 	/**
 	 * Constructeur de la fenêtre principale MateZone.
-	 * Configure les propriétés de la fenêtre et initialise les panneaux d'affichage
-	 * et de saisie.
-	 * La fenêtre est redimensionnable et centrée sur l'écran.
 	 * 
 	 * @param controleur le contrôleur principal de l'application
 	 */
 	public MateZoneFrame(Controleur controleur) 
 	{
-		this.setTitle("MateZone");
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setResizable(true);
-		this.setSize(800, 600);
+		this.controleur  = controleur;
+		this.channelName = "Général";
+	}
 
-		/*-------------------------------*/
-		/* Création des composants */
-		/*-------------------------------*/
-		this.saisieMessagePanel = new SaisieMessagePanel(controleur);
-		this.salonPanel         = new SalonPanel("#TEMP14>", controleur.getAdrServImg() );
+	/*--------------------------*/
+	/* Initialisation FXML      */
+	/*--------------------------*/
+	/**
+	 * Méthode appelée automatiquement après le chargement du FXML.
+	 * Configure les événements des boutons et du champ de texte.
+	 */
+	@FXML
+	public void initialize() 
+	{
+		// Configuration du nom du canal
+		this.lblChannelName.setText( this.channelName );
 
-		/*-------------------------------*/
-		/* Positionnement des composants */
-		/*-------------------------------*/
-		this.add(this.salonPanel        , BorderLayout.CENTER);
-		this.add(this.saisieMessagePanel, BorderLayout.SOUTH );
+		// Configuration des événements
+		this.btnEnvoyer    .setOnAction( e -> this.envoyerMessage    () );
+		this.btnPieceJointe.setOnAction( e -> this.envoyerPieceJointe() );
+		this.txtMessage    .setOnAction( e -> this.envoyerMessage    () );
 
-		this.setLocationRelativeTo(null);
+		// Configuration du scroll automatique
+		messagesContainer.heightProperty().addListener( ( obs, oldVal, newVal ) -> 
+		{
+			Platform.runLater( () -> scrollPaneMessages.setVvalue(1.0) );
+		});
+	}
+
+	/*--------------------------*/
+	/* Méthodes publiques       */
+	/*--------------------------*/
+	/**
+	 * Affiche la fenêtre MateZone.
+	 */
+	public void afficherFrame() throws Exception 
+	{
+		FXMLLoader loader = new FXMLLoader( getClass().getResource("MateZoneFrame.fxml") );
+		loader.setController(this);
+
+		this.stage = new Stage();
+		this.stage.setTitle("MateZone");
+		this.stage.getIcons().add(new Image("file:./image/image_1762797388911.png"));
+		this.stage.setScene(new Scene(loader.load(), 800, 600));
+		this.stage.show();
 	}
 
 	/**
 	 * Affiche une liste de messages dans le salon de chat.
-	 * Délègue l'affichage au panneau SalonPanel.
 	 * 
 	 * @param eventDTO l'événement contenant la liste des messages à afficher
 	 */
 	public void afficherListMessage(ChatEventDTO eventDTO) 
 	{
-		 this.salonPanel.addLstMessage(eventDTO);
+		List<ChatEventDTO> lstEvent = eventDTO.getLstEventDTO();
+	
+		for (ChatEventDTO chatEventDTO : lstEvent) 
+			this.afficherNvMessage(chatEventDTO);
 	}
 
 	/**
 	 * Affiche un nouveau message dans le salon de chat.
-	 * Délègue l'affichage au panneau SalonPanel.
 	 * 
 	 * @param eventDTO l'événement contenant le nouveau message à afficher
 	 */
-	public void afficherNvMessage(ChatEventDTO eventDTO) 
+	public void afficherNvMessage(ChatEventDTO eventDTO)
 	{
-		this.salonPanel.addMessage(eventDTO);
+		Platform.runLater( () ->
+		{
+			try
+			{
+				MessagePanel messagePanel = new MessagePanel( eventDTO, this.controleur.getAdrServImg() );
+				messagesContainer.getChildren().add( messagePanel.getParent() );
+			
+			} catch (Exception e) { e.printStackTrace(); }
+		});
+	}
+
+
+	/*--------------------------*/
+	/* Envoyer                  */
+	/*--------------------------*/
+	/**
+	 * Envoie le message saisi dans le champ de texte.
+	 */
+	private void envoyerMessage()
+	{
+		String message = this.txtMessage.getText().trim();
+		
+		if (!message.isEmpty())
+		{
+			this.controleur.envoyerMessage( message );
+			this.txtMessage.setText("");
+		}
+	}
+
+	/**
+	 * Ouvre un sélecteur de fichier pour envoyer une pièce jointe.
+	 */
+	private void envoyerPieceJointe() 
+	{
+		FileChooser chooser = new FileChooser();
+		chooser.setTitle("Choisir une image");
+		chooser.getExtensionFilters().add( new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg", "*.gif") );
+
+		File selectedFile = chooser.showOpenDialog( this.stage );
+		if ( selectedFile != null )
+		{
+			controleur.envoyerPieceJoint( selectedFile.getAbsolutePath() );
+		}
 	}
 }
