@@ -7,40 +7,39 @@
 
 
 <VBox xmlns:fx="http://javafx.com/fxml/1"
-      style="-fx-background-color: #1e1e1e; -fx-background-radius: 8; -fx-border-color: #323232; -fx-border-radius: 8; -fx-border-width: 1;"
-      spacing="0" maxWidth="Infinity">
+	  style="-fx-background-color: #1e1e1e; -fx-background-radius: 8; -fx-border-color: #323232; -fx-border-radius: 8; -fx-border-width: 1;"
+	  spacing="0" maxWidth="Infinity">
 
-    <padding>
-        <Insets top="12" right="15" bottom="12" left="15"/>
-    </padding>
+	<padding>
+		<Insets top="12" right="15" bottom="12" left="15"/>
+	</padding>
 
 
 	<!-- - - - - - - - - - - - -->
 	<!--        MESSAGE        -->
 	<!-- - - - - - - - - - - - -->
-    <HBox spacing="15" alignment="TOP_LEFT">
+	<HBox spacing="15" alignment="TOP_LEFT">
 
 		<!-- Avatar -->
-        <ImageView fx:id="imgAvatar" fitWidth="40" fitHeight="40" preserveRatio="true"> </ImageView>
+		<ImageView fx:id="imgAvatar" fitWidth="40" fitHeight="40" preserveRatio="true"> </ImageView>
 
-        <!-- message -->
-        <VBox spacing="5" HBox.hgrow="ALWAYS">
+		<!-- message -->
+		<VBox spacing="5" HBox.hgrow="ALWAYS">
 
-            <!-- en-tête -->
-            <HBox spacing="10" alignment="CENTER_LEFT">
+			<!-- en-tête -->
+			<HBox spacing="10" alignment="CENTER_LEFT">
 
 				<!-- pseudo -->
-                <Label fx:id="lblPseudo" style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #007aff;"/>
+				<Label fx:id="lblPseudo" style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #007aff;"/>
 
 				<!-- date -->
-                <Label fx:id="lblDate" style="-fx-font-size: 11px; -fx-text-fill: #969696;"/>
+				<Label fx:id="lblDate" style="-fx-font-size: 11px; -fx-text-fill: #969696;"/>
 
-            </HBox>
+			</HBox>
 
-            <!-- contenu -->
-            <Label fx:id="lblMessage" wrapText="true" style="-fx-font-size: 14px; -fx-text-fill: white;" maxWidth="Infinity"/>
-
-        </VBox>
-    </HBox>
+			<!-- contenu -->
+			<Label fx:id="lblMessage" wrapText="true" style="-fx-font-size: 14px; -fx-text-fill: white; -fx-background-color: transparent; -fx-border-color: transparent;" maxWidth="Infinity"/>
+		</VBox>
+	</HBox>
 
 </VBox>
