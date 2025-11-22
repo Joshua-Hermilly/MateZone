@@ -136,9 +136,10 @@ public class Controleur implements INotifieur
 	 * 
 	 * @param idChannel l'id du nouveau Channel
 	 */
-	public void changerChannel( int idChannel )
+	public void changerChannel( int idChannel, String nomChannel )
 	{
-		this.metier.changerChannel( idChannel );
+		this.metier.changerChannel( idChannel  );
+		this.ihmGui.changerChannel( nomChannel );
 	}
 
 	/**
@@ -146,7 +147,7 @@ public class Controleur implements INotifieur
 	 * 
 	 * @param message le contenu du message à envoyer
 	 */
-	public void envoyerMessage(String message) 
+	public void envoyerMessage( String message ) 
 	{
 		this.metier.envoyerMessage( message );
 	}

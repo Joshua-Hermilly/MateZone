@@ -80,6 +80,12 @@ public class IhmGui
 			Platform.runLater( () -> this.mateZoneFrame.afficherNvChannel(eventDTO) );
 	}
 
+	public void changerChannel( String nomChannel )
+	{
+		if (this.mateZoneFrame != null)
+			Platform.runLater( () -> this.mateZoneFrame.setNomCannel(nomChannel) );
+	}
+
 
 	/*-------------------------------*/
 	/* Affciher les messages         */
