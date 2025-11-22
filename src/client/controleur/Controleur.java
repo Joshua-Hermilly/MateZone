@@ -79,8 +79,7 @@ public class Controleur implements INotifieur
 		this.ihmGui = new IhmGui( this );
 
 		INotifieur iNotifieur = this;
-		IEnvoyeur  iEnvoyeur = new WebSocketChatAdapter( "ws://"+Controleur.ADRESSE_SERVEUR+Controleur.PORT_SERVEUR_CHAT, iNotifieur );
-		System.out.println( Controleur.ADRESSE_SERVEUR+Controleur.PORT_SERVEUR_CHAT );
+		IEnvoyeur  iEnvoyeur  = new WebSocketChatAdapter( "ws://"+Controleur.ADRESSE_SERVEUR+Controleur.PORT_SERVEUR_CHAT, iNotifieur );
 		iEnvoyeur.connecter();
 
 		this.metier = new Metier( iEnvoyeur, iNotifieur );
@@ -177,8 +176,7 @@ public class Controleur implements INotifieur
 	 * Extrait les octets d'un fichier depuis son chemin.
 	 * 
 	 * @param ImageName le chemin vers le fichier à lire
-	 * @return un tableau d'octets contenant le contenu du fichier, ou null si une
-	 *         erreur survient
+	 * @return un tableau d'octets contenant le contenu du fichier, ou null si une erreur survient
 	 */
 	private byte[] extractBytes(String ImageName) 
 	{

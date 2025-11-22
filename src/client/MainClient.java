@@ -26,6 +26,8 @@ public class MainClient
 	/*--------------------------*/
 	public static void main(String[] args) 
 	{		
+		// Config 
+		// - - - - - - - - - 
 		String ADRESSE  = "";
 		int    CHATPORT = 0;
 		int    IMGPORT  = 0;
@@ -43,10 +45,13 @@ public class MainClient
 		
 		} catch (Exception e) { System.err.println("config" ); e.printStackTrace(); System.exit( 1 );	}
 
+
+		// Lancement 
+		// - - - -  - -
 		try
 		{
 			Controleur controleur = new Controleur( ADRESSE, CHATPORT, IMGPORT );
-			controleur.lancerApp(); // affiche la fenêtre
+			controleur.lancerApp();
 
 		} catch (Exception e) { e.printStackTrace(); }
 	}

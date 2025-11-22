@@ -59,6 +59,10 @@ public class MessagePanel
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("MessagePanel.fxml"));
 		loader.setController(this);
 		this.parent = loader.load();
+
+
+		// ----- REND LE PANEL CLIQUABLE -----
+		this.parent.setOnMouseClicked( e -> this.estCliquee() );
 	}
 
 	/*--------------------------*/
@@ -87,6 +91,14 @@ public class MessagePanel
 			// Configuration de l'avatar
 			this.configurerAvatar( idClient );
 		}
+	}
+
+	/*--------------------------*/
+	/* Listeners               */
+	/*--------------------------*/
+	private void estCliquee()
+	{
+		System.out.println( "MESSAGE CLIQUEEE :: " + event);
 	}
 
 	/*--------------------------*/
