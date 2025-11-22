@@ -38,6 +38,18 @@ public enum EventEnum
 	 * Clés requises : pseudo, mot de passe
 	 */
 	SIGNUP(List.of("pseudo", "mdp")),
+	
+	/**
+	 * Événement 
+	 * Clés requises : idChannel, nomChannel
+	 */
+	PERM_CHANNEL(List.of("idChannel", "nomChannel")),
+
+	/**
+	 * Événement 
+	 * Clés requises : liste d'event 
+	 */
+	PERMS_CHANNELS(List.of()),
 
 	/**
 	 * Événement de succès de connexion.
@@ -80,6 +92,11 @@ public enum EventEnum
 	 * Clés requises : identifiant groupe, identifiant client, données binaires
 	 */
 	NEW_MESSAGE_IMG(List.of("IdGroupe", "idClient", "byte")),
+
+	 /**
+     * Événement représentant le changement d'un canal côté client.
+     */
+    CHANGER_CHANNEL(List.of("idChannel")),
 
 	/**
 	 * Événement de succès général avec message.

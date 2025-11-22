@@ -1,6 +1,7 @@
 package server.metier.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -120,7 +121,9 @@ public class ClientService
 					.add(EventEnum.SUCCESS_LOGIN.getKeyIndex(1), pseudo  );
 
 			client.send(event.toJson());
-			this.envoyerMessageList(1, client);
+			this.envoyerPermChannel(idClient, client);
+			this.handleNewChannel(client, new ChatEventDTO(EventEnum.CHANGER_CHANNEL).add(EventEnum.CHANGER_CHANNEL.getKeyIndex(0), 1));
+			
 		}
 	}
 
@@ -159,6 +162,32 @@ public class ClientService
 	}
 
 	/**
+	 * Gère l'envoye des accees au channel  pour un utilisateur done
+	 * Format attendu:"
+	 */
+	public void envoyerPermChannel(int idClient , WebSocket clientSocket)
+	{
+		HashMap<Integer, String> permCli;
+		List<ChatEventDTO>       lstEventDTO = new ArrayList<ChatEventDTO>();
+		ChatEventDTO event;
+
+		permCli = iUserRep.permChannel(idClient);
+
+
+		for (Integer key : permCli.keySet()) 
+		{
+		 lstEventDTO.add(new ChatEventDTO(EventEnum.PERM_CHANNEL)
+						.add(EventEnum.PERM_CHANNEL.getKeyIndex(0), key              )
+						.add(EventEnum.PERM_CHANNEL.getKeyIndex(1), permCli.get(key) )
+						);
+		}
+
+		event = new ChatEventDTO(EventEnum.PERMS_CHANNELS, lstEventDTO);
+
+		clientSocket.send(event.toJson());
+	}
+
+	/**
 	 * Gère l'insertion d'un nouveau message
 	 * Format attendu: "NEWMESSAGE:idClient:idChannel:leMessage"
 	 */
@@ -192,9 +221,11 @@ public class ClientService
 	 */
 	public void handleNewChannel(WebSocket client, ChatEventDTO eventRec) 
 	{
-		int idChannel = (int) eventRec.getDataIndex(0);
-
-		this.iWebSocketMateZone.setClientChannel(client, idChannel);
+		try {
+				int idChannel = (int) Double.parseDouble(eventRec.getDataIndex(0).toString());
+				this.iWebSocketMateZone.setClientChannel(client, idChannel);
+				this.envoyerMessageList(idChannel, client);
+		} catch (Exception e) { e.printStackTrace();}
 	}
 
 	private void envoyerMessageList(int IdGroupe, WebSocket client)
