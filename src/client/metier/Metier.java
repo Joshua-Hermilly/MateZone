@@ -147,7 +147,7 @@ public class Metier
 		ChatEventDTO event = new ChatEventDTO(EventEnum.CHANGER_CHANNEL)
 				.add(EventEnum.CHANGER_CHANNEL.getKeyIndex(0), idChannel);
 
-		System.out.println(event);
+		this.idChannel = idChannel;
 		this.iEnvoyeur.envoyer(event);
 	}
 
@@ -168,9 +168,9 @@ public class Metier
 	{
 		// Création du message eventDTO
 		ChatEventDTO event = new ChatEventDTO(EventEnum.NEW_MESSAGE)
-				.add(EventEnum.NEW_MESSAGE.getKeyIndex(0), this.idClient)
+				.add(EventEnum.NEW_MESSAGE.getKeyIndex(0), this.idClient )
 				.add(EventEnum.NEW_MESSAGE.getKeyIndex(1), this.idChannel)
-				.add(EventEnum.NEW_MESSAGE.getKeyIndex(2), texte);
+				.add(EventEnum.NEW_MESSAGE.getKeyIndex(2), texte         );
 
 		this.iEnvoyeur.envoyer(event);
 	}

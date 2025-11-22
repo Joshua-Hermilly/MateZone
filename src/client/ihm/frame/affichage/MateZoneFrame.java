@@ -52,6 +52,7 @@ public class MateZoneFrame
 	@FXML private TextField  txtMessage;
 	@FXML private Button     btnEnvoyer;
 	@FXML private Button     btnPieceJointe;
+	@FXML private Button     btnParametre;
 
 	/*-------------------------------*/
 	/* Constructeur                  */
@@ -83,6 +84,7 @@ public class MateZoneFrame
 		// Configuration des événements
 		this.btnEnvoyer    .setOnAction( e -> this.envoyerMessage    () );
 		this.btnPieceJointe.setOnAction( e -> this.envoyerPieceJointe() );
+		this.btnParametre  .setOnAction( e -> this.ouvrirParametre   () );
 		this.txtMessage    .setOnAction( e -> this.envoyerMessage    () );
 
 		// Configuration du scroll automatique
@@ -130,6 +132,8 @@ public class MateZoneFrame
 	public void afficherListMessage(ChatEventDTO eventDTO) 
 	{
 		List<ChatEventDTO> lstEvent = eventDTO.getLstEventDTO();
+
+		this.messagesContainer.getChildren().clear();
 
 		for (ChatEventDTO chatEventDTO : lstEvent)
 			this.afficherNvMessage(chatEventDTO);
@@ -187,6 +191,19 @@ public class MateZoneFrame
 		});
 	}
 
+	public void setNomCannel( String nom )
+	{ 
+	Platform.runLater(() -> 
+		{
+			try 
+			{
+				this.lblChannelName.setText( nom );
+
+			}  catch (Exception e) { e.printStackTrace(); }
+		});
+		
+	}
+
 	/*-------------------------------*/
 	/* Envoyer                       */
 	/*-------------------------------*/
@@ -199,7 +216,7 @@ public class MateZoneFrame
 
 		if (!message.isEmpty()) 
 		{
-			this.controleur.envoyerMessage(message);
+			this.controleur.envoyerMessage(message );
 			this.txtMessage.setText("");
 		}
 	}
@@ -218,5 +235,15 @@ public class MateZoneFrame
 		{
 			this.controleur.envoyerPieceJoint(selectedFile.getAbsolutePath());
 		}
+	}
+
+
+	/*-------------------------------*/
+	/* Paramètre                     */
+	/*-------------------------------*/
+	public void ouvrirParametre ()
+	{
+		System.out.println("hey");
+		//this.controleur.ouvrirParametre();
 	}
 }

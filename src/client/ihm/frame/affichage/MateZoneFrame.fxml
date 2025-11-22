@@ -16,6 +16,24 @@
     </top>
 
     <!-- - - - - - - - - - - - -->
+    <!--      CHANNEL LIST     -->
+    <!-- - - - - - - - - - - - -->
+    <left>
+        <!-- ScrollPane -->
+        <ScrollPane fx:id="scrollPaneChannel" style="-fx-background: #12013aff; -fx-background-color: #12013aff;" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" fitToWidth="true">
+            <VBox fx:id="channelContainer" 
+                  style="-fx-background-color: #12013aff;" 
+                  spacing="5">
+                <padding>
+                    <Insets top="10" right="10" bottom="10" left="10"/>
+                </padding>
+            </VBox>
+        </ScrollPane>
+    </left>
+
+
+
+    <!-- - - - - - - - - - - - -->
 	<!--        CHANNEL        -->
 	<!-- - - - - - - - - - - - -->
     <center>
@@ -36,15 +54,24 @@
     
 	</center>
 
+
     <!-- - - - - - - - - - - - -->
-	<!--         SAISIE        -->
+	<!--         SUD          -->
 	<!-- - - - - - - - - - - - -->
     <bottom>
         <HBox style="-fx-background-color: #1e1e1e; -fx-padding: 15 20; -fx-spacing: 10;" alignment="CENTER_LEFT">
 
+            <!-- btn Param -->
+            <Button fx:id="btnParametre" text="⚙ Paramètre"
+                                style="-fx-background-color: #2c2c2c; -fx-text-fill: #007aff; -fx-background-radius: 5; -fx-font-size: 16px;"
+                                minWidth="120" minHeight="40"/>
+
+            <!-- Séparateur  -->
+            <Separator orientation="vertical" style="-fx-background-color: #121212;" VBox.vgrow="ALWAYS"> <HBox.margin> <Insets left="23"/> </HBox.margin> </Separator>
+
 			<!-- Zone de saisie -->
             <TextField fx:id="txtMessage" 
-                       promptText="Tapez votre message..." 
+                       promptText="Tapez votr170 message..." 
                        style="-fx-background-color: #1d0125ff; -fx-text-fill: white; -fx-prompt-text-fill: #888888; -fx-background-radius: 5;"
                        HBox.hgrow="ALWAYS">
             
@@ -72,20 +99,6 @@
         </HBox>
     </bottom>
 
-    <!-- - - - - - - - - - - - -->
-    <!--      CHANNEL LIST     -->
-    <!-- - - - - - - - - - - - -->
-    <left>
-        <!-- ScrollPane -->
-        <ScrollPane fx:id="scrollPaneChannel" style="-fx-background: #121212; -fx-background-color: #121212;" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" fitToWidth="true">
-            <VBox fx:id="channelContainer" 
-                  style="-fx-background-color: #12013aff;" 
-                  spacing="5">
-                <padding>
-                    <Insets top="10" right="10" bottom="10" left="10"/>
-                </padding>
-            </VBox>
-        </ScrollPane>
-    </left>
+
 
 </BorderPane>

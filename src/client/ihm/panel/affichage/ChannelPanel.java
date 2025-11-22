@@ -3,16 +3,10 @@ package client.ihm.panel.affichage;
 import common.dto.ChatEventDTO;
 import client.controleur.Controleur;
 
-import java.lang.ModuleLayer.Controller;
-import java.util.ResourceBundle.Control;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.shape.Circle;
 
 /*-------------------------------*/
 /* Class ChannelPanel            */
@@ -36,6 +30,7 @@ public class ChannelPanel
 	private ChatEventDTO event;
 	private Parent       parent;
 	private int          idChannel;
+	private String       nmChannel;
 
 	/*--------------------------*/
 	/* Attributs FXML           */
@@ -52,13 +47,15 @@ public class ChannelPanel
 		this.controleur = controleur;
 		this.event      = event;
 
-		if ( event != null && event.getData().get("idChannel") != null )
+
+		if ( event != null )
 		{
 			try 
 			{
-				this.idChannel = Integer.parseInt( event.getData().get("idChannel").toString() );
-			
-			} catch (NumberFormatException e) {	this.idChannel = -1; }
+				this.idChannel = (int) Double.parseDouble( event.getData().get("idChannel").toString() );
+				this.nmChannel = event.getData().get( "nomChannel").toString();
+
+			} catch (NumberFormatException e) {	this.idChannel = -1; e.printStackTrace(); }
 		}
 		// Chargement du FXML
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("ChannelPanel.fxml"));
@@ -78,7 +75,7 @@ public class ChannelPanel
 	{
 		if (event != null)
 		{
-			this.btnChanel.setText( (String) event.getData().get( "nomChannel" ) );
+			this.btnChanel.setText( this.nmChannel );
 			this.btnChanel.setOnAction( e -> this.changerChannel() );
 		}
 	}
@@ -90,7 +87,7 @@ public class ChannelPanel
 	 * 
 	 * 
 	 */
-	private void changerChannel() { this.controleur.changerChannel( this.idChannel ); }
+	private void changerChannel() { this.controleur.changerChannel( this.idChannel, this.nmChannel ); }
 
 	/*--------------------------*/
 	/* Getters                  */
