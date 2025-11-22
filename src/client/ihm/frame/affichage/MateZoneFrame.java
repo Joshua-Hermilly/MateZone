@@ -1,6 +1,7 @@
 package client.ihm.frame.affichage;
 
 import java.awt.BorderLayout;
+import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 
@@ -53,6 +54,7 @@ public class MateZoneFrame extends JFrame
 	public MateZoneFrame(Controleur controleur) 
 	{
 		this.setTitle("MateZone");
+		this.setIconImage(Toolkit.getDefaultToolkit().getImage("src/client/img/MateZone.png"));
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setResizable(true);
 		this.setSize(800, 600);

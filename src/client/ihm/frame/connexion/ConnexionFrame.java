@@ -47,7 +47,7 @@ public class ConnexionFrame extends JFrame
 	{
 		this.setTitle("Connexion");
 		this.setResizable(false);
-		this.setIconImage(Toolkit.getDefaultToolkit().getImage("./image/image_1762797388911.png"));
+		this.setIconImage(Toolkit.getDefaultToolkit().getImage("src/client/img/MateZone.png"));
 
 		/*-------------------------------*/
 		/* Création des composants       */

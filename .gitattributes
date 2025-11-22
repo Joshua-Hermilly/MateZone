@@ -1,4 +1,4 @@
 # Configuration files with sensitive information
 # Prevent diffs from showing in git log, git show, and git diff
-serveur-exec/config.properties.example -diff
-config.properties -diff
+/src/server/config.properties -diff
+/src/client/config.properties -diff

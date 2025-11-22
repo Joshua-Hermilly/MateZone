@@ -8,7 +8,7 @@ echo ========================================
 REM Compilation des sources
 echo.
 echo [1/4] Compilation des sources...
-javac -encoding UTF-8 -d bin -cp "lib/*" src/common/dto/*.java src/common/protocol/*.java src/server/bd/*.java src/server/bd/repository/*.java src/server/metier/interfaces/*.java src/server/metier/model/*.java src/server/metier/service/*.java src/server/Protocol/webSocket/*.java src/server/MainServer.java src/client/metier/interfaces/*.java src/client/metier/*.java src/client/infrastructure/websocket/*.java src/client/controleur/*.java src/client/ihm/frame/connexion/*.java src/client/ihm/frame/affichage/*.java src/client/ihm/panel/connexion/*.java src/client/ihm/panel/affichage/*.java src/client/ihm/*.java src/client/MainClient.java
+javac -encoding UTF-8 -d bin -cp "lib/*" src/common/dto/*.java src/common/protocol/*.java src/server/bd/*.java src/server/bd/repository/*.java src/server/metier/interfaces/*.java src/server/metier/model/*.java src/server/metier/service/*.java src/server/Protocol/webSocket/*.java src/server/MainServer.java src/server/metier/util/*.java src/client/metier/interfaces/*.java src/client/metier/*.java src/client/infrastructure/websocket/*.java src/client/controleur/*.java src/client/ihm/frame/connexion/*.java src/client/ihm/frame/affichage/*.java src/client/ihm/panel/connexion/*.java src/client/ihm/panel/affichage/*.java src/client/ihm/*.java src/client/MainClient.java
 
 if %ERRORLEVEL% NEQ 0 (
     echo Erreur lors de la compilation!
