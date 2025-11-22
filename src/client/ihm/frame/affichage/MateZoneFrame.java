@@ -92,6 +92,7 @@ public class MateZoneFrame
 		{
 			Platform.runLater( () -> this.scrollPaneMessages.setVvalue(1.0)) ;
 		});
+		this.scrollPaneMessages.setVvalue( this.scrollPaneMessages.getVmax() );
 
 		this.channelContainer.heightProperty().addListener( (obs, oldVal, newVal) -> 
 		{
