@@ -1,5 +1,8 @@
 package server.metier.interfaces;
 
+import java.net.http.WebSocket;
+import java.util.HashMap;
+
 import server.metier.model.Client;
 
 /*-----------------------------------*/
@@ -50,4 +53,18 @@ public interface IUtilisateurRepository
 	 * @return les données binaires de l'avatar, null si non trouvé
 	 */
 	byte[] getAvatarById(int clientId);
+
+
+	/**
+	 * Récupère l'avatar d'un client par son identifiant.
+	 * Retourne les données binaires de l'image d'avatar stockée en base.
+	 * 
+	 * @param clientId l'identifiant du client
+	 * @return les données binaires de l'avatar, null si non trouvé
+	 */
+	HashMap<Integer, String> permChannel(int idclient);
+
+
+	
+
 }
