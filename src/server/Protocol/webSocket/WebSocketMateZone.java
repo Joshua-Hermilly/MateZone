@@ -82,6 +82,7 @@ public class WebSocketMateZone extends WebSocketServer implements IWebSocketMate
 	public void setClientChannel(WebSocket client, int idChannel) 
 	{
 		this.hsClientChannel.put(client, idChannel);
+	//	this.clientService.handleNewChannel(client, idChannel);
 	}
 
 	/**
@@ -131,8 +132,6 @@ public class WebSocketMateZone extends WebSocketServer implements IWebSocketMate
 	public void onOpen(WebSocket client, ClientHandshake handshake) 
 	{
 		System.out.println("Un client vient de se connecter : " + client.getRemoteSocketAddress());
-
-		this.setClientChannel(client, 1);
 	}
 
 	/**
@@ -156,7 +155,7 @@ public class WebSocketMateZone extends WebSocketServer implements IWebSocketMate
 		if (event.getType() == EventEnum.LOGIN      ) { this.clientService.handleLogin     (client, event); }
 		if (event.getType() == EventEnum.SIGNUP     ) { this.clientService.handleRegister  (client, event); }
 		if (event.getType() == EventEnum.NEW_MESSAGE) { this.clientService.handleNewMessage(client, event); }
-		if (event.getType() == EventEnum.NEW_CHANNEL) { this.clientService.handleNewChannel(client, event); }
+		if (event.getType() == EventEnum.CHANGER_CHANNEL) { this.clientService.handleNewChannel(client, event);}
 
 		System.out.println(event);
 	}

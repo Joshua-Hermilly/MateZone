@@ -1,16 +1,19 @@
 package server.bd.repository;
 
+import java.net.http.WebSocket;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import server.bd.ConnexionBD;
 import server.metier.interfaces.IUtilisateurRepository;
 import server.metier.model.Client;
+import server.metier.util.PasswordUtil;
 
 /*---------------------------------*/
 /*  Class UtilisateurRepository    */
@@ -197,6 +200,7 @@ public class UtilisateurRepository implements IUtilisateurRepository
 	 * Valide les identifiants de connexion d'un client.
 	 * Vérifie que la combinaison pseudo/mot de passe existe dans la base.
 	 * Cette méthode est utilisée pour l'authentification des utilisateurs.
+	 * Utilise BCrypt pour vérifier le mot de passe de manière sécurisée.
 	 * 
 	 * @param pseudo le pseudo du client
 	 * @param mdp    le mot de passe en clair
@@ -205,29 +209,39 @@ public class UtilisateurRepository implements IUtilisateurRepository
 	 */
 	public Boolean getConnexionValideClient(String pseudo, String mdp) 
 	{
-		String sql = "SELECT id, pseudo, mdp, created_at FROM clients WHERE pseudo = ? AND mdp = ?";
+		String sql = "SELECT id, pseudo, mdp, created_at FROM clients WHERE pseudo = ?";
 
 		try (PreparedStatement stmt = this.connexionBD.getConnection().prepareStatement(sql)) 
 		{
 			stmt.setString(1, pseudo);
-			stmt.setString(2, mdp);
 			ResultSet rs = stmt.executeQuery();
 
 			if (rs.next()) 
 			{
-				Client client = mapRowToClient(rs);
-				System.out.println("Client trouvé: " + client);
-				return true;
+				String hashedPassword = rs.getString("mdp");
+				
+				// Vérification sécurisée du mot de passe avec BCrypt
+				if (PasswordUtil.verifyPassword(mdp, hashedPassword))
+				{
+					Client client = mapRowToClient(rs);
+					System.out.println("Client authentifié: " + client.getPseudo());
+					return true;
+				}
+				else
+				{
+					System.out.println("Mot de passe incorrect pour: " + pseudo);
+					return false;
+				}
 			} 
 			else
 			{
-				System.out.println("Aucun client trouvé avec le pseudo et le mdp: " + pseudo);
+				System.out.println("Aucun client trouvé avec le pseudo: " + pseudo);
 				return false;
 			}
 
 		} catch (SQLException e) 
 		{
-			System.err.println("Erreur lors de la recherche du client (pseudo+mdp): " + pseudo);
+			System.err.println("Erreur lors de la recherche du client: " + pseudo);
 			e.printStackTrace();
 		}
 
@@ -269,8 +283,11 @@ public class UtilisateurRepository implements IUtilisateurRepository
 
 		try (PreparedStatement stmt = this.connexionBD.getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) 
 		{
+			// Hash du mot de passe avant stockage en base de données
+			String hashedPassword = PasswordUtil.hashPassword(client.getMdp());
+			
 			stmt.setString(1, client.getPseudo());
-			stmt.setString(2, client.getMdp());
+			stmt.setString(2, hashedPassword);
 
 			int lignesRetour = stmt.executeUpdate();
 
@@ -316,8 +333,11 @@ public class UtilisateurRepository implements IUtilisateurRepository
 
 		try (PreparedStatement stmt = this.connexionBD.getConnection().prepareStatement(sql)) 
 		{
+			// Hash du mot de passe avant mise à jour en base de données
+			String hashedPassword = PasswordUtil.hashPassword(client.getMdp());
+			
 			stmt.setString(1, client.getPseudo());
-			stmt.setString(2, client.getMdp());
+			stmt.setString(2, hashedPassword);
 			stmt.setInt(3, client.getId());
 
 			int lignesRetour = stmt.executeUpdate();
@@ -349,6 +369,7 @@ public class UtilisateurRepository implements IUtilisateurRepository
 	 * Authentifie un client avec ses identifiants de connexion.
 	 * Combine la recherche par pseudo et la vérification du mot de passe
 	 * pour valider l'identité d'un utilisateur.
+	 * Utilise BCrypt pour vérifier le mot de passe de manière sécurisée.
 	 * 
 	 * @param pseudo le pseudo du client
 	 * @param mdp    le mot de passe en clair
@@ -361,11 +382,48 @@ public class UtilisateurRepository implements IUtilisateurRepository
 		if (client == null) 
 			return -1;
 
-		if (client.getMdp() != null && client.getMdp().equals(mdp)) 
+		// Vérification sécurisée du mot de passe avec BCrypt
+		if (client.getMdp() != null && PasswordUtil.verifyPassword(mdp, client.getMdp())) 
 			return getClientId(pseudo);
 		
 
 		return -1;
+	}
+
+
+	public HashMap<Integer, String> permChannel(int idClient)
+	{
+		HashMap<Integer, String> permChannel = new HashMap<>();
+
+		String sql = "SELECT mg.groupe_id,g.nom FROM membres_groupes mg JOIN groupes g ON mg.groupe_id = g.id WHERE mg.client_id = ? ;";
+
+		try (PreparedStatement stmt = this.connexionBD.getConnection().prepareStatement(sql)) 
+		{
+			stmt.setInt(1, idClient);
+
+			ResultSet rs = stmt.executeQuery();
+			System.out.println(rs);
+
+			while (rs.next()) 
+			{
+				int    idchannel  = rs.getInt   ("groupe_id");
+				String nomChannel = rs.getString("nom"      );
+
+				permChannel.put(idchannel, nomChannel);
+			}
+			
+			if (permChannel.isEmpty())
+			{
+				System.out.println("Aucun groupe trouvé pour le client id: " + idClient);
+			}
+
+		} catch (SQLException e) 
+		{
+			System.err.println("Erreur lors de la reche des permission de idclient: " + idClient);
+			e.printStackTrace();
+		}
+
+		return permChannel;
 	}
 
 	/*-------------------------------*/
@@ -404,19 +462,29 @@ public class UtilisateurRepository implements IUtilisateurRepository
 	 */
 	public byte[] getAvatarById(int clientId) 
 	{
-		try
+		try 
 		{
-			String sql = "SELECT img_data FROM clients WHERE id = ?";
-			PreparedStatement st = this.connexionBD.getConnection().prepareStatement(sql);
+			// La magie opère ici : 
+			// 1. On joint la table 'clients' avec 'default_images'
+			// 2. On sélectionne l'image perso, SINON l'image par défaut
+			String sql = "SELECT COALESCE(c.custom_img_data, d.img_data) as avatar_final " +
+						"FROM clients c " +
+						"LEFT JOIN default_images d ON c.default_image_id = d.id " +
+						"WHERE c.id = ?";
 
+			PreparedStatement st = this.connexionBD.getConnection().prepareStatement(sql);
 			st.setInt(1, clientId);
+			
 			ResultSet rs = st.executeQuery();
 
-			if (rs.next()) 
-				return rs.getBytes("img_data");
-			
+			if (rs.next()) {
+				// On récupère la colonne virtuelle qu'on a nommée "avatar_final"
+				return rs.getBytes("avatar_final");
+			}
 
-		} catch (Exception e) { e.printStackTrace(); }
+		} catch (Exception e) { 
+			e.printStackTrace(); 
+		}
 
 		return null;
 	}

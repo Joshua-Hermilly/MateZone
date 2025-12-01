@@ -194,7 +194,7 @@ public class MateZoneFrame
 
 	public void setNomCannel( String nom )
 	{ 
-	Platform.runLater(() -> 
+		Platform.runLater(() -> 
 		{
 			try 
 			{
