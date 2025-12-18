@@ -13,6 +13,21 @@ MateZone est une application de messagerie instantanée permettant aux utilisate
 - Visualiser l'historique complet des messages
 - Personnaliser leur profil avec une image
 
+<div align="center">
+
+[![Site Web](https://img.shields.io/badge/🌐_Site_Web-www.m8yuriko.fr-blue?style=for-the-badge)](http://www.m8yuriko.fr)
+[![Version Beta](https://img.shields.io/badge/🚀_Version_Beta-pre--releases--beta-orange?style=for-the-badge)](https://github.com/Joshua-Hermilly/MateZone/tree/pre-relseases-beta)
+
+</div>
+
+## 📸 Aperçu
+
+| **Connexion** | Logo |
+|:---:|:---:|
+| <img width="400" alt="Connexion" src="https://github.com/user-attachments/assets/07de1d91-0a52-41c0-845f-1e297726ea05" /> | <img width="400" alt="MateZone" src="https://github.com/user-attachments/assets/7421b893-8067-43e5-a758-623f9d10521e" /> |
+| **Salon Public** | **Conversation Privée** |
+| <img width="400" alt="Salon Public" src="https://github.com/user-attachments/assets/bbc5faf0-9fb4-4ae4-a89a-f17c03e84109" /> | <img width="400" alt="Privé" src="https://github.com/user-attachments/assets/e32a4532-261a-4a2f-9e5e-a9b90a5e6a15" /> |
+
 ## 🏗️ Architecture
 
 L'application suit une architecture hexagonale (ports/adapters) avec séparation claire entre :
@@ -351,11 +366,10 @@ java -cp "bin:lib/*:test" org.junit.runner.JUnitCore TestSuite
 ## 👥 Développeurs
 
 ### Serveur
-- **DNB_Dono530** - Développement backend, architecture serveur, base de données
+- **[@Dono0530](https://github.com/Dono0530)** - Développement backend, architecture serveur, base de données
 
 ### Client  
-- **Yuriko** - Développement frontend, interface utilisateur, UX/UI
-
+- **[@Joshua-Hermilly](https://github.com/Joshua-Hermilly)** - Développement frontend, interface utilisateur, UX/UI
 ## 📧 Contact
 
 - **Repository** : [https://github.com/Joshua-Hermilly/MateZone](https://github.com/Joshua-Hermilly/MateZone)
