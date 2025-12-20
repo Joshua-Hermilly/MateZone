@@ -52,6 +52,8 @@
 					<h1>Architecture de MateZone</h1>
 					<p>Découvrez la structure hexagonale moderne qui fait de MateZone une application robuste,
 						maintenable et évolutive.</p>
+					<p><strong>Ici, la version présenté est celle de pre-releases-beta (la version la plus
+							aboutie).</strong></p>
 				</div>
 			</div>
 		</section>
@@ -139,28 +141,48 @@
 					<div class="card">
 						<h3>🖥️ Module Client</h3>
 						<div class="code-block">
-							<pre>client/
-├── MainClient.java
-├── controleur/
-│   └── Controleur.java
-├── ihm/
-│   ├── IhmGui.java
-│   ├── frame/
-│   │   ├── affichage/
-│   │   │   └── MateZoneFrame.java
-│   │   └── connexion/
-│   │       └── ConnexionFrame.java
-│   └── panel/
-│       ├── affichage/
-│       └── connexion/
-├── infrastructure/
-│   └── websocket/
-│       └── WebSocketChatAdapter.java
-└── metier/
-    ├── Metier.java
-    └── interfaces/
-        ├── IEnvoyeur.java
-        └── INotifieur.java</pre>
+							<pre style="white-space: pre-wrap; word-break: break-all;">
+├───client
+│   config.properties
+│   MainClient.java
+│
+├───controleur
+│       Controleur.java
+│
+├───ihm
+│   │   IhmGui.java
+│   │   JavaFXApplicationManager.java
+│   │
+│   ├───frame
+│   │   ├───affichage
+│   │   │       MateZoneFrame.fxml
+│   │   │       MateZoneFrame.java
+│   │   │
+│   │   └───connexion
+│   │           ConnexionFrame.java
+│   │
+│   └───panel
+│       ├───affichage
+│       │       ChannelPanel.fxml
+│       │       ChannelPanel.java
+│       │       MessagePanel.fxml
+│       │       MessagePanel.java
+│       │
+│       └───connexion
+│               ConnexionPanel.fxml
+│               ConnexionPanel.java
+│
+├───infrastructure
+│   └───websocket
+│           WebSocketChatAdapter.java
+│
+└───metier
+    │   Metier.java
+    │
+    └───interfaces
+            IEnvoyeur.java
+            INotifieur.java
+							</pre>
 						</div>
 						<p><strong>Responsabilités :</strong></p>
 						<ul>
@@ -174,28 +196,48 @@
 					<div class="card">
 						<h3>⚙️ Module Serveur</h3>
 						<div class="code-block">
-							<pre>server/
-├── MainServer.java
-├── bd/
-│   ├── ConnexionBD.java
-│   ├── repository/
-│   │   ├── MessageRepository.java
-│   │   └── UtilisateurRepository.java
-│   └── SQL/
-│       └── MateZone.sql
-├── metier/
-│   ├── interfaces/
-│   │   ├── IMessageRepository.java
-│   │   ├── IUtilisateurRepository.java
-│   │   └── IWebSocketMateZone.java
-│   ├── model/
-│   │   ├── Client.java
-│   │   └── Message.java
-│   └── service/
-│       └── ClientService.java
-└── Protocol/
-    └── webSocket/
-        └── WebSocketMateZone.java</pre>
+							<pre style="white-space: pre-wrap; word-break: break-all;">
+└───server
+    │   config.properties
+    │   MainServer.java
+    │
+    ├───bd
+    │   │   ConnexionBD.java
+    │   │
+    │   ├───repository
+    │   │       MessageRepository.java
+    │   │       UtilisateurRepository.java
+    │   │
+    │   └───SQL
+    │           MateZone.sql
+    │
+    ├───metier
+    │   ├───interfaces
+    │   │       IMessageRepository.java
+    │   │       IUtilisateurRepository.java
+    │   │       IWebSocketMateZone.java
+    │   │
+    │   ├───model
+    │   │       Client.java
+    │   │
+    │   └───service
+    │           ClientService.java
+    │
+    └───Protocol
+        └───webSocket
+                WebSocketMateZone.java
+
+
+
+
+
+
+
+
+
+
+
+							</pre>
 						</div>
 						<p><strong>Responsabilités :</strong></p>
 						<ul>
@@ -317,13 +359,30 @@
 				</div>
 
 				<div class="code-block mt-4">
-					<pre>{
-  "type": "NEW_MESSAGE",
-  "pseudo": "utilisateur",
-  "contenu": "Bonjour MateZone !",
-  "channel": 1,
-  "timestamp": "2024-11-11T10:30:00"
-}</pre>
+					<pre>
+public void envoyerMessage(String texte)
+{
+	// Création du message eventDTO
+	ChatEventDTO event = new ChatEventDTO(EventEnum.NEW_MESSAGE)
+			.add(EventEnum.NEW_MESSAGE.getKeyIndex(0), this.idClient )
+			.add(EventEnum.NEW_MESSAGE.getKeyIndex(1), this.idChannel)
+			.add(EventEnum.NEW_MESSAGE.getKeyIndex(2), texte         );
+			
+	this.iEnvoyeur.envoyer(event);
+}
+
+==>
+ChatEventDTO
+{
+    type='NEW_MESSAGE',
+    data=
+    { 
+        idChannel=1 , 
+        idClient=2  , 
+        contenu=Bonjour tout le monde !
+    }
+}
+					</pre>
 				</div>
 			</div>
 		</section>
@@ -410,7 +469,7 @@
 								<td>Standard Java, performance optimale, support natif du protocole WebSocket</td>
 							</tr>
 							<tr>
-								<td><strong>Java Swing</strong></td>
+								<td><strong> JavaFX + FXML </strong></td>
 								<td>Interface utilisateur</td>
 								<td>Interface native, riche en composants, intégration parfaite avec Java</td>
 							</tr>

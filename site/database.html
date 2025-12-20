@@ -175,14 +175,12 @@ db.connectionTimeout=30000</pre>
 			<div class="container">
 				<div class="section-title">
 					<h2>Structure des tables</h2>
-					<p>Détail des tables principales de la base de données MateZone</p>
+					<p>Structure réelle de la base de données MateZone telle que définie dans le script SQL.</p>
 				</div>
 
 				<div class="card mb-4">
-					<h3>👤 Table clients</h3>
-					<p>Stockage des comptes utilisateur avec leurs informations d'authentification et image de profil.
-					</p>
-
+					<h3>🖼️ Table default_images</h3>
+					<p>Stocke les images de profil par défaut. Une seule copie binaire est conservée par image.</p>
 					<div class="table-container">
 						<table class="table">
 							<thead>
@@ -195,48 +193,93 @@ db.connectionTimeout=30000</pre>
 							</thead>
 							<tbody>
 								<tr>
-									<td><strong>id</strong></td>
+									<td>id</td>
+									<td>INT</td>
+									<td>PRIMARY KEY, AUTO_INCREMENT</td>
+									<td>Identifiant de l'image</td>
+								</tr>
+								<tr>
+									<td>nom</td>
+									<td>VARCHAR(50)</td>
+									<td>UNIQUE, NOT NULL</td>
+									<td>Nom de l'image</td>
+								</tr>
+								<tr>
+									<td>img_data</td>
+									<td>MEDIUMBLOB</td>
+									<td>NOT NULL</td>
+									<td>Données binaires de l'image</td>
+								</tr>
+								<tr>
+									<td>created_at</td>
+									<td>TIMESTAMP</td>
+									<td>DEFAULT CURRENT_TIMESTAMP</td>
+									<td>Date de création de l'enregistrement</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+				<div class="card mb-4">
+					<h3>👤 Table clients</h3>
+					<p>Stocke les comptes utilisateurs, leur mot de passe hashé et leur image (personnalisée ou par
+						défaut).</p>
+					<div class="table-container">
+						<table class="table">
+							<thead>
+								<tr>
+									<th>Champ</th>
+									<th>Type</th>
+									<th>Contraintes</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>id</td>
 									<td>INT</td>
 									<td>PRIMARY KEY, AUTO_INCREMENT</td>
 									<td>Identifiant unique du client</td>
 								</tr>
 								<tr>
-									<td><strong>pseudo</strong></td>
-									<td>VARCHAR</td>
-									<td>NOT NULL, UNIQUE</td>
-									<td>Nom d'utilisateur pour la connexion</td>
+									<td>pseudo</td>
+									<td>VARCHAR(255)</td>
+									<td>UNIQUE, NOT NULL</td>
+									<td>Pseudo de connexion</td>
 								</tr>
 								<tr>
-									<td><strong>mdp</strong></td>
-									<td>VARCHAR</td>
+									<td>mdp</td>
+									<td>VARCHAR(255)</td>
 									<td>NOT NULL</td>
-									<td>Mot de passe (hashé)</td>
+									<td>Mot de passe hashé</td>
 								</tr>
 								<tr>
-									<td><strong>img_data</strong></td>
+									<td>custom_img_data</td>
 									<td>MEDIUMBLOB</td>
 									<td>NULL</td>
-									<td>Image de profil (données binaires)</td>
+									<td>Image de profil personnalisée</td>
+								</tr>
+								<tr>
+									<td>default_image_id</td>
+									<td>INT</td>
+									<td>DEFAULT 1, FK default_images(id)</td>
+									<td>Image de profil par défaut associée</td>
+								</tr>
+								<tr>
+									<td>created_at</td>
+									<td>TIMESTAMP</td>
+									<td>DEFAULT CURRENT_TIMESTAMP</td>
+									<td>Date de création du compte</td>
 								</tr>
 							</tbody>
 						</table>
-					</div>
-
-					<div class="code-block mt-3">
-						<pre>CREATE TABLE IF NOT EXISTS clients 
-(
-    id         INT AUTO_INCREMENT PRIMARY KEY,
-    pseudo     VARCHAR(...) NOT NULL UNIQUE,
-    mdp        VARCHAR(...) NOT NULL,
-    img_data   MEDIUMBLOB
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;</pre>
 					</div>
 				</div>
 
 				<div class="card mb-4">
 					<h3>🏢 Table groupes</h3>
-					<p>Gestion des groupes/canaux de discussion avec leurs créateurs et métadonnées.</p>
-
+					<p>Gère les groupes de discussion créés par les clients.</p>
 					<div class="table-container">
 						<table class="table">
 							<thead>
@@ -249,31 +292,31 @@ db.connectionTimeout=30000</pre>
 							</thead>
 							<tbody>
 								<tr>
-									<td><strong>id</strong></td>
+									<td>id</td>
 									<td>INT</td>
 									<td>PRIMARY KEY, AUTO_INCREMENT</td>
 									<td>Identifiant unique du groupe</td>
 								</tr>
 								<tr>
-									<td><strong>nom</strong></td>
-									<td>VARCHAR</td>
-									<td>NOT NULL</td>
-									<td>Nom du groupe/canal</td>
+									<td>nom</td>
+									<td>VARCHAR(150)</td>
+									<td>UNIQUE, NOT NULL</td>
+									<td>Nom du groupe</td>
 								</tr>
 								<tr>
-									<td><strong>description</strong></td>
-									<td>TEXT</td>
-									<td>NULL</td>
-									<td>Description du groupe</td>
+									<td>type</td>
+									<td>VARCHAR(20)</td>
+									<td>NOT NULL, DEFAULT 'groupe'</td>
+									<td>Type de groupe (groupe / prive)</td>
 								</tr>
 								<tr>
-									<td><strong>cree_par</strong></td>
+									<td>cree_par</td>
 									<td>INT</td>
-									<td>FOREIGN KEY</td>
-									<td>Référence vers le client créateur</td>
+									<td>FK clients(id)</td>
+									<td>Créateur du groupe</td>
 								</tr>
 								<tr>
-									<td><strong>date_creation</strong></td>
+									<td>cree_le</td>
 									<td>TIMESTAMP</td>
 									<td>DEFAULT CURRENT_TIMESTAMP</td>
 									<td>Date de création du groupe</td>
@@ -281,24 +324,11 @@ db.connectionTimeout=30000</pre>
 							</tbody>
 						</table>
 					</div>
-
-					<div class="code-block mt-3">
-						<pre>CREATE TABLE IF NOT EXISTS groupes 
-(
-    id             INT AUTO_INCREMENT PRIMARY KEY,
-    nom            VARCHAR(...) NOT NULL,
-    description    TEXT,
-    cree_par       INT,
-    date_creation  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (cree_par) REFERENCES clients(id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;</pre>
-					</div>
 				</div>
 
 				<div class="card mb-4">
 					<h3>💬 Table messages</h3>
-					<p>Conservation de l'historique complet des messages avec support des images et fichiers.</p>
-
+					<p>Stocke tous les messages envoyés dans chaque groupe.</p>
 					<div class="table-container">
 						<table class="table">
 							<thead>
@@ -311,145 +341,43 @@ db.connectionTimeout=30000</pre>
 							</thead>
 							<tbody>
 								<tr>
-									<td><strong>id</strong></td>
+									<td>id</td>
 									<td>INT</td>
 									<td>PRIMARY KEY, AUTO_INCREMENT</td>
 									<td>Identifiant unique du message</td>
 								</tr>
 								<tr>
-									<td><strong>auteur_id</strong></td>
+									<td>groupe_id</td>
 									<td>INT</td>
-									<td>FOREIGN KEY, NOT NULL</td>
-									<td>Référence vers l'utilisateur auteur</td>
+									<td>FK groupes(id), NOT NULL</td>
+									<td>Groupe destinataire</td>
 								</tr>
 								<tr>
-									<td><strong>canal_id</strong></td>
+									<td>expediteur_id</td>
 									<td>INT</td>
-									<td>FOREIGN KEY, NOT NULL</td>
-									<td>Référence vers le canal de discussion</td>
+									<td>FK clients(id), NOT NULL</td>
+									<td>Client ayant envoyé le message</td>
 								</tr>
 								<tr>
-									<td><strong>contenu</strong></td>
+									<td>contenu</td>
 									<td>TEXT</td>
 									<td>NOT NULL</td>
-									<td>Contenu textuel du message</td>
+									<td>Contenu du message</td>
 								</tr>
 								<tr>
-									<td><strong>timestamp</strong></td>
+									<td>envoye_le</td>
 									<td>TIMESTAMP</td>
 									<td>DEFAULT CURRENT_TIMESTAMP</td>
-									<td>Date et heure d'envoi du message</td>
-								</tr>
-								<tr>
-									<td><strong>type_message</strong></td>
-									<td>ENUM</td>
-									<td>'text', 'system', 'notification'</td>
-									<td>Type de message</td>
-								</tr>
-								<tr>
-									<td><strong>modifie</strong></td>
-									<td>BOOLEAN</td>
-									<td>DEFAULT FALSE</td>
-									<td>Indique si le message a été modifié</td>
+									<td>Date/heure d'envoi</td>
 								</tr>
 							</tbody>
 						</table>
-					</div>
-
-					<div class="code-block mt-3">
-						<pre>CREATE TABLE messages (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    auteur_id INT NOT NULL,
-    canal_id INT NOT NULL,
-    contenu TEXT NOT NULL,
-    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    type_message ENUM('text', 'system', 'notification') DEFAULT 'text',
-    modifie BOOLEAN DEFAULT FALSE,
-    FOREIGN KEY (auteur_id) REFERENCES utilisateurs(id) ON DELETE CASCADE,
-    FOREIGN KEY (canal_id) REFERENCES canaux(id) ON DELETE CASCADE
-);</pre>
-					</div>
-				</div>
-
-				<div class="card mb-4">
-					<h3>🏷️ Table Canaux</h3>
-					<p>Organisation des discussions en canaux thématiques avec gestion des permissions.</p>
-
-					<div class="table-container">
-						<table class="table">
-							<thead>
-								<tr>
-									<th>Champ</th>
-									<th>Type</th>
-									<th>Contraintes</th>
-									<th>Description</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td><strong>id</strong></td>
-									<td>INT</td>
-									<td>PRIMARY KEY, AUTO_INCREMENT</td>
-									<td>Identifiant unique du canal</td>
-								</tr>
-								<tr>
-									<td><strong>nom</strong></td>
-									<td>VARCHAR(100)</td>
-									<td>NOT NULL, UNIQUE</td>
-									<td>Nom du canal de discussion</td>
-								</tr>
-								<tr>
-									<td><strong>description</strong></td>
-									<td>TEXT</td>
-									<td>NULL</td>
-									<td>Description du canal</td>
-								</tr>
-								<tr>
-									<td><strong>createur_id</strong></td>
-									<td>INT</td>
-									<td>FOREIGN KEY, NOT NULL</td>
-									<td>Référence vers l'utilisateur créateur</td>
-								</tr>
-								<tr>
-									<td><strong>date_creation</strong></td>
-									<td>TIMESTAMP</td>
-									<td>DEFAULT CURRENT_TIMESTAMP</td>
-									<td>Date de création du canal</td>
-								</tr>
-								<tr>
-									<td><strong>type_canal</strong></td>
-									<td>ENUM</td>
-									<td>'public', 'prive', 'direct'</td>
-									<td>Type de canal</td>
-								</tr>
-								<tr>
-									<td><strong>actif</strong></td>
-									<td>BOOLEAN</td>
-									<td>DEFAULT TRUE</td>
-									<td>Indique si le canal est actif</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-
-					<div class="code-block mt-3">
-						<pre>CREATE TABLE canaux (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    nom VARCHAR(100) NOT NULL UNIQUE,
-    description TEXT,
-    createur_id INT NOT NULL,
-    date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    type_canal ENUM('public', 'prive', 'direct') DEFAULT 'public',
-    actif BOOLEAN DEFAULT TRUE,
-    FOREIGN KEY (createur_id) REFERENCES utilisateurs(id) ON DELETE CASCADE
-);</pre>
 					</div>
 				</div>
 
 				<div class="card">
 					<h3>🔗 Table membres_groupes</h3>
-					<p>Table d'association pour gérer l'appartenance des clients aux groupes de discussion.</p>
-
+					<p>Fait le lien entre les clients et les groupes (relation N:N) avec un rôle.</p>
 					<div class="table-container">
 						<table class="table">
 							<thead>
@@ -462,50 +390,37 @@ db.connectionTimeout=30000</pre>
 							</thead>
 							<tbody>
 								<tr>
-									<td><strong>id</strong></td>
+									<td>id</td>
 									<td>INT</td>
 									<td>PRIMARY KEY, AUTO_INCREMENT</td>
-									<td>Identifiant unique de l'association</td>
+									<td>Identifiant de l'enregistrement</td>
 								</tr>
 								<tr>
-									<td><strong>client_id</strong></td>
+									<td>groupe_id</td>
 									<td>INT</td>
-									<td>FOREIGN KEY, NOT NULL</td>
-									<td>Référence vers le client</td>
+									<td>FK groupes(id), NOT NULL</td>
+									<td>Groupe concerné</td>
 								</tr>
 								<tr>
-									<td><strong>groupe_id</strong></td>
+									<td>client_id</td>
 									<td>INT</td>
-									<td>FOREIGN KEY, NOT NULL</td>
-									<td>Référence vers le groupe</td>
+									<td>FK clients(id), NOT NULL</td>
+									<td>Client membre du groupe</td>
 								</tr>
 								<tr>
-									<td><strong>date_adhesion</strong></td>
+									<td>role</td>
+									<td>VARCHAR(50)</td>
+									<td>DEFAULT 'membre'</td>
+									<td>Rôle dans le groupe</td>
+								</tr>
+								<tr>
+									<td>date_adhesion</td>
 									<td>TIMESTAMP</td>
 									<td>DEFAULT CURRENT_TIMESTAMP</td>
-									<td>Date d'adhésion au groupe</td>
-								</tr>
-								<tr>
-									<td><strong>role</strong></td>
-									<td>VARCHAR</td>
-									<td>DEFAULT 'membre'</td>
-									<td>Rôle du client dans le groupe</td>
+									<td>Date d'adhésion</td>
 								</tr>
 							</tbody>
 						</table>
-					</div>
-
-					<div class="code-block mt-3">
-						<pre>CREATE TABLE IF NOT EXISTS membres_groupes 
-(
-    id            INT AUTO_INCREMENT PRIMARY KEY,
-    client_id     INT NOT NULL,
-    groupe_id     INT NOT NULL,
-    date_adhesion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    role          VARCHAR(50) DEFAULT 'membre',
-    FOREIGN KEY (groupe_id) REFERENCES groupes(id) ON DELETE CASCADE,
-    FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;</pre>
 					</div>
 				</div>
 			</div>
@@ -516,44 +431,52 @@ db.connectionTimeout=30000</pre>
 			<div class="container">
 				<div class="section-title">
 					<h2>Diagramme relationnel</h2>
-					<p>Visualisation des relations entre les tables de la base de données</p>
+					<p>Visualisation des relations entre les tables principales de MateZone</p>
 				</div>
 
 				<div class="architecture-diagram">
 					<div class="grid grid-2">
 						<div class="layer layer-db">
-							<h4>👤 UTILISATEURS</h4>
-							<p>id (PK), pseudo, mot_de_passe, email, date_creation, derniere_connexion, statut</p>
+							<h4>👤 CLIENTS</h4>
+							<p>id (PK), pseudo (UNIQUE), mdp, custom_img_data, default_image_id (FK), created_at</p>
 						</div>
 
 						<div class="layer layer-server">
-							<h4>🏷️ CANAUX</h4>
-							<p>id (PK), nom, description, createur_id (FK), date_creation, type_canal, actif</p>
+							<h4>🏢 GROUPES</h4>
+							<p>id (PK), nom (UNIQUE), type, cree_par (FK client), cree_le</p>
 						</div>
 					</div>
 
 					<div style="text-align: center; margin: 1rem 0; font-size: 2rem;">↕️</div>
 
 					<div class="layer layer-common">
-						<h4>🔗 MEMBRES_CANAUX</h4>
-						<p>utilisateur_id (FK), canal_id (FK), date_adhesion, role</p>
+						<h4>🔗 MEMBRES_GROUPES</h4>
+						<p>groupe_id (FK), client_id (FK), role, date_adhesion</p>
 					</div>
 
 					<div style="text-align: center; margin: 1rem 0; font-size: 2rem;">↕️</div>
 
 					<div class="layer layer-client">
 						<h4>💬 MESSAGES</h4>
-						<p>id (PK), auteur_id (FK), canal_id (FK), contenu, timestamp, type_message, modifie</p>
+						<p>id (PK), groupe_id (FK), expediteur_id (FK client), contenu, envoye_le</p>
+					</div>
+
+					<div style="text-align: center; margin: 1rem 0; font-size: 2rem;">↕️</div>
+
+					<div class="layer layer-db">
+						<h4>🖼️ DEFAULT_IMAGES</h4>
+						<p>id (PK), nom (UNIQUE), img_data, created_at</p>
 					</div>
 				</div>
 
 				<div class="alert alert-info mt-4">
 					<strong>Relations clés :</strong>
 					<ul style="text-align: left; margin-top: 1rem;">
-						<li>Un utilisateur peut créer plusieurs canaux (1:N)</li>
-						<li>Un utilisateur peut appartenir à plusieurs canaux (N:M via membres_canaux)</li>
-						<li>Un canal contient plusieurs messages (1:N)</li>
-						<li>Un utilisateur peut écrire plusieurs messages (1:N)</li>
+						<li>Un client peut créer plusieurs groupes (1:N via groupes.cree_par)</li>
+						<li>Un client peut appartenir à plusieurs groupes (N:M via membres_groupes)</li>
+						<li>Un groupe contient plusieurs messages (1:N via messages.groupe_id)</li>
+						<li>Un client peut envoyer plusieurs messages (1:N via messages.expediteur_id)</li>
+						<li>Plusieurs clients peuvent partager la même image par défaut (1:N via default_image_id)</li>
 					</ul>
 				</div>
 			</div>
@@ -564,30 +487,30 @@ db.connectionTimeout=30000</pre>
 			<div class="container">
 				<div class="section-title">
 					<h2>Opérations principales</h2>
-					<p>Exemples de requêtes SQL typiques utilisées par MateZone</p>
+					<p>Exemples de requêtes SQL typiques utilisées par MateZone sur les tables réelles.</p>
 				</div>
 
 				<div class="grid grid-2">
 					<div class="card">
-						<h3>👤 Gestion des utilisateurs</h3>
+						<h3>👤 Gestion des clients</h3>
 
-						<h4>Inscription d'un nouvel utilisateur :</h4>
+						<h4>Inscription d'un nouveau client :</h4>
 						<div class="code-block">
-							<pre>INSERT INTO utilisateurs (pseudo, mot_de_passe, email) 
-VALUES ('nouveau_user', 'hash_password', 'user@example.com');</pre>
+							<pre>INSERT INTO clients (pseudo, mdp, default_image_id)
+VALUES ('nouveau_user', 'hash_password', 1);</pre>
 						</div>
 
-						<h4>Authentification :</h4>
+						<h4>Authentification (récupération du hash) :</h4>
 						<div class="code-block">
-							<pre>SELECT id, pseudo, statut 
-FROM utilisateurs 
-WHERE pseudo = ? AND mot_de_passe = ?;</pre>
+							<pre>SELECT id, mdp
+FROM clients
+WHERE pseudo = ?;</pre>
 						</div>
 
-						<h4>Mise à jour de la dernière connexion :</h4>
+						<h4>Changer l'image de profil personnalisée :</h4>
 						<div class="code-block">
-							<pre>UPDATE utilisateurs 
-SET derniere_connexion = CURRENT_TIMESTAMP 
+							<pre>UPDATE clients
+SET custom_img_data = ?
 WHERE id = ?;</pre>
 						</div>
 					</div>
@@ -597,50 +520,50 @@ WHERE id = ?;</pre>
 
 						<h4>Envoi d'un nouveau message :</h4>
 						<div class="code-block">
-							<pre>INSERT INTO messages (auteur_id, canal_id, contenu) 
+							<pre>INSERT INTO messages (groupe_id, expediteur_id, contenu)
 VALUES (?, ?, ?);</pre>
 						</div>
 
 						<h4>Récupération de l'historique :</h4>
 						<div class="code-block">
-							<pre>SELECT m.contenu, m.timestamp, u.pseudo 
-FROM messages m 
-JOIN utilisateurs u ON m.auteur_id = u.id 
-WHERE m.canal_id = ? 
-ORDER BY m.timestamp DESC 
+							<pre>SELECT m.contenu, m.envoye_le, c.pseudo
+FROM messages m
+JOIN clients c ON m.expediteur_id = c.id
+WHERE m.groupe_id = ?
+ORDER BY m.envoye_le DESC
 LIMIT 50;</pre>
 						</div>
 
 						<h4>Recherche de messages :</h4>
 						<div class="code-block">
-							<pre>SELECT m.*, u.pseudo 
-FROM messages m 
-JOIN utilisateurs u ON m.auteur_id = u.id 
-WHERE m.contenu LIKE ? 
-AND m.canal_id = ?;</pre>
+							<pre>SELECT m.*, c.pseudo
+FROM messages m
+JOIN clients c ON m.expediteur_id = c.id
+WHERE m.contenu LIKE ?
+AND m.groupe_id = ?;</pre>
 						</div>
 					</div>
 
 					<div class="card">
-						<h3>🏷️ Gestion des canaux</h3>
+						<h3>🏢 Gestion des groupes</h3>
 
-						<h4>Création d'un canal :</h4>
+						<h4>Création d'un groupe :</h4>
 						<div class="code-block">
-							<pre>INSERT INTO canaux (nom, description, createur_id, type_canal) 
-VALUES (?, ?, ?, ?);</pre>
+							<pre>INSERT INTO groupes (nom, type, cree_par)
+VALUES (?, 'groupe', ?);</pre>
 						</div>
 
-						<h4>Liste des canaux d'un utilisateur :</h4>
+						<h4>Liste des groupes d'un client :</h4>
 						<div class="code-block">
-							<pre>SELECT c.id, c.nom, c.description, mc.role 
-FROM canaux c 
-JOIN membres_canaux mc ON c.id = mc.canal_id 
-WHERE mc.utilisateur_id = ? AND c.actif = TRUE;</pre>
+							<pre>SELECT g.id, g.nom, g.type, mg.role
+FROM groupes g
+JOIN membres_groupes mg ON g.id = mg.groupe_id
+WHERE mg.client_id = ?;</pre>
 						</div>
 
-						<h4>Ajout d'un membre au canal :</h4>
+						<h4>Ajout d'un membre dans un groupe :</h4>
 						<div class="code-block">
-							<pre>INSERT INTO membres_canaux (utilisateur_id, canal_id, role) 
+							<pre>INSERT INTO membres_groupes (groupe_id, client_id, role)
 VALUES (?, ?, 'membre');</pre>
 						</div>
 					</div>
@@ -650,28 +573,28 @@ VALUES (?, ?, 'membre');</pre>
 
 						<h4>Nombre de messages par canal :</h4>
 						<div class="code-block">
-							<pre>SELECT c.nom, COUNT(m.id) as nb_messages 
-FROM canaux c 
-LEFT JOIN messages m ON c.id = m.canal_id 
-GROUP BY c.id, c.nom;</pre>
+							<pre>SELECT g.nom, COUNT(m.id) AS nb_messages
+FROM groupes g
+LEFT JOIN messages m ON g.id = m.groupe_id
+GROUP BY g.id, g.nom;</pre>
 						</div>
 
 						<h4>Utilisateurs les plus actifs :</h4>
 						<div class="code-block">
-							<pre>SELECT u.pseudo, COUNT(m.id) as nb_messages 
-FROM utilisateurs u 
-JOIN messages m ON u.id = m.auteur_id 
-GROUP BY u.id, u.pseudo 
-ORDER BY nb_messages DESC 
+							<pre>SELECT c.pseudo, COUNT(m.id) AS nb_messages
+FROM clients c
+JOIN messages m ON c.id = m.expediteur_id
+GROUP BY c.id, c.pseudo
+ORDER BY nb_messages DESC
 LIMIT 10;</pre>
 						</div>
 
 						<h4>Activité récente :</h4>
 						<div class="code-block">
-							<pre>SELECT DATE(timestamp) as jour, COUNT(*) as nb_messages 
-FROM messages 
-WHERE timestamp >= DATE_SUB(NOW(), INTERVAL 7 DAY) 
-GROUP BY DATE(timestamp) 
+							<pre>SELECT DATE(envoye_le) AS jour, COUNT(*) AS nb_messages
+FROM messages
+WHERE envoye_le >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+GROUP BY DATE(envoye_le)
 ORDER BY jour;</pre>
 						</div>
 					</div>
@@ -684,7 +607,8 @@ ORDER BY jour;</pre>
 			<div class="container">
 				<div class="section-title">
 					<h2>Performance et optimisation</h2>
-					<p>Stratégies mises en place pour optimiser les performances de la base de données</p>
+					<p>Stratégies mises en place pour optimiser les performances et garantir la cohérence des données.
+					</p>
 				</div>
 
 				<div class="grid grid-3">
@@ -692,21 +616,26 @@ ORDER BY jour;</pre>
 						<span class="card-icon">⚡</span>
 						<h3>Index optimisés</h3>
 						<ul style="text-align: left;">
-							<li><strong>utilisateurs.pseudo</strong> - Connexion rapide</li>
-							<li><strong>messages.canal_id</strong> - Récupération des messages</li>
-							<li><strong>messages.timestamp</strong> - Tri chronologique</li>
-							<li><strong>membres_canaux(utilisateur_id, canal_id)</strong> - Jointures</li>
+							<li><strong>messages.groupe_id</strong> (idx_messages_groupe) - Récupération rapide par
+								groupe</li>
+							<li><strong>messages.expediteur_id</strong> (idx_messages_expediteur) - Récupération par
+								expéditeur</li>
+							<li><strong>clients.pseudo</strong> - Index implicite via contrainte UNIQUE</li>
+							<li><strong>membres_groupes(groupe_id, client_id)</strong> - Index implicite via contrainte
+								UNIQUE</li>
 						</ul>
 
 						<div class="code-block mt-3">
-							<pre>CREATE INDEX idx_messages_canal_timestamp 
-ON messages(canal_id, timestamp DESC);
+							<pre>-- Index explicites définis dans MateZone.sql
+CREATE INDEX idx_messages_groupe
+ON messages(groupe_id);
 
-CREATE INDEX idx_utilisateurs_pseudo 
-ON utilisateurs(pseudo);
+CREATE INDEX idx_messages_expediteur
+ON messages(expediteur_id);
 
-CREATE INDEX idx_messages_auteur 
-ON messages(auteur_id);</pre>
+-- Index implicites créés par les contraintes UNIQUE
+-- UNIQUE(pseudo) sur clients.pseudo
+-- UNIQUE(groupe_id, client_id) sur membres_groupes</pre>
 						</div>
 					</div>
 

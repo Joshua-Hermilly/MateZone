@@ -48,8 +48,8 @@
 		<section class="hero">
 			<div class="container">
 				<div class="hero-content">
-					<h1>Documentation MateZone</h1>
-					<p>Documentation technique complète pour développeurs et administrateurs système.</p>
+					<h1>📚 Documentation MateZone</h1>
+					<p>Documentation technique complète basée sur le code source du projet.</p>
 				</div>
 			</div>
 		</section>
@@ -58,653 +58,735 @@
 		<section class="section">
 			<div class="container">
 				<div class="section-title">
-					<h2>📚 Ressources documentaires</h2>
-					<p>Toute la documentation nécessaire pour comprendre, utiliser et étendre MateZone</p>
+					<h2>📁 Structure du projet</h2>
+					<p>Organisation des packages dans <code>/src</code></p>
+				</div>
+
+				<div class="grid grid-3">
+					<div class="card">
+						<span class="card-icon">💻</span>
+						<h3>client/</h3>
+						<p>Application cliente JavaFX avec architecture MVC.</p>
+						<ul style="text-align: left; font-size: 0.9rem;">
+							<li><code>MainClient.java</code></li>
+							<li><code>controleur/</code></li>
+							<li><code>ihm/</code></li>
+							<li><code>metier/</code></li>
+							<li><code>infrastructure/</code></li>
+						</ul>
+					</div>
+
+					<div class="card">
+						<span class="card-icon">🖥️</span>
+						<h3>server/</h3>
+						<p>Serveur WebSocket avec couche métier et accès BD.</p>
+						<ul style="text-align: left; font-size: 0.9rem;">
+							<li><code>MainServer.java</code></li>
+							<li><code>Protocol/webSocket/</code></li>
+							<li><code>metier/service/</code></li>
+							<li><code>bd/repository/</code></li>
+						</ul>
+					</div>
+
+					<div class="card">
+						<span class="card-icon">🔗</span>
+						<h3>common/</h3>
+						<p>Éléments partagés entre client et serveur.</p>
+						<ul style="text-align: left; font-size: 0.9rem;">
+							<li><code>dto/ChatEventDTO.java</code></li>
+							<li><code>protocol/EventEnum.java</code></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Client -->
+		<section class="section section-alt">
+			<div class="container">
+				<div class="section-title">
+					<h2>💻 Client - Architecture MVC</h2>
+					<p>Classes principales de l'application cliente</p>
+				</div>
+
+				<div class="grid grid-2">
+					<div class="card">
+						<h3>🚀 MainClient</h3>
+						<p>Point d'entrée de l'application cliente. Charge la configuration depuis
+							<code>config.properties</code> et lance le contrôleur.
+						</p>
+						<div class="code-block">
+							<pre><code>// src/client/MainClient.java
+public static void main(String[] args) {
+    // Chargement config
+    Properties props = new Properties();
+    props.load(new FileInputStream("src/client/config.properties"));
+    
+    ADRESSE  = props.getProperty("server.URL");
+    CHATPORT = Integer.parseInt(props.getProperty("serverChat.PORT"));
+    IMGPORT  = Integer.parseInt(props.getProperty("serverImg.PORT"));
+    
+    // Lancement
+    Controleur controleur = new Controleur(ADRESSE, CHATPORT, IMGPORT);
+    controleur.lancerApp();
+}</code></pre>
+						</div>
+						<a href="../docs/client/MainClient.html" class="btn btn-primary mt-2" target="_blank">📖
+							Javadoc</a>
+					</div>
+
+					<div class="card">
+						<h3>🎮 Controleur</h3>
+						<p>Contrôleur principal implémentant <code>INotifieur</code>. Orchestre l'IHM, le métier et la
+							connexion WebSocket.</p>
+						<div class="code-block">
+							<pre><code>// src/client/controleur/Controleur.java
+public class Controleur implements INotifieur {
+    private IhmGui ihmGui;
+    private Metier metier;
+    
+    public Controleur(String ADRESSE, int CHATPORT, int IMGPORT) {
+        this.ihmGui = new IhmGui(this);
+        
+        INotifieur iNotifieur = this;
+        IEnvoyeur iEnvoyeur = new WebSocketChatAdapter(
+            "ws://" + ADRESSE + CHATPORT, iNotifieur
+        );
+        iEnvoyeur.connecter();
+        
+        this.metier = new Metier(iEnvoyeur, iNotifieur);
+    }
+    
+    public void lancerApp() {
+        this.ihmGui.lancerConnexionFrame();
+    }
+}</code></pre>
+						</div>
+						<a href="../docs/client/controleur/Controleur.html" class="btn btn-primary mt-2"
+							target="_blank">📖 Javadoc</a>
+					</div>
+
+					<div class="card">
+						<h3>⚙️ Metier</h3>
+						<p>Couche métier gérant la logique business, l'état du client connecté et la création des
+							<code>ChatEventDTO</code>.
+						</p>
+						<div class="code-block">
+							<pre><code>// src/client/metier/Metier.java
+public class Metier {
+    private final IEnvoyeur iEnvoyeur;
+    private final INotifieur iNotifieur;
+    private int idChannel, idClient;
+    private String pseudoClient;
+    
+    public void connecterAuClient(String pseudo, String mdp) {
+        ChatEventDTO event = new ChatEventDTO(EventEnum.LOGIN)
+            .add(EventEnum.LOGIN.getKeyIndex(0), pseudo)
+            .add(EventEnum.LOGIN.getKeyIndex(1), mdp);
+        
+        this.iEnvoyeur.envoyer(event);
+    }
+    
+    public void setClient(int idClient, String pseudoClient) {
+        this.idClient = idClient;
+        this.pseudoClient = pseudoClient;
+        this.iNotifieur.succesLogin(this.pseudoClient);
+    }
+}</code></pre>
+						</div>
+						<a href="../docs/client/metier/Metier.html" class="btn btn-primary mt-2" target="_blank">📖
+							Javadoc</a>
+					</div>
+
+					<div class="card">
+						<h3>🖼️ IhmGui</h3>
+						<p>Gestion de l'interface graphique JavaFX via <code>JavaFXApplicationManager</code>. Affiche
+							les fenêtres et notifie les événements.</p>
+						<div class="code-block">
+							<pre><code>// src/client/ihm/IhmGui.java
+public class IhmGui {
+    private Controleur controleur;
+    private MateZoneFrame mateZoneFrame;
+    private JavaFXApplicationManager javaFXManager;
+    
+    public void lancerConnexionFrame() {
+        this.javaFXManager.creerEtAfficherConnexion(this.controleur);
+    }
+    
+    public void lancerMateZoneFrame(String pseudo) {
+        Platform.runLater(() -> {
+            this.javaFXManager.fermerConnexion();
+            this.mateZoneFrame = new MateZoneFrame(this.controleur);
+            this.mateZoneFrame.afficherFrame();
+        });
+    }
+    
+    public void afficherNvMessage(ChatEventDTO eventDTO) {
+        if (this.mateZoneFrame != null)
+            Platform.runLater(() -> 
+                this.mateZoneFrame.afficherNvMessage(eventDTO)
+            );
+    }
+}</code></pre>
+						</div>
+						<a href="../docs/client/ihm/IhmGui.html" class="btn btn-primary mt-2" target="_blank">📖
+							Javadoc</a>
+					</div>
+				</div>
+
+				<!-- Interfaces client -->
+				<div class="card mt-4">
+					<h3>🔌 Interfaces Client</h3>
+					<div class="grid grid-2">
+						<div>
+							<h4>IEnvoyeur</h4>
+							<p>Interface d'envoi vers le serveur.</p>
+							<div class="code-block">
+								<pre><code>// src/client/metier/interfaces/IEnvoyeur.java
+public interface IEnvoyeur {
+    void envoyer(ChatEventDTO event);
+    void connecter();
+}</code></pre>
+							</div>
+						</div>
+						<div>
+							<h4>INotifieur</h4>
+							<p>Interface de notification vers l'IHM.</p>
+							<div class="code-block">
+								<pre><code>// src/client/metier/interfaces/INotifieur.java
+public interface INotifieur {
+    void succesLogin(String pseudo);
+    void afficherErreur(String message);
+    void recevoirMessage(ChatEventDTO event);
+    // ...
+}</code></pre>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- WebSocketChatAdapter -->
+				<div class="card mt-4">
+					<h3>🌐 WebSocketChatAdapter</h3>
+					<p>Adaptateur WebSocket implémentant <code>IEnvoyeur</code>. Gère la connexion et la
+						sérialisation JSON via Gson.</p>
+					<div class="code-block">
+						<pre><code>// src/client/infrastructure/websocket/WebSocketChatAdapter.java
+public class WebSocketChatAdapter extends WebSocketClient implements IEnvoyeur {
+    private final INotifieur iNotifieur;
+    private Gson gson = new Gson();
+    
+    public WebSocketChatAdapter(String serverUri, INotifieur iNotifieur) throws Exception {
+        super(new URI(serverUri));
+        this.iNotifieur = iNotifieur;
+    }
+    
+    @Override
+    public void envoyer(ChatEventDTO event) {
+        if (!this.isOpen()) {
+            System.err.println("Erreur serveur");
+            return;
+        }
+        String json = gson.toJson(event);
+        this.send(json);
+    }
+    
+    @Override
+    public void connecter() {
+        if (!this.isOpen())
+            this.connectBlocking();
+    }
+}</code></pre>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Serveur -->
+		<section class="section">
+			<div class="container">
+				<div class="section-title">
+					<h2>🖥️ Serveur - Architecture en couches</h2>
+					<p>Classes principales du serveur MateZone</p>
+				</div>
+
+				<div class="grid grid-2">
+					<div class="card">
+						<h3>🚀 MainServer</h3>
+						<p>Point d'entrée serveur. Initialise la BD, les repositories, les services et démarre les
+							serveurs WebSocket et HTTP.</p>
+						<div class="code-block">
+							<pre><code>// src/server/MainServer.java
+public static void main(String[] args) throws Exception {
+    // 1) Connexion BD
+    ConnexionBD bd = ConnexionBD.getInstance();
+    
+    // 2) Repositories
+    IMessageRepository messageRepo = new MessageRepository();
+    IUtilisateurRepository userRepo = new UtilisateurRepository();
+    
+    // 3) Services Métier
+    ClientService userService = new ClientService(userRepo, messageRepo);
+    
+    // 4) Serveur WebSocket
+    WebSocketMateZone wsServer = new WebSocketMateZone(PORTMESS, userService);
+    wsServer.start();
+    userService.setIWebSocketMateZone(wsServer);
+    
+    // 5) Serveur HTTP avatar
+    MainServer.startAvatarServer(userRepo);
+}</code></pre>
+						</div>
+						<a href="../docs/server/MainServer.html" class="btn btn-primary mt-2" target="_blank">📖
+							Javadoc</a>
+					</div>
+
+					<div class="card">
+						<h3>🔌 WebSocketMateZone</h3>
+						<p>Serveur WebSocket principal implémentant <code>IWebSocketMateZone</code>. Gère les connexions
+							et dispatch vers <code>ClientService</code>.</p>
+						<div class="code-block">
+							<pre><code>// src/server/Protocol/webSocket/WebSocketMateZone.java
+public class WebSocketMateZone extends WebSocketServer 
+                               implements IWebSocketMateZone {
+    private ClientService clientService;
+    private HashMap&lt;WebSocket, Integer&gt; hsClientChannel;
+    
+    @Override
+    public void onMessage(WebSocket client, String message) {
+        ChatEventDTO event = ChatEventDTO.jsonToEventDTO(message);
+        
+        switch (event.getType()) {
+            case LOGIN:
+                clientService.handleLogin(client, event);
+                break;
+            case SIGNUP:
+                clientService.handleSignup(client, event);
+                break;
+            case NEW_MESSAGE:
+                clientService.handleNewMessage(client, event);
+                break;
+            case NEW_CHANNEL:
+                clientService.handleNewChannel(client, event);
+                break;
+        }
+    }
+    
+    public void broadcast(int idChannel, ChatEventDTO event) {
+        for (WebSocket client : hsClientChannel.keySet()) {
+            if (hsClientChannel.get(client) == idChannel)
+                client.send(event.toJson());
+        }
+    }
+}</code></pre>
+						</div>
+						<a href="../docs/server/Protocol/webSocket/WebSocketMateZone.html" class="btn btn-primary mt-2"
+							target="_blank">📖 Javadoc</a>
+					</div>
+
+					<div class="card">
+						<h3>👤 ClientService</h3>
+						<p>Service métier gérant l'authentification, l'inscription, l'envoi de messages et la gestion
+							des canaux.</p>
+						<div class="code-block">
+							<pre><code>// src/server/metier/service/ClientService.java
+public class ClientService {
+    private final IUtilisateurRepository iUserRep;
+    private final IMessageRepository iMesRep;
+    private IWebSocketMateZone iWebSocketMateZone;
+    
+    public void handleLogin(WebSocket client, ChatEventDTO eventRec) {
+        String pseudo = (String) eventRec.getDataIndex(0);
+        String mdp = (String) eventRec.getDataIndex(1);
+        
+        int idClient = this.iUserRep.authenticate(pseudo, mdp);
+        
+        if (idClient == -1) {
+            ChatEventDTO error = new ChatEventDTO(EventEnum.ERROR)
+                .add(EventEnum.ERROR.getKeyIndex(0), "Client introuvable");
+            client.send(error.toJson());
+        } else {
+            ChatEventDTO success = new ChatEventDTO(EventEnum.SUCCESS_LOGIN)
+                .add(EventEnum.SUCCESS_LOGIN.getKeyIndex(0), idClient)
+                .add(EventEnum.SUCCESS_LOGIN.getKeyIndex(1), pseudo);
+            client.send(success.toJson());
+        }
+    }
+}</code></pre>
+						</div>
+						<a href="../docs/server/metier/service/ClientService.html" class="btn btn-primary mt-2"
+							target="_blank">📖 Javadoc</a>
+					</div>
+
+					<div class="card">
+						<h3>🗄️ ConnexionBD</h3>
+						<p>Singleton gérant la connexion MySQL. Charge la configuration depuis
+							<code>config.properties</code>.
+						</p>
+						<div class="code-block">
+							<pre><code>// src/server/bd/ConnexionBD.java
+public class ConnexionBD {
+    private static ConnexionBD instance;
+    private static String URL, USERNAME, PASSWORD;
+    private Connection connection;
+    
+    static {
+        Properties props = new Properties();
+        props.load(new FileInputStream("src/server/config.properties"));
+        URL = props.getProperty("db.url");
+        USERNAME = props.getProperty("db.username");
+        PASSWORD = props.getProperty("db.password");
+    }
+    
+    private ConnexionBD() {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        this.connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+    }
+    
+    public static ConnexionBD getInstance() {
+        if (instance == null)
+            instance = new ConnexionBD();
+        return instance;
+    }
+    
+    public Connection getConnection() {
+        return this.connection;
+    }
+}</code></pre>
+						</div>
+						<a href="../docs/server/bd/ConnexionBD.html" class="btn btn-primary mt-2" target="_blank">📖
+							Javadoc</a>
+					</div>
+				</div>
+
+				<!-- Repositories -->
+				<div class="card mt-4">
+					<h3>📦 Repositories</h3>
+					<div class="grid grid-2">
+						<div>
+							<h4>UtilisateurRepository</h4>
+							<p>Implémente <code>IUtilisateurRepository</code>. Gère CRUD et authentification des
+								clients.</p>
+							<div class="code-block">
+								<pre><code>// src/server/bd/repository/UtilisateurRepository.java
+public class UtilisateurRepository implements IUtilisateurRepository {
+    private ConnexionBD connexionBD;
+    
+    public int authenticate(String pseudo, String mdp) {
+        String sql = "SELECT id, mdp FROM clients WHERE pseudo = ?";
+        // Vérifie le hash avec PasswordUtil
+    }
+    
+    public Client getClientById(int id) { ... }
+    public void createClient(String pseudo, String mdp) { ... }
+}</code></pre>
+							</div>
+						</div>
+						<div>
+							<h4>MessageRepository</h4>
+							<p>Implémente <code>IMessageRepository</code>. Gère l'envoi et la récupération des messages.
+							</p>
+							<div class="code-block">
+								<pre><code>// src/server/bd/repository/MessageRepository.java
+public class MessageRepository implements IMessageRepository {
+    private ConnexionBD connexionBD;
+    
+    public int sendMessage(int groupe_id, int idUser, String message) {
+        String sql = "INSERT INTO messages " +
+            "(groupe_id, expediteur_id, contenu) VALUES (?, ?, ?)";
+        // Exécute et retourne l'ID du message
+    }
+    
+    public List&lt;Message&gt; getMessages(int groupeId) { ... }
+}</code></pre>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Common -->
+		<section class="section section-alt">
+			<div class="container">
+				<div class="section-title">
+					<h2>🔗 Common - Éléments partagés</h2>
+					<p>Classes utilisées par le client ET le serveur</p>
+				</div>
+
+				<div class="grid grid-2">
+					<div class="card">
+						<h3>📦 ChatEventDTO</h3>
+						<p>DTO (Data Transfer Object) standardisant les échanges JSON entre client et serveur.</p>
+						<div class="code-block">
+							<pre><code>// src/common/dto/ChatEventDTO.java
+public class ChatEventDTO {
+    private EventEnum type;
+    private Map&lt;String, Object&gt; data;
+    private List&lt;ChatEventDTO&gt; lstEventDTO;
+    
+    // Constructeurs
+    public ChatEventDTO() { this.data = new HashMap&lt;&gt;(); }
+    public ChatEventDTO(EventEnum type) { this(); this.type = type; }
+    public ChatEventDTO(EventEnum type, List&lt;ChatEventDTO&gt; lst) { ... }
+    
+    // Builder pattern
+    public ChatEventDTO add(String key, Object value) {
+        this.data.put(key, value);
+        return this;
+    }
+    
+    // Sérialisation JSON (Gson)
+    public String toJson() {
+        return new Gson().toJson(this);
+    }
+    
+    public static ChatEventDTO jsonToEventDTO(String json) {
+        return new Gson().fromJson(json, ChatEventDTO.class);
+    }
+    
+    // Accès par index selon EventEnum
+    public Object getDataIndex(int index) {
+        String key = this.type.getRequiredKeys().get(index);
+        return this.data.get(key);
+    }
+}</code></pre>
+						</div>
+						<a href="../docs/common/dto/ChatEventDTO.html" class="btn btn-primary mt-2" target="_blank">📖
+							Javadoc</a>
+					</div>
+
+					<div class="card">
+						<h3>🏷️ EventEnum</h3>
+						<p>Énumération définissant tous les types d'événements et leurs clés requises.</p>
+						<div class="code-block">
+							<pre><code>// src/common/protocol/EventEnum.java
+public enum EventEnum {
+    LOGIN(List.of("pseudo", "mdp")),
+    SIGNUP(List.of("pseudo", "mdp")),
+    SUCCESS_LOGIN(List.of("id", "pseudo")),
+    SUCCESS_SIGNUP(List.of("id", "pseudo")),
+    NEW_CHANNEL(List.of("idChannel")),
+    MESSAGE(List.of("idClient", "pseudo", "contenu", "date")),
+    MESSAGE_LIST(List.of()),
+    NEW_MESSAGE(List.of("idClient", "idChannel", "contenu")),
+    NEW_MESSAGE_IMG(List.of("IdGroupe", "idClient", "byte")),
+    SUCCESS(List.of("message")),
+    ERROR(List.of("message")),
+    PERMS_CHANNELS(List.of()),
+    PERM_CHANNEL(List.of("idChannel", "nomChannel")),
+    CHANGER_CHANNEL(List.of("idChannel"));
+    
+    private final List&lt;String&gt; composants;
+    
+    public List&lt;String&gt; getRequiredKeys() {
+        return this.composants;
+    }
+    
+    public String getKeyIndex(int index) {
+        if (index >= this.composants.size()) return null;
+        return this.composants.get(index);
+    }
+}</code></pre>
+						</div>
+						<a href="../docs/common/protocol/EventEnum.html" class="btn btn-primary mt-2" target="_blank">📖
+							Javadoc</a>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Configuration -->
+		<section class="section">
+			<div class="container">
+				<div class="section-title">
+					<h2>⚙️ Fichiers de configuration</h2>
+					<p>Paramétrage du client et du serveur</p>
+				</div>
+
+				<div class="grid grid-2">
+					<div class="card">
+						<h3>📄 Client - config.properties</h3>
+						<p>Configuration de la connexion au serveur.</p>
+						<div class="code-block">
+							<pre><code># src/client/config.properties
+
+# Adresse du serveur WebSocket
+server.URL=127.0.0.1:
+
+# Port du serveur de chat
+serverChat.PORT=8080
+
+# Port du serveur d'images
+serverImg.PORT=8081</code></pre>
+						</div>
+					</div>
+
+					<div class="card">
+						<h3>📄 Server - config.properties</h3>
+						<p>Configuration du serveur et de la base de données.</p>
+						<div class="code-block">
+							<pre><code># src/server/config.properties
+
+# Base de données MySQL
+db.url=jdbc:mysql://localhost:3306/matezone
+db.username=root
+db.password=votre_mot_de_passe
+
+# Port du serveur WebSocket
+server.port=8080
+
+# Port du serveur HTTP (avatars)
+web.port=8081</code></pre>
+						</div>
+					</div>
+				</div>
+
+				<div class="alert alert-warning mt-4">
+					<h4>⚠️ Sécurité</h4>
+					<p>Ne committez jamais vos identifiants réels dans <code>config.properties</code>. Utilisez des
+						variables d'environnement ou un fichier <code>.env</code> ignoré par Git.</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- Récapitulatif des classes -->
+		<section class="section section-alt">
+			<div class="container">
+				<div class="section-title">
+					<h2>📋 Récapitulatif des classes</h2>
+					<p>Vue d'ensemble de toutes les classes du projet</p>
+				</div>
+
+				<div class="card table-container">
+					<table class="table">
+						<thead>
+							<tr>
+								<th>Classe</th>
+								<th>Package</th>
+								<th>Responsabilité</th>
+								<th>Javadoc</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><code>MainClient</code></td>
+								<td>client</td>
+								<td>Point d'entrée client, charge config et lance Controleur</td>
+								<td><a href="../docs/client/MainClient.html" target="_blank">📖</a></td>
+							</tr>
+							<tr>
+								<td><code>Controleur</code></td>
+								<td>client.controleur</td>
+								<td>Contrôleur MVC, implémente INotifieur</td>
+								<td><a href="../docs/client/controleur/Controleur.html" target="_blank">📖</a></td>
+							</tr>
+							<tr>
+								<td><code>Metier</code></td>
+								<td>client.metier</td>
+								<td>Logique métier client, création des ChatEventDTO</td>
+								<td><a href="../docs/client/metier/Metier.html" target="_blank">📖</a></td>
+							</tr>
+							<tr>
+								<td><code>IhmGui</code></td>
+								<td>client.ihm</td>
+								<td>Gestionnaire de l'interface JavaFX</td>
+								<td><a href="../docs/client/ihm/IhmGui.html" target="_blank">📖</a></td>
+							</tr>
+							<tr>
+								<td><code>WebSocketChatAdapter</code></td>
+								<td>client.infrastructure.websocket</td>
+								<td>Adaptateur WebSocket implémentant IEnvoyeur</td>
+								<td><a href="../docs/client/infrastructure/websocket/WebSocketChatAdapter.html"
+										target="_blank">📖</a></td>
+							</tr>
+							<tr>
+								<td><code>MainServer</code></td>
+								<td>server</td>
+								<td>Point d'entrée serveur, initialise BD et services</td>
+								<td><a href="../docs/server/MainServer.html" target="_blank">📖</a></td>
+							</tr>
+							<tr>
+								<td><code>WebSocketMateZone</code></td>
+								<td>server.Protocol.webSocket</td>
+								<td>Serveur WebSocket, dispatch vers ClientService</td>
+								<td><a href="../docs/server/Protocol/webSocket/WebSocketMateZone.html"
+										target="_blank">📖</a></td>
+							</tr>
+							<tr>
+								<td><code>ClientService</code></td>
+								<td>server.metier.service</td>
+								<td>Service métier (login, signup, messages, canaux)</td>
+								<td><a href="../docs/server/metier/service/ClientService.html" target="_blank">📖</a>
+								</td>
+							</tr>
+							<tr>
+								<td><code>ConnexionBD</code></td>
+								<td>server.bd</td>
+								<td>Singleton de connexion MySQL</td>
+								<td><a href="../docs/server/bd/ConnexionBD.html" target="_blank">📖</a></td>
+							</tr>
+							<tr>
+								<td><code>UtilisateurRepository</code></td>
+								<td>server.bd.repository</td>
+								<td>CRUD et authentification des clients</td>
+								<td><a href="../docs/server/bd/repository/UtilisateurRepository.html"
+										target="_blank">📖</a></td>
+							</tr>
+							<tr>
+								<td><code>MessageRepository</code></td>
+								<td>server.bd.repository</td>
+								<td>Gestion des messages en BD</td>
+								<td><a href="../docs/server/bd/repository/MessageRepository.html" target="_blank">📖</a>
+								</td>
+							</tr>
+							<tr>
+								<td><code>ChatEventDTO</code></td>
+								<td>common.dto</td>
+								<td>DTO standardisé pour échanges JSON</td>
+								<td><a href="../docs/common/dto/ChatEventDTO.html" target="_blank">📖</a></td>
+							</tr>
+							<tr>
+								<td><code>EventEnum</code></td>
+								<td>common.protocol</td>
+								<td>Énumération des types d'événements et clés requises</td>
+								<td><a href="../docs/common/protocol/EventEnum.html" target="_blank">📖</a></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</section>
+
+		<!-- Ressources -->
+		<section class="section">
+			<div class="container">
+				<div class="section-title">
+					<h2>📚 Ressources complémentaires</h2>
+					<p>Documentation et liens utiles</p>
 				</div>
 
 				<div class="grid grid-3">
 					<div class="card">
 						<span class="card-icon">📖</span>
-						<h3>Javadoc API</h3>
-						<p>Documentation complète du code source généré automatiquement avec toutes les classes,
-							méthodes et interfaces.</p>
+						<h3>Javadoc complète</h3>
+						<p>Documentation générée automatiquement de toutes les classes, méthodes et interfaces.</p>
 						<a href="../docs/index.html" class="btn btn-primary mt-2" target="_blank">Consulter la
 							Javadoc</a>
 					</div>
 
 					<div class="card">
-						<span class="card-icon">🏗️</span>
-						<h3>Guide architectural</h3>
-						<p>Comprenez l'architecture hexagonale de MateZone et les patterns utilisés pour une maintenance
-							efficace.</p>
-						<a href="architecture.html" class="btn btn-primary mt-2">Voir l'architecture</a>
+						<span class="card-icon">🔌</span>
+						<h3>Protocole WebSocket</h3>
+						<p>Documentation détaillée du protocole de communication avec exemples JSON.</p>
+						<a href="protocol.html" class="btn btn-primary mt-2">Voir le protocole</a>
 					</div>
 
 					<div class="card">
 						<span class="card-icon">🗄️</span>
-						<h3>Documentation BDD</h3>
-						<p>Structure complète de la base de données MySQL avec schémas, relations et exemples de
-							requêtes.</p>
-						<a href="database.html" class="btn btn-primary mt-2">Base de données</a>
-					</div>
-				</div>
-			</div>
-		</section>
-
-		<!-- API Documentation -->
-		<section class="section section-alt">
-			<div class="container">
-				<div class="section-title">
-					<h2>🔌 Documentation de l'API</h2>
-					<p>Interfaces et classes principales de MateZone</p>
-				</div>
-
-				<div class="grid grid-2">
-					<div class="card">
-						<h3>📦 Packages principaux</h3>
-						<div class="table-container">
-							<table class="table">
-								<thead>
-									<tr>
-										<th>Package</th>
-										<th>Description</th>
-										<th>Javadoc</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<td><strong>client</strong></td>
-										<td>Application cliente MVC</td>
-										<td><a href="../docs/client/package-summary.html" target="_blank">📖</a></td>
-									</tr>
-									<tr>
-										<td><strong>client.controleur</strong></td>
-										<td>Contrôleurs de l'interface</td>
-										<td><a href="../docs/client/controleur/package-summary.html"
-												target="_blank">📖</a></td>
-									</tr>
-									<tr>
-										<td><strong>client.ihm</strong></td>
-										<td>Interface utilisateur Swing</td>
-										<td><a href="../docs/client/ihm/package-summary.html" target="_blank">📖</a>
-										</td>
-									</tr>
-									<tr>
-										<td><strong>client.metier</strong></td>
-										<td>Logique métier client</td>
-										<td><a href="../docs/client/metier/package-summary.html" target="_blank">📖</a>
-										</td>
-									</tr>
-									<tr>
-										<td><strong>server</strong></td>
-										<td>Serveur WebSocket</td>
-										<td><a href="../docs/server/package-summary.html" target="_blank">📖</a></td>
-									</tr>
-									<tr>
-										<td><strong>server.metier</strong></td>
-										<td>Services métier serveur</td>
-										<td><a href="../docs/server/metier/service/package-summary.html"
-												target="_blank">📖</a></td>
-									</tr>
-									<tr>
-										<td><strong>server.bd</strong></td>
-										<td>Accès aux données</td>
-										<td><a href="../docs/server/bd/package-summary.html" target="_blank">📖</a></td>
-									</tr>
-									<tr>
-										<td><strong>common</strong></td>
-										<td>Éléments partagés</td>
-										<td><a href="../docs/common/dto/package-summary.html" target="_blank">📖</a>
-										</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-					</div>
-
-					<div class="card">
-						<h3>🔑 Classes principales</h3>
-						<div class="table-container">
-							<table class="table">
-								<thead>
-									<tr>
-										<th>Classe</th>
-										<th>Responsabilité</th>
-										<th>Documentation</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<td><strong>MainClient</strong></td>
-										<td>Point d'entrée client</td>
-										<td><a href="../docs/client/MainClient.html" target="_blank">📖</a></td>
-									</tr>
-									<tr>
-										<td><strong>MainServer</strong></td>
-										<td>Point d'entrée serveur</td>
-										<td><a href="../docs/server/MainServer.html" target="_blank">📖</a></td>
-									</tr>
-									<tr>
-										<td><strong>Controleur</strong></td>
-										<td>Contrôleur principal client</td>
-										<td><a href="../docs/client/controleur/Controleur.html" target="_blank">📖</a>
-										</td>
-									</tr>
-									<tr>
-										<td><strong>WebSocketMateZone</strong></td>
-										<td>Serveur WebSocket</td>
-										<td><a href="../docs/server/Protocol/webSocket/WebSocketMateZone.html"
-												target="_blank">📖</a></td>
-									</tr>
-									<tr>
-										<td><strong>ConnexionBD</strong></td>
-										<td>Connexion base de données</td>
-										<td><a href="../docs/server/bd/ConnexionBD.html" target="_blank">📖</a></td>
-									</tr>
-									<tr>
-										<td><strong>ChatEventDTO</strong></td>
-										<td>Objet de transfert messages</td>
-										<td><a href="../docs/common/dto/ChatEventDTO.html" target="_blank">📖</a></td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</div>
-
-				<div class="alert alert-info mt-4">
-					<strong>Navigation :</strong> La Javadoc inclut un système de navigation complet avec index,
-					recherche et arbre des classes.
-					Utilisez la fonction de recherche pour trouver rapidement une classe ou méthode spécifique.
-				</div>
-			</div>
-		</section>
-
-		<!-- Protocole de communication -->
-		<section class="section">
-			<div class="container">
-				<div class="section-title">
-					<h2>📡 Protocole de communication</h2>
-					<p>Format des messages échangés entre client et serveur</p>
-				</div>
-
-				<div class="card mb-4">
-					<h3>📋 Types d'événements</h3>
-					<p>Énumération des différents types de messages supportés par le protocole WebSocket :</p>
-
-					<div class="table-container">
-						<table class="table">
-							<thead>
-								<tr>
-									<th>Type</th>
-									<th>Direction</th>
-									<th>Description</th>
-									<th>Exemple d'usage</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td><strong>LOGIN</strong></td>
-									<td>Client → Serveur</td>
-									<td>Demande d'authentification</td>
-									<td>Connexion utilisateur</td>
-								</tr>
-								<tr>
-									<td><strong>SIGNUP</strong></td>
-									<td>Client → Serveur</td>
-									<td>Demande d'inscription</td>
-									<td>Création nouveau compte</td>
-								</tr>
-								<tr>
-									<td><strong>NEW_MESSAGE</strong></td>
-									<td>Bidirectionnel</td>
-									<td>Envoi/réception de message</td>
-									<td>Message de chat</td>
-								</tr>
-								<tr>
-									<td><strong>NEW_CHANNEL</strong></td>
-									<td>Client → Serveur</td>
-									<td>Création d'un canal</td>
-									<td>Nouveau canal de discussion</td>
-								</tr>
-								<tr>
-									<td><strong>JOIN_CHANNEL</strong></td>
-									<td>Client → Serveur</td>
-									<td>Rejoindre un canal</td>
-									<td>Adhésion à un canal</td>
-								</tr>
-								<tr>
-									<td><strong>USER_CONNECTED</strong></td>
-									<td>Serveur → Client</td>
-									<td>Notification de connexion</td>
-									<td>Utilisateur en ligne</td>
-								</tr>
-								<tr>
-									<td><strong>USER_DISCONNECTED</strong></td>
-									<td>Serveur → Client</td>
-									<td>Notification de déconnexion</td>
-									<td>Utilisateur hors ligne</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
-
-				<div class="grid grid-2">
-					<div class="card">
-						<h3>📨 Structure des messages</h3>
-						<p>Format JSON standard pour tous les échanges :</p>
-
-						<div class="code-block">
-							<pre>{
-  "type": "NEW_MESSAGE",
-  "pseudo": "nom_utilisateur",
-  "contenu": "Contenu du message",
-  "channel": 1,
-  "timestamp": "2024-11-11T10:30:00.000Z"
-}</pre>
-						</div>
-
-						<h4>Champs obligatoires :</h4>
-						<ul style="text-align: left;">
-							<li><strong>type</strong> : Type d'événement (enum)</li>
-							<li><strong>timestamp</strong> : Horodatage ISO 8601</li>
-						</ul>
-
-						<h4>Champs optionnels :</h4>
-						<ul style="text-align: left;">
-							<li><strong>pseudo</strong> : Nom d'utilisateur</li>
-							<li><strong>contenu</strong> : Contenu textuel</li>
-							<li><strong>channel</strong> : ID du canal</li>
-							<li><strong>metadata</strong> : Données additionnelles</li>
-						</ul>
-					</div>
-
-					<div class="card">
-						<h3>🔒 Authentification</h3>
-						<p>Processus de connexion sécurisé :</p>
-
-						<h4>1. Demande de connexion</h4>
-						<div class="code-block">
-							<pre>{
-  "type": "LOGIN",
-  "pseudo": "utilisateur",
-  "motDePasse": "hash_password",
-  "timestamp": "2024-11-11T10:30:00.000Z"
-}</pre>
-						</div>
-
-						<h4>2. Réponse du serveur</h4>
-						<div class="code-block">
-							<pre>// Succès
-{
-  "type": "LOGIN_SUCCESS",
-  "pseudo": "utilisateur",
-  "sessionId": "abc123",
-  "timestamp": "2024-11-11T10:30:01.000Z"
-}
-
-// Échec
-{
-  "type": "LOGIN_FAILED",
-  "error": "Identifiants incorrects",
-  "timestamp": "2024-11-11T10:30:01.000Z"
-}</pre>
-						</div>
-					</div>
-				</div>
-			</div>
-		</section>
-
-		<!-- Exemples de code -->
-		<section class="section section-alt">
-			<div class="container">
-				<div class="section-title">
-					<h2>💻 Exemples de code</h2>
-					<p>Extraits de code illustrant les fonctionnalités principales</p>
-				</div>
-
-				<div class="grid grid-2">
-					<div class="card">
-						<h3>📤 Envoi de message côté client</h3>
-						<div class="code-block">
-							<pre>public class WebSocketChatAdapter implements IEnvoyeur {
-    private WebSocketContainer container;
-    private Session session;
-    
-    @Override
-    public void envoyerMessage(String contenu, int canalId) {
-        ChatEventDTO event = new ChatEventDTO();
-        event.setType(EventEnum.NEW_MESSAGE);
-        event.setContenu(contenu);
-        event.setChannel(canalId);
-        event.setTimestamp(LocalDateTime.now());
-        
-        String json = gson.toJson(event);
-        
-        try {
-            session.getBasicRemote().sendText(json);
-        } catch (IOException e) {
-            logger.error("Erreur envoi message", e);
-        }
-    }
-}</pre>
-						</div>
-					</div>
-
-					<div class="card">
-						<h3>📥 Réception côté serveur</h3>
-						<div class="code-block">
-							<pre>@ServerEndpoint("/websocket")
-public class WebSocketMateZone {
-    
-    @OnMessage
-    public void onMessage(String message, Session session) {
-        ChatEventDTO event = gson.fromJson(message, ChatEventDTO.class);
-        
-        switch (event.getType()) {
-            case NEW_MESSAGE:
-                traiterNouveauMessage(event, session);
-                break;
-            case LOGIN:
-                traiterConnexion(event, session);
-                break;
-            default:
-                logger.warn("Type d'événement non géré: " + event.getType());
-        }
-    }
-    
-    private void traiterNouveauMessage(ChatEventDTO event, Session session) {
-        // Sauvegarder en base
-        messageRepository.save(event);
-        
-        // Diffuser aux clients connectés
-        diffuserMessage(event);
-    }
-}</pre>
-						</div>
-					</div>
-
-					<div class="card">
-						<h3>🗄️ Accès aux données</h3>
-						<div class="code-block">
-							<pre>public class MessageRepository implements IMessageRepository {
-    private ConnexionBD connexionBD;
-    
-    @Override
-    public void sauvegarderMessage(Message message) {
-        String sql = "INSERT INTO messages (auteur_id, canal_id, contenu, timestamp) VALUES (?, ?, ?, ?)";
-        
-        try (Connection conn = connexionBD.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            
-            stmt.setInt(1, message.getAuteurId());
-            stmt.setInt(2, message.getCanalId());
-            stmt.setString(3, message.getContenu());
-            stmt.setTimestamp(4, Timestamp.valueOf(message.getTimestamp()));
-            
-            stmt.executeUpdate();
-            
-        } catch (SQLException e) {
-            logger.error("Erreur sauvegarde message", e);
-            throw new RepositoryException("Impossible de sauvegarder le message", e);
-        }
-    }
-}</pre>
-						</div>
-					</div>
-
-					<div class="card">
-						<h3>🖥️ Interface utilisateur</h3>
-						<div class="code-block">
-							<pre>public class MateZoneFrame extends JFrame {
-    private JTextArea messageArea;
-    private JTextField inputField;
-    private JList<String> channelList;
-    private Controleur controleur;
-    
-    public void afficherNouveauMessage(Message message) {
-        SwingUtilities.invokeLater(() -> {
-            String formatted = String.format("[%s] %s: %s%n",
-                message.getTimestamp().format(DateTimeFormatter.ofPattern("HH:mm")),
-                message.getAuteur(),
-                message.getContenu()
-            );
-            
-            messageArea.append(formatted);
-            messageArea.setCaretPosition(messageArea.getDocument().getLength());
-        });
-    }
-    
-    private void setupEventHandlers() {
-        inputField.addActionListener(e -> {
-            String text = inputField.getText().trim();
-            if (!text.isEmpty()) {
-                controleur.envoyerMessage(text);
-                inputField.setText("");
-            }
-        });
-    }
-}</pre>
-						</div>
-					</div>
-				</div>
-			</div>
-		</section>
-
-		<!-- Configuration et déploiement -->
-		<section class="section">
-			<div class="container">
-				<div class="section-title">
-					<h2>⚙️ Configuration et déploiement</h2>
-					<p>Guides techniques pour la mise en production</p>
-				</div>
-
-				<div class="grid grid-3">
-					<div class="card">
-						<h3>🔧 Fichiers de configuration</h3>
-
-						<h4>config.properties</h4>
-						<div class="code-block">
-							<pre># Base de données
-db.url=jdbc:mysql://localhost:3306/matezone
-db.username=${DB_USER}
-db.password=${DB_PASSWORD}
-db.driver=com.mysql.cj.jdbc.Driver
-
-# Serveur
-server.port=8080
-server.host=0.0.0.0
-server.maxConnections=100
-
-# Logging
-log.level=INFO
-log.file=logs/matezone.log</pre>
-						</div>
-
-						<div class="alert alert-warning mt-3">
-							<strong>Variables d'environnement :</strong> Utilisez des variables pour les données
-							sensibles.
-						</div>
-					</div>
-
-					<div class="card">
-						<h3>🐳 Docker</h3>
-
-						<h4>Dockerfile</h4>
-						<div class="code-block">
-							<pre>FROM openjdk:21-jre-slim
-
-WORKDIR /app
-
-COPY bin/ bin/
-COPY lib/ lib/
-COPY config/ config/
-
-EXPOSE 8080
-
-ENTRYPOINT ["java", "-cp", "bin:lib/*", "server.MainServer"]</pre>
-						</div>
-
-						<h4>docker-compose.yml</h4>
-						<div class="code-block">
-							<pre>version: '3.8'
-services:
-  matezone:
-    build: .
-    ports:
-      - "8080:8080"
-    environment:
-      - DB_HOST=db
-      - DB_USER=matezone
-      - DB_PASSWORD=password
-    depends_on:
-      - db
-      
-  db:
-    image: mysql:8.0
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpass
-      MYSQL_DATABASE: matezone
-      MYSQL_USER: matezone
-      MYSQL_PASSWORD: password</pre>
-						</div>
-					</div>
-
-					<div class="card">
-						<h3>🚀 Scripts de déploiement</h3>
-
-						<h4>deploy.sh</h4>
-						<div class="code-block">
-							<pre>#!/bin/bash
-set -e
-
-echo "🚀 Déploiement MateZone"
-
-# Arrêt du service existant
-sudo systemctl stop matezone || true
-
-# Sauvegarde
-sudo -u mysql mysqldump matezone > backup_$(date +%Y%m%d_%H%M%S).sql
-
-# Compilation
-./run.sh
-
-# Copie des fichiers
-sudo cp -r bin lib /opt/matezone/
-
-# Redémarrage
-sudo systemctl start matezone
-sudo systemctl status matezone
-
-echo "✅ Déploiement terminé"</pre>
-						</div>
-
-						<h4>Service systemd</h4>
-						<div class="code-block">
-							<pre># /etc/systemd/system/matezone.service
-[Unit]
-Description=MateZone Chat Server
-After=mysql.service
-Requires=mysql.service
-
-[Service]
-Type=simple
-User=matezone
-WorkingDirectory=/opt/matezone
-ExecStart=/usr/bin/java -cp "bin:lib/*" server.MainServer
-Restart=on-failure
-RestartSec=10
-
-[Install]
-WantedBy=multi-user.target</pre>
-						</div>
-					</div>
-				</div>
-			</div>
-		</section>
-
-		<!-- Contribution et développement -->
-		<section class="section section-alt">
-			<div class="container">
-				<div class="section-title">
-					<h2>🤝 Contribution au projet</h2>
-					<p>Guide pour les développeurs souhaitant contribuer à MateZone</p>
-				</div>
-
-				<div class="grid grid-2">
-					<div class="card">
-						<h3>📋 Processus de contribution</h3>
-						<ol style="text-align: left;">
-							<li><strong>Fork</strong> du repository sur GitHub</li>
-							<li><strong>Clone</strong> votre fork localement</li>
-							<li><strong>Branche</strong> pour votre fonctionnalité :
-								<code>git checkout -b feature/ma-feature</code>
-							</li>
-							<li><strong>Développement</strong> avec tests unitaires</li>
-							<li><strong>Commit</strong> avec messages clairs</li>
-							<li><strong>Push</strong> vers votre fork</li>
-							<li><strong>Pull Request</strong> vers le repository principal</li>
-						</ol>
-
-						<div class="alert alert-info mt-3">
-							<strong>Convention :</strong> Utilisez des messages de commit descriptifs au format "type:
-							description courte".
-						</div>
-					</div>
-
-					<div class="card">
-						<h3>🧪 Tests et qualité</h3>
-						<ul style="text-align: left;">
-							<li><strong>Tests unitaires</strong> obligatoires pour nouvelles fonctionnalités</li>
-							<li><strong>Couverture</strong> minimale de 80%</li>
-							<li><strong>Documentation</strong> Javadoc pour toutes les méthodes publiques</li>
-							<li><strong>Style</strong> respecter les conventions Java</li>
-						</ul>
-
-						<div class="code-block mt-3">
-							<pre># Exécuter les tests
-./gradlew test
-
-# Générer le rapport de couverture
-./gradlew jacocoTestReport
-
-# Vérifier le style de code
-./gradlew checkstyleMain</pre>
-						</div>
-					</div>
-				</div>
-
-				<div class="card mt-4">
-					<h3>📝 Standards de documentation</h3>
-					<div class="grid grid-2">
-						<div>
-							<h4>Javadoc obligatoire pour :</h4>
-							<ul style="text-align: left;">
-								<li>Toutes les classes publiques</li>
-								<li>Toutes les méthodes publiques</li>
-								<li>Tous les champs publics</li>
-								<li>Toutes les interfaces</li>
-							</ul>
-						</div>
-
-						<div>
-							<h4>Exemple de documentation :</h4>
-							<div class="code-block">
-								<pre>/**
- * Envoie un message à tous les clients connectés au canal spécifié.
- * 
- * @param message le message à diffuser
- * @param canalId l'identifiant du canal cible
- * @throws IllegalArgumentException si le message est null ou vide
- * @throws RepositoryException si erreur d'accès aux données
- * @since 1.0
- */
-public void diffuserMessage(String message, int canalId) {
-    // Implémentation
-}</pre>
-							</div>
-						</div>
+						<h3>Base de données</h3>
+						<p>Structure des tables MySQL, relations et exemples de requêtes.</p>
+						<a href="database.html" class="btn btn-primary mt-2">Voir la BDD</a>
 					</div>
 				</div>
 			</div>
@@ -717,33 +799,36 @@ public void diffuserMessage(String message, int canalId) {
 			<div class="footer-content">
 				<div class="footer-section">
 					<h3>MateZone</h3>
-					<p>Documentation complète pour développeurs, utilisateurs et administrateurs système.</p>
+					<p>Application de messagerie temps réel avec architecture hexagonale et WebSocket.</p>
 				</div>
-
 				<div class="footer-section">
-					<h3>Navigation</h3>
-					<p><a href="index.html">Accueil</a></p>
-					<p><a href="architecture.html">Architecture</a></p>
-					<p><a href="database.html">Base de données</a></p>
-					<p><a href="guide.html">Guide d'utilisation</a></p>
+					<h4>Liens rapides</h4>
+					<ul>
+						<li><a href="index.html">Accueil</a></li>
+						<li><a href="architecture.html">Architecture</a></li>
+						<li><a href="protocol.html">Protocole</a></li>
+						<li><a href="documentation.html">Documentation</a></li>
+					</ul>
 				</div>
-
 				<div class="footer-section">
-					<h3>Ressources techniques</h3>
-					<p><a href="../docs/index.html" target="_blank">Javadoc complète</a></p>
-					<p><a href="https://github.com/Joshua-Hermilly/MateZone" target="_blank">Code source</a></p>
-					<p><a href="https://github.com/Joshua-Hermilly/MateZone/releases" target="_blank">Releases</a></p>
+					<h4>Développement</h4>
+					<ul>
+						<li><a href="https://github.com/Joshua-Hermilly/MateZone" target="_blank"
+								rel="noopener">GitHub</a></li>
+						<li><a href="../docs/index.html" target="_blank">Javadoc</a></li>
+						<li><a href="contact.html">Contact</a></li>
+					</ul>
 				</div>
-
 				<div class="footer-section">
-					<h3>Support développeur</h3>
-					<p><a href="contact.html">Questions techniques</a></p>
-					<p><a href="https://github.com/Joshua-Hermilly/MateZone/issues" target="_blank">Issues GitHub</a>
-					</p>
-					<p><a href="https://github.com/Joshua-Hermilly/MateZone/pulls" target="_blank">Pull Requests</a></p>
+					<h4>Technologies</h4>
+					<ul>
+						<li>Java 25 ☕</li>
+						<li>JavaFX 🖼️</li>
+						<li>WebSocket 🔌</li>
+						<li>MySQL 🗄️</li>
+					</ul>
 				</div>
 			</div>
-
 			<div class="footer-bottom">
 				<p>&copy; 2025 MateZone Team. Projet éducatif - Joshua Hermilly & Donovan Prévost</p>
 			</div>
