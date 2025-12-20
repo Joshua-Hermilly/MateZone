@@ -20,7 +20,7 @@ import java.sql.Timestamp;
 public class Client 
 {
     /*-------------------------------*/
-    /* Attributs */
+    /* Attributs                     */
     /*-------------------------------*/
 
     /**
@@ -48,15 +48,14 @@ public class Client
     private Timestamp createdAt;
 
     /*-------------------------------*/
-    /* Constructeurs */
+    /* Constructeurs                 */
     /*-------------------------------*/
 
     /**
      * Constructeur par défaut.
      * Utilisé notamment pour la désérialisation depuis la base de données.
      */
-    public Client() {
-    }
+    public Client() { }
 
     /**
      * Constructeur complet avec tous les attributs.
@@ -68,10 +67,11 @@ public class Client
      * @param mdp       mot de passe du client
      * @param createdAt date de création du compte
      */
-    public Client(int id, String pseudo, String mdp, Timestamp createdAt) {
-        this.id = id;
-        this.pseudo = pseudo;
-        this.mdp = mdp;
+    public Client(int id, String pseudo, String mdp, Timestamp createdAt) 
+    {
+        this.id        = id;
+        this.pseudo    = pseudo;
+        this.mdp       = mdp;
         this.createdAt = createdAt;
     }
 
@@ -82,12 +82,13 @@ public class Client
      * @param pseudo pseudonyme souhaité pour le nouveau client
      * @param mdp    mot de passe du nouveau client
      */
-    public Client(String pseudo, String mdp) {
+    public Client(String pseudo, String mdp) 
+    {
         this(0, pseudo, mdp, null);
     }
 
     /*-------------------------------*/
-    /* Accesseurs */
+    /* Accesseurs                    */
     /*-------------------------------*/
 
     /**
@@ -95,7 +96,8 @@ public class Client
      * 
      * @return l'identifiant du client
      */
-    public int getId() {
+    public int getId() 
+    {
         return this.id;
     }
 
@@ -104,7 +106,8 @@ public class Client
      * 
      * @return le pseudonyme du client
      */
-    public String getPseudo() {
+    public String getPseudo() 
+    {
         return this.pseudo;
     }
 
@@ -113,7 +116,8 @@ public class Client
      * 
      * @return le mot de passe du client
      */
-    public String getMdp() {
+    public String getMdp() 
+    {
         return this.mdp;
     }
 
@@ -122,12 +126,13 @@ public class Client
      * 
      * @return la date de création du compte
      */
-    public Timestamp getCreatedAt() {
+    public Timestamp getCreatedAt() 
+    {
         return this.createdAt;
     }
 
     /*-------------------------------*/
-    /* Modificateurs */
+    /* Modificateurs                 */
     /*-------------------------------*/
 
     /**
@@ -135,7 +140,8 @@ public class Client
      * 
      * @param id le nouvel identifiant du client
      */
-    public void setId(int id) {
+    public void setId(int id) 
+    {
         this.id = id;
     }
 
@@ -144,7 +150,8 @@ public class Client
      * 
      * @param pseudo le nouveau pseudonyme du client
      */
-    public void setPseudo(String pseudo) {
+    public void setPseudo(String pseudo) 
+    {
         this.pseudo = pseudo;
     }
 
@@ -153,7 +160,8 @@ public class Client
      * 
      * @param mdp le nouveau mot de passe du client
      */
-    public void setMdp(String mdp) {
+    public void setMdp(String mdp) 
+    {
         this.mdp = mdp;
     }
 
@@ -162,7 +170,8 @@ public class Client
      * 
      * @param createdAt la nouvelle date de création
      */
-    public void setCreatedAt(Timestamp createdAt) {
+    public void setCreatedAt(Timestamp createdAt) 
+    {
         this.createdAt = createdAt;
     }
 
@@ -176,11 +185,10 @@ public class Client
     @Override
     public String toString() 
     {
-        return "Client{" +
-                "id=" + id +
-                ", pseudo='" + pseudo + '\'' +
-                ", mdp='" + mdp + '\'' +
-                ", createdAt=" + createdAt +
-                '}';
+        return "Client{"       +
+                "id="          + id        +
+                ", pseudo='"   + pseudo    + '\'' +
+                ", mdp='"      + mdp       + '\'' +
+                ", createdAt=" + createdAt + '}'  ;
     }
 }
