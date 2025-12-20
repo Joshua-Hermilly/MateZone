@@ -16,4 +16,5 @@ server.bd.repository
 server.metier.interfaces
 server.metier.model
 server.metier.service
+server.metier.util
 server.Protocol.webSocket

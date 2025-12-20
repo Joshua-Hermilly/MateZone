@@ -144,41 +144,41 @@
 						<h3>🔐 Authentification</h3>
 
 						<h4>LOGIN</h4>
-						<p><strong>Clés requises :</strong> pseudo, mot de passe</p>
+						<p><strong>Clés requises :</strong> pseudo, mdp</p>
 						<div class="code-block">
 							<pre><code>{
   "type": "LOGIN",
   "data": {
     "pseudo": "alice",
-    "motDePasse": "secretPassword"
+	    "mdp": "secretPassword"
   }
 }</code></pre>
 						</div>
 
 						<h4>SIGNUP</h4>
-						<p><strong>Clés requises :</strong> pseudo, mot de passe</p>
+						<p><strong>Clés requises :</strong> pseudo, mdp</p>
 						<div class="code-block">
 							<pre><code>{
   "type": "SIGNUP",
   "data": {
     "pseudo": "newUser",
-    "motDePasse": "newPassword"
+	    "mdp": "newPassword"
   }
 }</code></pre>
 						</div>
 
 						<h4>SUCCESS_LOGIN</h4>
-						<p><strong>Clés requises :</strong> identifiant utilisateur, pseudo</p>
+						<p><strong>Clés requises :</strong> id (identifiant utilisateur), pseudo</p>
 
 						<h4>SUCCESS_SIGNUP</h4>
-						<p><strong>Clés requises :</strong> identifiant utilisateur, pseudo</p>
+						<p><strong>Clés requises :</strong> id (identifiant utilisateur), pseudo</p>
 					</div>
 
 					<div class="card">
 						<h3>💬 Messages</h3>
 
 						<h4>MESSAGE</h4>
-						<p><strong>Clés requises :</strong> identifiant client, pseudo, contenu, date</p>
+						<p><strong>Clés requises :</strong> idClient, pseudo, contenu, date</p>
 						<div class="code-block">
 							<pre><code>{
   "type": "MESSAGE",
@@ -192,10 +192,10 @@
 						</div>
 
 						<h4>NEW_MESSAGE</h4>
-						<p><strong>Clés requises :</strong> identifiant client, identifiant canal, contenu</p>
+						<p><strong>Clés requises :</strong> idClient, idChannel, contenu</p>
 
 						<h4>NEW_MESSAGE_IMG</h4>
-						<p><strong>Clés requises :</strong> identifiant groupe, identifiant client, données binaires</p>
+						<p><strong>Clés requises :</strong> IdGroupe, idClient, byte</p>
 
 						<h4>MESSAGE_LIST</h4>
 						<p><strong>Utilise lstEventDTO</strong> - Aucune clé data requise</p>
@@ -205,34 +205,142 @@
 						<h3>📡 Canaux</h3>
 
 						<h4>NEW_CHANNEL</h4>
-						<p><strong>Clés requises :</strong> identifiant du canal</p>
+						<p><strong>Clés requises :</strong> idChannel</p>
 						<div class="code-block">
 							<pre><code>{
   "type": "NEW_CHANNEL",
   "data": {
-    "idCanal": "channel_001"
+	    "idChannel": "channel_001"
   }
 }</code></pre>
 						</div>
+
+						<h4>PERMS_CHANNELS</h4>
+						<p><strong>Clés requises :</strong> aucune (utilise lstEventDTO)</p>
+
+						<h4>PERM_CHANNEL</h4>
+						<p><strong>Clés requises :</strong> idChannel, nomChannel</p>
+						<div class="code-block">
+							<pre><code>{
+  "type": "PERM_CHANNEL",
+  "data": {
+	    "idChannel": "channel_001",
+	    "nomChannel": "Général"
+  }
+}</code></pre>
+						</div>
+
+						<h4>CHANGER_CHANNEL</h4>
+						<p><strong>Clés requises :</strong> idChannel</p>
 					</div>
 
 					<div class="card">
 						<h3>⚠️ Réponses système</h3>
 
 						<h4>SUCCESS</h4>
-						<p><strong>Clés requises :</strong> message de succès</p>
+						<p><strong>Clés requises :</strong> message (message de succès)</p>
 
 						<h4>ERROR</h4>
-						<p><strong>Clés requises :</strong> message d'erreur</p>
+						<p><strong>Clés requises :</strong> message (message d'erreur)</p>
 						<div class="code-block">
 							<pre><code>{
   "type": "ERROR",
   "data": {
-    "messageErreur": "Connexion échouée"
+	    "message": "Connexion échouée"
   }
 }</code></pre>
 						</div>
 					</div>
+				</div>
+
+				<!-- Récapitulatif des événements -->
+				<div class="card mt-4 table-container">
+					<h3>📋 Récapitulatif EventEnum → clés requises</h3>
+					<p>Ce tableau synthétise l'énumération <code>EventEnum</code> et les clés attendues dans
+						<code>data</code>
+						pour chaque type d'événement.</p>
+					<table class="table">
+						<thead>
+							<tr>
+								<th>Type (EventEnum)</th>
+								<th>Description</th>
+								<th>Clés requises dans <code>data</code></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><code>LOGIN</code></td>
+								<td>Connexion d'un utilisateur existant</td>
+								<td><code>pseudo</code>, <code>mdp</code></td>
+							</tr>
+							<tr>
+								<td><code>SIGNUP</code></td>
+								<td>Inscription d'un nouvel utilisateur</td>
+								<td><code>pseudo</code>, <code>mdp</code></td>
+							</tr>
+							<tr>
+								<td><code>SUCCESS_LOGIN</code></td>
+								<td>Retour succès après connexion</td>
+								<td><code>id</code>, <code>pseudo</code></td>
+							</tr>
+							<tr>
+								<td><code>SUCCESS_SIGNUP</code></td>
+								<td>Retour succès après inscription</td>
+								<td><code>id</code>, <code>pseudo</code></td>
+							</tr>
+							<tr>
+								<td><code>NEW_CHANNEL</code></td>
+								<td>Demande de connexion / création de canal</td>
+								<td><code>idChannel</code></td>
+							</tr>
+							<tr>
+								<td><code>MESSAGE</code></td>
+								<td>Message complet diffusé dans un canal</td>
+								<td><code>idClient</code>, <code>pseudo</code>, <code>contenu</code>, <code>date</code>
+								</td>
+							</tr>
+							<tr>
+								<td><code>MESSAGE_LIST</code></td>
+								<td>Liste de messages (utilise <code>lstEventDTO</code>)</td>
+								<td>Aucune (liste d'événements)</td>
+							</tr>
+							<tr>
+								<td><code>NEW_MESSAGE</code></td>
+								<td>Envoi d'un nouveau message texte</td>
+								<td><code>idClient</code>, <code>idChannel</code>, <code>contenu</code></td>
+							</tr>
+							<tr>
+								<td><code>NEW_MESSAGE_IMG</code></td>
+								<td>Envoi d'un message avec image</td>
+								<td><code>IdGroupe</code>, <code>idClient</code>, <code>byte</code></td>
+							</tr>
+							<tr>
+								<td><code>SUCCESS</code></td>
+								<td>Retour générique de succès</td>
+								<td><code>message</code></td>
+							</tr>
+							<tr>
+								<td><code>ERROR</code></td>
+								<td>Retour d'erreur avec détail</td>
+								<td><code>message</code></td>
+							</tr>
+							<tr>
+								<td><code>PERMS_CHANNELS</code></td>
+								<td>Liste des canaux accessibles à l'utilisateur</td>
+								<td>Aucune (utilise <code>lstEventDTO</code>)</td>
+							</tr>
+							<tr>
+								<td><code>PERM_CHANNEL</code></td>
+								<td>Détail d'un canal avec ses permissions</td>
+								<td><code>idChannel</code>, <code>nomChannel</code></td>
+							</tr>
+							<tr>
+								<td><code>CHANGER_CHANNEL</code></td>
+								<td>Changement de canal côté client</td>
+								<td><code>idChannel</code></td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
 			</div>
 		</section>
@@ -260,7 +368,7 @@ ChatEventDTO add(String key, Object value)
 // Exemple d'utilisation
 ChatEventDTO event = new ChatEventDTO(EventEnum.NEW_MESSAGE)
     .add("idClient", "user123")
-    .add("idCanal", "channel1")
+	    .add("idChannel", "channel1")
     .add("contenu", "Hello!");</code></pre>
 						</div>
 					</div>
@@ -294,19 +402,6 @@ event.setType(EventEnum.MESSAGE);
 event.setData(dataMap);</code></pre>
 						</div>
 					</div>
-
-					<div class="card">
-						<h3>🔍 Validation EventEnum</h3>
-						<div class="code-block">
-							<pre><code>// Récupération des clés requises
-List&lt;String&gt; requiredKeys = EventEnum.LOGIN.getRequiredKeys();
-// Résultat: ["pseudo", "motDePasse"]
-
-// Accès par index
-String keyName = EventEnum.MESSAGE.getKeyIndex(0);
-// Résultat: "idClient"</code></pre>
-						</div>
-					</div>
 				</div>
 			</div>
 		</section>
@@ -329,7 +424,7 @@ String keyName = EventEnum.MESSAGE.getKeyIndex(0);
   "type": "LOGIN",
   "data": {
     "pseudo": "alice",
-    "motDePasse": "secret123"
+	    "mdp": "secret123"
   }
 }</code></pre>
 								</div>
@@ -339,7 +434,7 @@ String keyName = EventEnum.MESSAGE.getKeyIndex(0);
 									<pre><code>{
   "type": "SUCCESS_LOGIN",
   "data": {
-    "idUtilisateur": "user_456",
+		    "id": "user_456",
     "pseudo": "alice"
   }
 }</code></pre>
@@ -357,7 +452,7 @@ String keyName = EventEnum.MESSAGE.getKeyIndex(0);
   "type": "NEW_MESSAGE",
   "data": {
     "idClient": "user_456",
-    "idCanal": "general",
+		"idChannel": "general",
     "contenu": "Salut tout le monde !"
   }
 }</code></pre>
