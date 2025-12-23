@@ -9,10 +9,9 @@ import org.java_websocket.WebSocket;
 
 import common.dto.ChatEventDTO;
 import common.protocol.EventEnum;
-import server.metier.interfaces.IMessageRepository;
-import server.metier.interfaces.IUtilisateurRepository;
-import server.metier.interfaces.IWebSocketMateZone;
+import server.metier.interfaces.*;
 import server.metier.model.Client;
+import server.metier.util.InputValidator;
 
 /**
  * Service métier gérant les opérations liées aux clients de l'application
@@ -27,8 +26,75 @@ import server.metier.model.Client;
  * @version V1
  * @date 08/11/25
  */
+import java.util.HashMap;
+import java.time.Instant;
+
 public class ClientService 
 {
+	/*-------------------------------*/
+	/* Anti-brute-force              */
+	/*-------------------------------*/
+
+	private static final HashMap<String, Tentatives> tentativesParIp = new HashMap<>();
+	private static final int NB_MAX_TENTATIVES_CONNEXION  = 3;
+	private static final int NB_MAX_TENTATIVES_MESSAGE    = 5;
+	private static final long TEMPS_BLOQUAGE_MS = 60_000; // 1 minute
+
+	private static class Tentatives 
+	{
+		int nb;
+		long dernierEssai;
+		long bloqueJusqua;
+
+		Tentatives() 
+		{ 
+			nb           = 0;
+			dernierEssai = 0;
+			bloqueJusqua = 0; 
+		}
+	}
+
+	private boolean estBloque(String ip) 
+	{
+		Tentatives t = ClientService.tentativesParIp.get(ip);
+
+		if (t == null) return false;
+
+		long maintenant = Instant.now().toEpochMilli();
+
+		return t.bloqueJusqua > maintenant;
+	}
+
+	private void enregistrerTentative(String ip) 
+	{
+		long maintenant = Instant.now().toEpochMilli();
+		Tentatives t    = ClientService.tentativesParIp.getOrDefault(ip, new Tentatives());
+
+		if (maintenant - t.dernierEssai > ClientService.TEMPS_BLOQUAGE_MS) {t.nb = 1;}
+		else {t.nb++;}
+
+		t.dernierEssai = maintenant;
+
+		if (t.nb >= ClientService.NB_MAX_TENTATIVES_CONNEXION) {t.bloqueJusqua = maintenant + ClientService.TEMPS_BLOQUAGE_MS;}
+
+		ClientService.tentativesParIp.put(ip, t);
+	}
+
+		private void messageEnvoyer(String ip) 
+	{
+		long maintenant = Instant.now().toEpochMilli();
+		Tentatives t    = ClientService.tentativesParIp.getOrDefault(ip, new Tentatives());
+
+		if (maintenant - t.dernierEssai > ClientService.TEMPS_BLOQUAGE_MS) {t.nb = 1;}
+		else {t.nb++;}
+
+		t.dernierEssai = maintenant;
+
+		if (t.nb >= ClientService.NB_MAX_TENTATIVES_MESSAGE) {t.bloqueJusqua = maintenant + ClientService.TEMPS_BLOQUAGE_MS;}
+
+		ClientService.tentativesParIp.put(ip, t);
+	}
+
 	/*-------------------------------*/
 	/* Attributs                     */
 	/*-------------------------------*/
@@ -44,6 +110,12 @@ public class ClientService
 	 * Gère l'envoi, la récupération et le stockage des messages de chat.
 	 */
 	private final IMessageRepository iMesRep;
+
+	/**
+	 * Repository pour les opérations liées aux messages.
+	 * Gère la creation 
+	 */
+	private final IChannelRepository iChannelRep;
 
 	/**
 	 * Interface WebSocket pour la communication temps réel avec les clients.
@@ -64,10 +136,11 @@ public class ClientService
 	 * @param iUserRepo repository pour les opérations utilisateur
 	 * @param iMesRepo  repository pour les opérations de messages
 	 */
-	public ClientService(IUtilisateurRepository iUserRepo, IMessageRepository iMesRepo)
+	public ClientService(IUtilisateurRepository iUserRepo, IMessageRepository iMesRepo, IChannelRepository iChanRepo)
 	{
 		this.iUserRep           = iUserRepo;
 		this.iMesRep            = iMesRepo;
+		this.iChannelRep        = iChanRepo;
 		this.iWebSocketMateZone = null;
 	}
 
@@ -100,30 +173,51 @@ public class ClientService
 	 */
 	public void handleLogin(WebSocket client, ChatEventDTO eventRec) 
 	{
+		if (estBloque(client.getRemoteSocketAddress().toString())) 
+		{
+			ChatEventDTO event = new ChatEventDTO(EventEnum.ERROR).add(EventEnum.ERROR.getKeyIndex(0), "Trop de tentatives. Merci de patienter 1 minute avant de réessayer.");
+			client.send(event.toJson());
+			return;
+		}
+
+		this.enregistrerTentative(client.getRemoteSocketAddress().toString());
+
 		ChatEventDTO event;
 
 		String pseudo = (String) eventRec.getDataIndex(0);
 		String mdp    = (String) eventRec.getDataIndex(1);
 
+
+		// Validation du pseudo
+		if (!InputValidator.isValidPseudo(pseudo)) 
+		{
+			String erreur = "Pseudo invalide. Seuls les caractères alphanumériques et _ sont autorisés (3-20 caractères).";
+			event = new ChatEventDTO(EventEnum.ERROR).add(EventEnum.ERROR.getKeyIndex(0), erreur);
+			client.send(event.toJson());
+			return;
+		}
+
 		int idClient = this.iUserRep.authenticate(pseudo, mdp);
 
 		if (idClient == -1)
 		{
-			String erreur = "LOGIN: Client introuvable:" + pseudo + ":" + mdp;
+			String erreur = "Échec de connexion : Identifiants incorrects pour l'utilisateur '" + pseudo + "'.";
 			event = new ChatEventDTO(EventEnum.ERROR).add(EventEnum.ERROR.getKeyIndex(0), erreur);
 			client.send(event.toJson());
 
 		} 
 		else 
 		{
+			ClientService.tentativesParIp.remove(client.getRemoteSocketAddress().toString());
+
 			event = new ChatEventDTO(EventEnum.SUCCESS_LOGIN)
 					.add(EventEnum.SUCCESS_LOGIN.getKeyIndex(0), idClient)
-					.add(EventEnum.SUCCESS_LOGIN.getKeyIndex(1), pseudo  );
+					.add(EventEnum.SUCCESS_LOGIN.getKeyIndex(1), InputValidator.escapeHtml(pseudo));
 
+			this.iWebSocketMateZone.registerClientSocket(idClient, client);
 			client.send(event.toJson());
 			this.envoyerPermChannel(idClient, client);
-			this.handleNewChannel(client, new ChatEventDTO(EventEnum.CHANGER_CHANNEL).add(EventEnum.CHANGER_CHANNEL.getKeyIndex(0), 1));
-			
+			this.handleSwitchChannel(client, new ChatEventDTO(EventEnum.CHANGER_CHANNEL).add(EventEnum.CHANGER_CHANNEL.getKeyIndex(0), 1));
 		}
 	}
 
@@ -134,28 +228,53 @@ public class ClientService
 	 */
 	public void handleRegister(WebSocket client, ChatEventDTO eventRec) 
 	{
+		if (estBloque(client.getRemoteSocketAddress().toString())) 
+		{
+			ChatEventDTO event = new ChatEventDTO(EventEnum.ERROR).add(EventEnum.ERROR.getKeyIndex(0), "Trop de tentatives. Merci de patienter 1 minute avant de réessayer.");
+			client.send(event.toJson());
+			return;
+		}
+
+		this.enregistrerTentative(client.getRemoteSocketAddress().toString());
+
 		ChatEventDTO event;
 
 		String pseudo = (String) eventRec.getDataIndex(0);
 		String mdp    = (String) eventRec.getDataIndex(1);
 
-		if (!pseudo.isEmpty() && !mdp.isEmpty()) 
+		// Validation du pseudo
+		if (!InputValidator.isValidPseudo(pseudo)) 
 		{
-			int idClient = this.iUserRep.createClient(new Client(pseudo, mdp));
+			String erreur = "Pseudo invalide. Seuls les caractères alphanumériques et _ sont autorisés (3-20 caractères).";
+			event = new ChatEventDTO(EventEnum.ERROR).add(EventEnum.ERROR.getKeyIndex(0), erreur);
+			client.send(event.toJson());
+			return;
+		}
 
-			if (idClient != -1) 
-			{
-				event = new ChatEventDTO(EventEnum.SUCCESS_SIGNUP)
-						.add(EventEnum.SUCCESS_LOGIN.getKeyIndex(0), idClient)
-						.add(EventEnum.SUCCESS_LOGIN.getKeyIndex(1), pseudo  );
+		// Validation du mot de passe fort
+		if (!InputValidator.isStrongPassword(mdp)) 
+		{
+			String erreur = "Mot de passe trop faible. 8 caractères min, 1 majuscule, 1 minuscule, 1 chiffre, 1 spécial.";
+			event = new ChatEventDTO(EventEnum.ERROR).add(EventEnum.ERROR.getKeyIndex(0), erreur);
+			client.send(event.toJson());
+			return;
+		}
 
-				client.send(event.toJson());
-				return;
-			}
+		int idClient = this.iUserRep.createClient(new Client(pseudo, mdp));
+
+		if (idClient != -1) 
+		{
+			this.iChannelRep.ajouterChannelCLient(idClient, 1);
+			event = new ChatEventDTO(EventEnum.SUCCESS_SIGNUP)
+				.add(EventEnum.SUCCESS_LOGIN.getKeyIndex(0), idClient)
+				.add(EventEnum.SUCCESS_LOGIN.getKeyIndex(1), InputValidator.escapeHtml(pseudo));
+
+			client.send(event.toJson());
+			return;
 		}
 
 		// Gestion de l'erreur (champs vides ou échec de création)
-		String erreur = "REGISTER: Erreur de creation de l'utilisateur:" + pseudo + ":" + mdp;
+		String erreur = "Échec de l'inscription : impossible de créer l'utilisateur '" + pseudo + "'. Veuillez vérifier les informations fournies.";
 		event         = new ChatEventDTO(EventEnum.ERROR).add(EventEnum.ERROR.getKeyIndex(0), erreur);
 		client.send(event.toJson());
 
@@ -193,13 +312,32 @@ public class ClientService
 	 */
 	public void handleNewMessage(WebSocket client, ChatEventDTO eventRec) 
 	{
+		if (estBloque(client.getRemoteSocketAddress().toString())) 
+		{
+			ChatEventDTO event = new ChatEventDTO(EventEnum.ERROR)
+				.add(EventEnum.ERROR.getKeyIndex(0), "Trop de messages envoyés. Merci de patienter avant de réessayer.");
+			client.send(event.toJson());
+			return;
+		}
 
-		System.out.println(eventRec);
+		this.messageEnvoyer(client.getRemoteSocketAddress().toString());
+
 		int   idClient  = ((Double) eventRec.getDataIndex(0)).intValue();
 		int   idChannel = ((Double) eventRec.getDataIndex(1)).intValue();
 		String nMessage = (String)  eventRec.getDataIndex(2);
 
-		int idMessage = this.iMesRep.sendMessage(idChannel, idClient, nMessage);
+		// Validation du message
+		if (!InputValidator.isValidMessage(nMessage)) 
+		{
+			ChatEventDTO event = new ChatEventDTO(EventEnum.ERROR)
+				.add(EventEnum.ERROR.getKeyIndex(0), "Message invalide ([1;500]).");
+			client.send(event.toJson());
+			return;
+		}
+		// Sanitize le message avant stockage et diffusion
+		String safeMessage = InputValidator.escapeHtml(nMessage);
+
+		int idMessage = this.iMesRep.sendMessage(idChannel, idClient, safeMessage);
 
 		if (idMessage != -1) 
 		{
@@ -219,7 +357,7 @@ public class ClientService
 	 * Savoir ou est l'utilisateur
 	 * Fo"
 	 */
-	public void handleNewChannel(WebSocket client, ChatEventDTO eventRec) 
+	public void handleSwitchChannel(WebSocket client, ChatEventDTO eventRec) 
 	{
 		try {
 				int idChannel = (int) Double.parseDouble(eventRec.getDataIndex(0).toString());
@@ -229,7 +367,7 @@ public class ClientService
 	}
 
 	private void envoyerMessageList(int IdGroupe, WebSocket client)
-	 {
+	{
 		List<ChatEventDTO> lstEventDTO = new ArrayList<ChatEventDTO>();
 
 		Map<Integer, String[]> mapMessages = this.iMesRep.getMessages(IdGroupe);
@@ -244,9 +382,26 @@ public class ClientService
 		}
 
 		ChatEventDTO event = new ChatEventDTO(EventEnum.MESSAGE_LIST, lstEventDTO);
-		System.out.println(event);
 
 		client.send(event.toJson());
+	}
+
+
+	public void handleNewChannel(WebSocket client, ChatEventDTO eventRec)
+	{
+		try {
+				int idClient1 = (int)Integer.parseInt(eventRec.getDataIndex(0).toString());
+				int idCLient2 = (int)Integer.parseInt(eventRec.getDataIndex(1).toString());
+
+				String nomClient1 = this.iUserRep.getClientById(idClient1).getPseudo();
+				String nomClient2 = this.iUserRep.getClientById(idCLient2).getPseudo();
+
+				if (this.iChannelRep.CreerMp(idClient1, idCLient2, "prive_" + nomClient1 + "_" + nomClient2 ))
+				{
+					this.envoyerPermChannel(idClient1, client);
+					this.envoyerPermChannel(idCLient2, this.iWebSocketMateZone.getWebSocketByClientId(idCLient2));
+				}
+		} catch (Exception e) { e.printStackTrace();}
 	}
 
 }

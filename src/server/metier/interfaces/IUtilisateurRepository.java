@@ -64,7 +64,5 @@ public interface IUtilisateurRepository
 	 */
 	HashMap<Integer, String> permChannel(int idclient);
 
-
-	
-
+	Client getClientById(int id);
 }

@@ -1,10 +1,12 @@
+
 package server.Protocol.webSocket;
 
-import java.net.InetSocketAddress;
-import java.util.HashMap;
 
+import java.net.InetSocketAddress;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import common.dto.ChatEventDTO;
 import common.protocol.EventEnum;
@@ -30,6 +32,7 @@ import org.java_websocket.WebSocket;
  */
 public class WebSocketMateZone extends WebSocketServer implements IWebSocketMateZone 
 {
+	private static final Logger logger = LoggerFactory.getLogger(WebSocketMateZone.class);
 	/*-------------------------------*/
 	/* Attributs                     */
 	/*-------------------------------*/
@@ -44,7 +47,9 @@ public class WebSocketMateZone extends WebSocketServer implements IWebSocketMate
 	 * Map associant chaque connexion WebSocket à son canal de chat actuel.
 	 * Permet de savoir dans quel canal se trouve chaque client connecté.
 	 */
-	private HashMap<WebSocket, Integer> hsClientChannel;
+
+	// Registre pour associer idClient <-> WebSocket
+	private WebSocketClientsConnecter clientRegistry;
 
 	/*-------------------------------*/
 	/* Constructeur                  */
@@ -64,8 +69,7 @@ public class WebSocketMateZone extends WebSocketServer implements IWebSocketMate
 		super(new InetSocketAddress(port));
 
 		this.clientService    = clientService;
-		this.hsClientChannel = new HashMap<WebSocket, Integer>();
-
+		this.clientRegistry   = new WebSocketClientsConnecter();
 	}
 
 	/*-------------------------------*/
@@ -81,19 +85,7 @@ public class WebSocketMateZone extends WebSocketServer implements IWebSocketMate
 	 */
 	public void setClientChannel(WebSocket client, int idChannel) 
 	{
-		this.hsClientChannel.put(client, idChannel);
-	//	this.clientService.handleNewChannel(client, idChannel);
-	}
-
-	/**
-	 * Supprime l'association d'un client avec son canal de chat.
-	 * Utilisé lors de la déconnexion d'un client.
-	 * 
-	 * @param client la connexion WebSocket du client à supprimer
-	 */
-	public void delClientChannel(WebSocket client) 
-	{
-		this.hsClientChannel.remove(client);
+		this.clientRegistry.setChannel(client, idChannel);
 	}
 
 	/**
@@ -107,13 +99,24 @@ public class WebSocketMateZone extends WebSocketServer implements IWebSocketMate
 	 */
 	public void broadcast(int idChannel, ChatEventDTO eventRec) 
 	{
-		for (WebSocket client : this.hsClientChannel.keySet()) 
-		{
-			if (this.hsClientChannel.get(client) == idChannel) 
-			{
-				client.send(eventRec.toJson());
-			}
-		}
+		this.clientRegistry.broadcast(idChannel, eventRec);
+	}
+
+	/**
+	 * Associe un idClient à un WebSocket (à appeler après login/register).
+	 */
+	public void registerClientSocket(int idClient, WebSocket socket) 
+	{
+		this.clientRegistry.register(idClient, socket);
+	}
+
+	/**
+	 * Récupère le WebSocket associé à un idClient.
+	 */
+	@Override
+	public WebSocket getWebSocketByClientId(int idClient)
+	{
+		return this.clientRegistry.getSocket(idClient);
 	}
 
 	/*-------------------------------*/
@@ -131,7 +134,7 @@ public class WebSocketMateZone extends WebSocketServer implements IWebSocketMate
 	@Override
 	public void onOpen(WebSocket client, ClientHandshake handshake) 
 	{
-		System.out.println("Un client vient de se connecter : " + client.getRemoteSocketAddress());
+		logger.info("Un client vient de se connecter : {}", client.getRemoteSocketAddress());
 	}
 
 	/**
@@ -152,12 +155,13 @@ public class WebSocketMateZone extends WebSocketServer implements IWebSocketMate
 		ChatEventDTO event = ChatEventDTO.jsonToEventDTO(message);
 
 		// Traitement des différents types de messages
-		if (event.getType() == EventEnum.LOGIN      ) { this.clientService.handleLogin     (client, event); }
-		if (event.getType() == EventEnum.SIGNUP     ) { this.clientService.handleRegister  (client, event); }
-		if (event.getType() == EventEnum.NEW_MESSAGE) { this.clientService.handleNewMessage(client, event); }
-		if (event.getType() == EventEnum.CHANGER_CHANNEL) { this.clientService.handleNewChannel(client, event);}
+		if (event.getType() == EventEnum.LOGIN             ) { this.clientService.handleLogin     (client, event); }
+		if (event.getType() == EventEnum.SIGNUP            ) { this.clientService.handleRegister  (client, event); }
+		if (event.getType() == EventEnum.NEW_MESSAGE       ) { this.clientService.handleNewMessage(client, event); }
+		if (event.getType() == EventEnum.CHANGER_CHANNEL   ) { this.clientService.handleSwitchChannel(client, event); }
+		if (event.getType() == EventEnum.DEMANDER_CHANNEL_MP) { this.clientService.handleNewChannel(client, event); }
 
-		System.out.println(event);
+		logger.debug("Event reçu : {}", event);
 	}
 
 	/**
@@ -173,9 +177,8 @@ public class WebSocketMateZone extends WebSocketServer implements IWebSocketMate
 	@Override
 	public void onClose(WebSocket client, int code, String reason, boolean remote) 
 	{
-		System.out.println("Un client s'est déconnecté.");
-
-		this.delClientChannel(client);
+		logger.info("Un client s'est déconnecté. Code: {}, Raison: {}", code, reason);
+		this.clientRegistry.unregister(client);
 	}
 
 	/**
@@ -189,7 +192,7 @@ public class WebSocketMateZone extends WebSocketServer implements IWebSocketMate
 	@Override
 	public void onError(WebSocket client, Exception ex) 
 	{
-		System.out.println("Erreur : " + ex.getMessage());
+		logger.error("Erreur WebSocket", ex);
 	}
 
 	/**
@@ -199,7 +202,7 @@ public class WebSocketMateZone extends WebSocketServer implements IWebSocketMate
 	@Override
 	public void onStart() 
 	{
-		System.out.println("Serveur WebSocket démarré !");
+		logger.info("Serveur WebSocket démarré !");
 	}
 
 }
