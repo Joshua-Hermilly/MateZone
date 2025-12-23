@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" style="-fx-background-color: #121212;">
+
+	<!-- - - - - - - - - - - - -->
+	<!--         TITRE         -->
+	<!-- - - - - - - - - - - - -->
+    <top>
+        <HBox style="-fx-background-color: #1e1e1e; -fx-padding: 15 20;">
+            <Label fx:id="lblChannelName" text="#TEMP14>" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: white;" />
+        </HBox>
+    </top>
+
+    <!-- - - - - - - - - - - - -->
+    <!--      CHANNEL LIST     -->
+    <!-- - - - - - - - - - - - -->
+    <left>
+        <!-- ScrollPane -->
+        <ScrollPane fx:id="scrollPaneChannel" style="-fx-background: #12013aff; -fx-background-color: #12013aff;" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" fitToWidth="true">
+            <VBox fx:id="channelContainer" 
+                  style="-fx-background-color: #12013aff;" 
+                  spacing="5">
+                <padding>
+                    <Insets top="10" right="10" bottom="10" left="10"/>
+                </padding>
+            </VBox>
+        </ScrollPane>
+    </left>
+
+
+
+    <!-- - - - - - - - - - - - -->
+	<!--        CHANNEL        -->
+	<!-- - - - - - - - - - - - -->
+    <center>
+		
+		<!-- ScrollPane -->
+        <ScrollPane fx:id="scrollPaneMessages" style="-fx-background: #121212; -fx-background-color: #121212;" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" fitToWidth="true">
+            
+			<VBox fx:id="messagesContainer" 
+                  style="-fx-background-color: #121212;" 
+                  spacing="5">
+
+                <padding>
+                    <Insets top="10" right="10" bottom="10" left="10"/>
+                </padding>
+            </VBox>
+        
+		</ScrollPane>
+    
+	</center>
+
+
+    <!-- - - - - - - - - - - - -->
+	<!--         SUD          -->
+	<!-- - - - - - - - - - - - -->
+    <bottom>
+        <HBox style="-fx-background-color: #1e1e1e; -fx-padding: 15 20; -fx-spacing: 10;" alignment="CENTER_LEFT">
+
+            <!-- btn Param -->
+            <Button fx:id="btnParametre" text="⚙ Paramètre"
+                                style="-fx-background-color: #2c2c2c; -fx-text-fill: #007aff; -fx-background-radius: 5; -fx-font-size: 16px;"
+                                minWidth="120" minHeight="40"/>
+
+            <!-- Séparateur  -->
+            <Separator orientation="vertical" style="-fx-background-color: #121212;" VBox.vgrow="ALWAYS"> <HBox.margin> <Insets left="23"/> </HBox.margin> </Separator>
+
+			<!-- Zone de saisie -->
+            <TextField fx:id="txtMessage" 
+                       promptText="Tapez votr170 message..." 
+                       style="-fx-background-color: #1d0125ff; -fx-text-fill: white; -fx-prompt-text-fill: #888888; -fx-background-radius: 5;"
+                       HBox.hgrow="ALWAYS">
+            
+			    <padding>
+                    <Insets top="10" right="15" bottom="10" left="15"/>
+                </padding>           
+			</TextField>
+
+
+			<!-- btn Piece jointe -->
+            <Button fx:id="btnPieceJointe" text="📎" 
+                    style="-fx-background-color: #2c2c2c; -fx-text-fill: #007aff; -fx-background-radius: 5; -fx-font-size: 16px;"
+                    minWidth="40" minHeight="40"/>
+
+			<!-- btn Envoyer -->
+            <Button fx:id="btnEnvoyer" text="Envoyer" 
+                    style="-fx-background-color: #007aff; -fx-text-fill: white; -fx-background-radius: 5; -fx-font-weight: bold;"
+                    minHeight="40">
+
+                <padding>
+                    <Insets top="10" right="20" bottom="10" left="20"/>
+                </padding>
+            </Button>
+
+        </HBox>
+    </bottom>
+
+
+
+</BorderPane>

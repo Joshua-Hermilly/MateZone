@@ -79,8 +79,7 @@ public class Controleur implements INotifieur
 		this.ihmGui = new IhmGui( this );
 
 		INotifieur iNotifieur = this;
-		IEnvoyeur  iEnvoyeur = new WebSocketChatAdapter( "ws://"+Controleur.ADRESSE_SERVEUR+Controleur.PORT_SERVEUR_CHAT, iNotifieur );
-		System.out.println( Controleur.ADRESSE_SERVEUR+Controleur.PORT_SERVEUR_CHAT );
+		IEnvoyeur  iEnvoyeur  = new WebSocketChatAdapter( "ws://"+Controleur.ADRESSE_SERVEUR+Controleur.PORT_SERVEUR_CHAT, iNotifieur );
 		iEnvoyeur.connecter();
 
 		this.metier = new Metier( iEnvoyeur, iNotifieur );
@@ -132,11 +131,22 @@ public class Controleur implements INotifieur
 	}
 
 	/**
+	 * Change le channel courant.
+	 * 
+	 * @param idChannel l'id du nouveau Channel
+	 */
+	public void changerChannel( int idChannel, String nomChannel )
+	{
+		this.metier.changerChannel( idChannel  );
+		this.ihmGui.changerChannel( nomChannel );
+	}
+
+	/**
 	 * Envoie un message texte dans le chat en appelant le méthode dans le métier.
 	 * 
 	 * @param message le contenu du message à envoyer
 	 */
-	public void envoyerMessage(String message) 
+	public void envoyerMessage( String message ) 
 	{
 		this.metier.envoyerMessage( message );
 	}
@@ -166,8 +176,7 @@ public class Controleur implements INotifieur
 	 * Extrait les octets d'un fichier depuis son chemin.
 	 * 
 	 * @param ImageName le chemin vers le fichier à lire
-	 * @return un tableau d'octets contenant le contenu du fichier, ou null si une
-	 *         erreur survient
+	 * @return un tableau d'octets contenant le contenu du fichier, ou null si une erreur survient
 	 */
 	private byte[] extractBytes(String ImageName) 
 	{
@@ -239,6 +248,26 @@ public class Controleur implements INotifieur
 	public void afficherNvMessage(ChatEventDTO eventDTO) 
 	{
 		this.ihmGui.afficherNvMessage( eventDTO );
+	}
+
+	/**
+	 * Affiche une liste de channel dans l'interface utilisateur.
+	 * 
+	 * @param lstEventDTO l'événement contenant la liste des channel à afficher
+	 */
+	public void afficherListChannel(ChatEventDTO lstEventDTO) 
+	{
+		this.ihmGui.afficherListChannel( lstEventDTO );
+	}
+
+	/**
+	 * Affiche un nouveau channel dans l'interface utilisateur.
+	 * 
+	 * @param eventDTO l'événement contenant le nouveau channel à afficher
+	 */
+	public void afficherNvChannel(ChatEventDTO eventDTO) 
+	{
+		this.ihmGui.afficherNvChannel( eventDTO );
 	}
 
 	/*---------------------------*/

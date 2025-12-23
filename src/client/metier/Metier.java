@@ -21,7 +21,7 @@ import common.protocol.EventEnum;
  * @version V1
  * @date 08/11/25
  */
-public class Metier
+public class Metier 
 {
 	/*--------------------------*/
 	/* Attributs                */
@@ -54,7 +54,7 @@ public class Metier
 	private String pseudoClient;
 
 	/*--------------------------*/
-	/* Constructeur             */
+	/* Constructeur */
 	/*--------------------------*/
 	/**
 	 * Constructeur de la classe Métier.
@@ -64,7 +64,7 @@ public class Metier
 	 * @param iEnvoyeur  interface d'envoi pour communiquer avec le serveur
 	 * @param iNotifieur interface de notification pour communiquer avec l'IHM
 	 */
-	public Metier(IEnvoyeur iEnvoyeur, INotifieur iNotifieur)
+	public Metier(IEnvoyeur iEnvoyeur, INotifieur iNotifieur) 
 	{
 		this.iEnvoyeur  = iEnvoyeur;
 		this.iNotifieur = iNotifieur;
@@ -74,7 +74,7 @@ public class Metier
 	/* METIER                            */
 	/*-----------------------------------*/
 	/*--------------------------*/
-	/* Client */
+	/* Client                   */
 	/*--------------------------*/
 	/**
 	 * Configure les informations du client après une connexion réussie.
@@ -84,7 +84,7 @@ public class Metier
 	 * @param idClient     l'identifiant unique attribué au client par le serveur
 	 * @param pseudoClient le pseudonyme du client connecté
 	 */
-	public void setClient(int idClient, String pseudoClient)
+	public void setClient(int idClient, String pseudoClient) 
 	{
 		this.idClient     = idClient;
 		this.pseudoClient = pseudoClient;
@@ -108,7 +108,7 @@ public class Metier
 		// Création du message eventDTO
 		ChatEventDTO event = new ChatEventDTO(EventEnum.LOGIN)
 				.add(EventEnum.LOGIN.getKeyIndex(0), pseudo)
-				.add(EventEnum.LOGIN.getKeyIndex(1), mdp   );
+				.add(EventEnum.LOGIN.getKeyIndex(1), mdp);
 
 		this.iEnvoyeur.envoyer(event);
 	}
@@ -126,11 +126,31 @@ public class Metier
 		// Création du message eventDTO
 		ChatEventDTO event = new ChatEventDTO(EventEnum.SIGNUP)
 				.add(EventEnum.SIGNUP.getKeyIndex(0), pseudo)
-				.add(EventEnum.SIGNUP.getKeyIndex(1), mdp   );
+				.add(EventEnum.SIGNUP.getKeyIndex(1), mdp);
 
 		this.iEnvoyeur.envoyer(event);
 		this.connecterAuClient(pseudo, mdp);
 	}
+
+
+	/*-----------------------*/
+	/* Channel               */
+	/*-----------------------*/
+	/**
+	 * Change le channel courant.
+	 * 
+	 * @param idChannel l'id du nouveau Channel
+	 */
+	public void changerChannel( int idChannel )
+	{
+		// Création du message eventDTO
+		ChatEventDTO event = new ChatEventDTO(EventEnum.CHANGER_CHANNEL)
+				.add(EventEnum.CHANGER_CHANNEL.getKeyIndex(0), idChannel);
+
+		this.idChannel = idChannel;
+		this.iEnvoyeur.envoyer(event);
+	}
+
 
 	/*-----------------------*/
 	/* Envoyer Message       */
@@ -144,7 +164,7 @@ public class Metier
 	 * 
 	 * @param texte le contenu du message à envoyer
 	 */
-	public void envoyerMessage(String texte)
+	public void envoyerMessage(String texte) 
 	{
 		// Création du message eventDTO
 		ChatEventDTO event = new ChatEventDTO(EventEnum.NEW_MESSAGE)
@@ -152,8 +172,6 @@ public class Metier
 				.add(EventEnum.NEW_MESSAGE.getKeyIndex(1), this.idChannel)
 				.add(EventEnum.NEW_MESSAGE.getKeyIndex(2), texte         );
 
-		// System.out.println(this.idClient );
-		// System.out.println(this.idChannel);
 		this.iEnvoyeur.envoyer(event);
 	}
 
@@ -164,13 +182,14 @@ public class Metier
 	 * 
 	 * @param bytes les données binaires de la pièce jointe à envoyer
 	 */
-	public void envoyerPieceJoint(byte[] bytes) 
+	public void envoyerPieceJoint(byte[] bytes)
 	{
-		// Création du message eventDTO NEW_MESSAGE_IMG ( List.of( "IdGroupe" , "idClient", "byte" ) ),
+		// Création du message eventDTO NEW_MESSAGE_IMG ( List.of( "IdGroupe" ,
+		// "idClient", "byte" ) ),
 		ChatEventDTO event = new ChatEventDTO(EventEnum.NEW_MESSAGE_IMG)
 				.add(EventEnum.NEW_MESSAGE.getKeyIndex(0), this.idChannel)
-				.add(EventEnum.NEW_MESSAGE.getKeyIndex(1), this.idClient )
-				.add(EventEnum.NEW_MESSAGE.getKeyIndex(2), bytes         );
+				.add(EventEnum.NEW_MESSAGE.getKeyIndex(1), this.idClient)
+				.add(EventEnum.NEW_MESSAGE.getKeyIndex(2), bytes);
 
 		this.iEnvoyeur.envoyer(event);
 	}
@@ -188,18 +207,31 @@ public class Metier
 	 * 
 	 * @param event l'événement de chat reçu du serveur à traiter
 	 */
-	public void notifierMessage(ChatEventDTO event)
+	public void notifierMessage(ChatEventDTO event) 
 	{
-		if ( event.getType().equals(EventEnum.SUCCESS_LOGIN) || event.getType().equals(EventEnum.SUCCESS_SIGNUP) ) 
+		// EVENT NULL
+		// - - - - - - -
+		if (event.getType() == null) 
 		{
-			int id        = ((Number) event.getDataIndex(0)).intValue();
-			String pseudo = (String) event.getDataIndex(1);
+			System.err.println("Type d'événement null reçu : " + event.toJson());
+			return;
+		}
+
+		// CONNEXION
+		// - - - - - - -
+		if (event.getType().equals(EventEnum.SUCCESS_LOGIN) || event.getType().equals(EventEnum.SUCCESS_SIGNUP)) 
+		{
+			int    id     = ( (Number) event.getData().get("id"    ) ).intValue();
+			String pseudo =   (String) event.getData().get("pseudo");
 
 			this.setClient(id, pseudo);
 			this.idChannel = 1;
 			return;
 		}
 
+
+		// MESSAGES
+		// - - - - - - -
 		if (event.getType().equals(EventEnum.MESSAGE_LIST)) 
 		{
 			this.iNotifieur.afficherListMessage(ChatEventDTO.jsonToLstEventDTO(event.toJson()));
@@ -211,10 +243,29 @@ public class Metier
 			this.iNotifieur.afficherNvMessage(event);
 			return;
 		}
+		
 
+		// CHANNEL
+		// - - - - - - -
+		if (event.getType().equals(EventEnum.PERMS_CHANNELS)) 
+		{
+			this.iNotifieur.afficherListChannel(ChatEventDTO.jsonToLstEventDTO(event.toJson()));
+			System.out.println("Canaux disponibles reçus : " + event.getLstEventDTO().size() + " canaux");
+			return;
+		}
+
+		if (event.getType().equals(EventEnum.PERM_CHANNEL)) 
+		{
+			this.iNotifieur.afficherNvChannel(event);
+			return;
+		}
+		
+
+		// ERREUR
+		// - - - - - - -
 		if (event.getType().equals(EventEnum.ERROR)) 
 		{
-			String erreur = (String) event.getDataIndex(0);
+			String erreur = (String) event.getData().get("message");
 
 			this.iNotifieur.notifierErreur(erreur);
 			return;

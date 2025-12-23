@@ -59,6 +59,22 @@ public interface INotifieur
 	void afficherNvMessage(ChatEventDTO eventDTO);
 
 	/**
+	 * Demande l'affichage d'une liste de channel dans l'interface utilisateur.
+	 * 
+	 * @param eventDTO l'événement contenant la liste des channel à afficher
+	 */
+	void afficherListChannel(ChatEventDTO eventDTO);
+
+	/**
+	 * Demande l'affichage d'un nouveau channel dans l'interface utilisateur.
+	 * 
+	 * @param eventDTO l'événement contenant le nouveau channel à afficher
+	 */
+	void afficherNvChannel(ChatEventDTO eventDTO);
+
+
+
+	/**
 	 * Notifie une erreur à afficher à l'utilisateur.
 	 * Utilisée pour informer l'utilisateur des erreurs de connexion,
 	 * d'authentification
