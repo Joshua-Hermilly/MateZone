@@ -34,6 +34,8 @@ import server.metier.util.PasswordUtil;
  */
 public class UtilisateurRepository implements IUtilisateurRepository 
 {
+	// Logger SLF4J
+	private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(UtilisateurRepository.class);
 	/*-------------------------------*/
 	/* Attributs                     */
 	/*-------------------------------*/
@@ -70,25 +72,21 @@ public class UtilisateurRepository implements IUtilisateurRepository
 	 */
 	public int getClientId(String pseudo) 
 	{
-		String sql = "SELECT id FROM clients WHERE pseudo = ?";
-
-		try (PreparedStatement stmt = this.connexionBD.getConnection().prepareStatement(sql)) 
-		{
-			stmt.setString(1, pseudo);
-			ResultSet rs = stmt.executeQuery();
-
-			if (rs.next()) 
-			{ 
-				return rs.getInt("id");
-			}
-
-		} catch (SQLException e) 
-		{
-			System.err.println("Erreur lors de la récupération de l'ID du client: " + pseudo);
-			e.printStackTrace();
-		}
-
-		return -1;
+		   String sql = "SELECT id FROM clients WHERE pseudo = ?";
+		   try (PreparedStatement stmt = this.connexionBD.getConnection().prepareStatement(sql)) {
+			   stmt.setString(1, pseudo);
+			   ResultSet rs = stmt.executeQuery();
+			   if (rs.next()) {
+				   int id = rs.getInt("id");
+				   logger.debug("ID récupéré pour le pseudo '{}': {}", pseudo, id);
+				   return id;
+			   } else {
+				   logger.info("Aucun client trouvé avec le pseudo: {}", pseudo);
+			   }
+		   } catch (SQLException e) {
+			   logger.error("Erreur lors de la récupération de l'ID du client: {}", pseudo, e);
+		   }
+		   return -1;
 	}
 
 	/**
@@ -103,24 +101,17 @@ public class UtilisateurRepository implements IUtilisateurRepository
 		List<Client> clients = new ArrayList<>();
 		String sql = "SELECT id, pseudo, mdp, created_at FROM clients ORDER BY id";
 
-		try (PreparedStatement stmt = this.connexionBD.getConnection().prepareStatement(sql);
-				ResultSet rs = stmt.executeQuery()) 
-		{
-			while (rs.next()) 
-			{
-				Client client = mapRowToClient(rs);
-				clients.add(client);
-			}
-
-			System.out.println("Nombre de clients récupérés: " + clients.size());
-
-		} catch (SQLException e) 
-		{
-			System.err.println("Erreur lors de la récupération des clients");
-			e.printStackTrace();
-		}
-
-		return clients;
+		   try (PreparedStatement stmt = this.connexionBD.getConnection().prepareStatement(sql);
+				ResultSet rs = stmt.executeQuery()) {
+			   while (rs.next()) {
+				   Client client = mapRowToClient(rs);
+				   clients.add(client);
+			   }
+			   logger.info("{} clients récupérés.", clients.size());
+		   } catch (SQLException e) {
+			   logger.error("Erreur lors de la récupération des clients", e);
+		   }
+		   return clients;
 	}
 
 	/**
@@ -134,29 +125,20 @@ public class UtilisateurRepository implements IUtilisateurRepository
 	{
 		String sql = "SELECT id, pseudo, mdp, created_at FROM clients WHERE id = ?";
 
-		try (PreparedStatement stmt = this.connexionBD.getConnection().prepareStatement(sql)) 
-		{
-			stmt.setInt(1, id);
-			ResultSet rs = stmt.executeQuery();
-
-			if (rs.next())
-			{
-				Client client = mapRowToClient(rs);
-				System.out.println("Client trouvé: " + client);
-				return client;
-			} 
-			else
-			{
-				System.out.println("Aucun client trouvé avec l'ID: " + id);
-			}
-
-		} catch (SQLException e) 
-		{
-			System.err.println("Erreur lors de la recherche du client ID: " + id);
-			e.printStackTrace();
-		}
-
-		return null;
+		   try (PreparedStatement stmt = this.connexionBD.getConnection().prepareStatement(sql)) {
+			   stmt.setInt(1, id);
+			   ResultSet rs = stmt.executeQuery();
+			   if (rs.next()) {
+				   Client client = mapRowToClient(rs);
+				   logger.debug("Client trouvé par ID {}: {}", id, client);
+				   return client;
+			   } else {
+				   logger.info("Aucun client trouvé avec l'ID: {}", id);
+			   }
+		   } catch (SQLException e) {
+			   logger.error("Erreur lors de la recherche du client ID: {}", id, e);
+		   }
+		   return null;
 	}
 
 	/**
@@ -171,29 +153,20 @@ public class UtilisateurRepository implements IUtilisateurRepository
 	{
 		String sql = "SELECT id, pseudo, mdp, created_at FROM clients WHERE pseudo = ?";
 
-		try (PreparedStatement stmt = this.connexionBD.getConnection().prepareStatement(sql)) 
-		{
-			stmt.setString(1, pseudo);
-			ResultSet rs = stmt.executeQuery();
-
-			if (rs.next()) 
-			{
-				Client client = mapRowToClient(rs);
-				System.out.println("Client trouvé: " + client);
-				return client;
-			} 
-			else 
-			{
-				System.out.println("Aucun client trouvé avec le pseudo: " + pseudo);
-			}
-
-		} catch (SQLException e) 
-		{
-			System.err.println("Erreur lors de la recherche du client pseudo: " + pseudo);
-			e.printStackTrace();
-		}
-
-		return null;
+		   try (PreparedStatement stmt = this.connexionBD.getConnection().prepareStatement(sql)) {
+			   stmt.setString(1, pseudo);
+			   ResultSet rs = stmt.executeQuery();
+			   if (rs.next()) {
+				   Client client = mapRowToClient(rs);
+				   logger.debug("Client trouvé par pseudo '{}': {}", pseudo, client);
+				   return client;
+			   } else {
+				   logger.info("Aucun client trouvé avec le pseudo: {}", pseudo);
+			   }
+		   } catch (SQLException e) {
+			   logger.error("Erreur lors de la recherche du client pseudo: {}", pseudo, e);
+		   }
+		   return null;
 	}
 
 	/**
@@ -211,41 +184,26 @@ public class UtilisateurRepository implements IUtilisateurRepository
 	{
 		String sql = "SELECT id, pseudo, mdp, created_at FROM clients WHERE pseudo = ?";
 
-		try (PreparedStatement stmt = this.connexionBD.getConnection().prepareStatement(sql)) 
-		{
-			stmt.setString(1, pseudo);
-			ResultSet rs = stmt.executeQuery();
-
-			if (rs.next()) 
-			{
-				String hashedPassword = rs.getString("mdp");
-				
-				// Vérification sécurisée du mot de passe avec BCrypt
-				if (PasswordUtil.verifyPassword(mdp, hashedPassword))
-				{
-					Client client = mapRowToClient(rs);
-					System.out.println("Client authentifié: " + client.getPseudo());
-					return true;
-				}
-				else
-				{
-					System.out.println("Mot de passe incorrect pour: " + pseudo);
-					return false;
-				}
-			} 
-			else
-			{
-				System.out.println("Aucun client trouvé avec le pseudo: " + pseudo);
-				return false;
-			}
-
-		} catch (SQLException e) 
-		{
-			System.err.println("Erreur lors de la recherche du client: " + pseudo);
-			e.printStackTrace();
-		}
-
-		return null;
+		   try (PreparedStatement stmt = this.connexionBD.getConnection().prepareStatement(sql)) {
+			   stmt.setString(1, pseudo);
+			   ResultSet rs = stmt.executeQuery();
+			   if (rs.next()) {
+				   String hashedPassword = rs.getString("mdp");
+				   if (PasswordUtil.verifyPassword(mdp, hashedPassword)) {
+					   logger.info("Authentification réussie pour le client: {}", pseudo);
+					   return true;
+				   } else {
+					   logger.warn("Mot de passe incorrect pour: {}", pseudo);
+					   return false;
+				   }
+			   } else {
+				   logger.info("Aucun client trouvé avec le pseudo: {}", pseudo);
+				   return false;
+			   }
+		   } catch (SQLException e) {
+			   logger.error("Erreur lors de la recherche du client: {}", pseudo, e);
+		   }
+		   return null;
 	}
 
 	/**
@@ -273,11 +231,14 @@ public class UtilisateurRepository implements IUtilisateurRepository
 	 */
 	public int createClient(Client client) 
 	{
-		if (client == null)
-			return -1;
-		
-		if (this.getClientByPseudo(client.getPseudo()) != null) 
-			return -1;
+		   if (client == null) {
+			   logger.warn("Tentative de création d'un client null.");
+			   return -1;
+		   }
+		   if (this.getClientByPseudo(client.getPseudo()) != null) {
+			   logger.warn("Pseudo déjà utilisé: {}", client.getPseudo());
+			   return -1;
+		   }
 
 		String sql = "INSERT INTO clients (pseudo, mdp) VALUES (?, ?)";
 
@@ -302,18 +263,21 @@ public class UtilisateurRepository implements IUtilisateurRepository
 					}
 
 				}
-				System.out.println("Client créé avec succès: " + client.getPseudo());
+				logger.info("Client créé avec succès: {}", client.getPseudo());
 				return client.getId();
 			}
 
 		} catch (SQLException e)
 		{
-			System.err.println("Erreur lors de la création du client: " + client.getPseudo());
-			e.printStackTrace();
+			logger.error("Erreur lors de la création du client: {}", client.getPseudo(), e);
 		}
 
 		return -1;
 	}
+
+
+
+
 
 	/**
 	 * Met à jour les informations d'un client existant.
@@ -324,41 +288,29 @@ public class UtilisateurRepository implements IUtilisateurRepository
 	 */
 	public boolean majClient(Client client)
 	{
-		if (client == null || client.getId() <= 0) 
-		{
-			return false;
-		}
+		   if (client == null || client.getId() <= 0) {
+			   logger.warn("Tentative de mise à jour d'un client invalide: {}", client);
+			   return false;
+		   }
 
 		String sql = "UPDATE clients SET pseudo = ?, mdp = ? WHERE id = ?";
 
-		try (PreparedStatement stmt = this.connexionBD.getConnection().prepareStatement(sql)) 
-		{
-			// Hash du mot de passe avant mise à jour en base de données
-			String hashedPassword = PasswordUtil.hashPassword(client.getMdp());
-			
-			stmt.setString(1, client.getPseudo());
-			stmt.setString(2, hashedPassword);
-			stmt.setInt(3, client.getId());
-
-			int lignesRetour = stmt.executeUpdate();
-
-			if (lignesRetour > 0)
-			{
-				System.out.println("Mise à jour du client: " + client);
-				return true;
-			} 
-			else
-			{
-				System.out.println("Aucun client trouvé avec l'ID: " + client.getId());
-			}
-
-		} catch (SQLException e) 
-		{
-			System.err.println("Erreur lors de la mise à jour du client: " + client.getId());
-			e.printStackTrace();
-		}
-
-		return false;
+		   try (PreparedStatement stmt = this.connexionBD.getConnection().prepareStatement(sql)) {
+			   String hashedPassword = PasswordUtil.hashPassword(client.getMdp());
+			   stmt.setString(1, client.getPseudo());
+			   stmt.setString(2, hashedPassword);
+			   stmt.setInt(3, client.getId());
+			   int lignesRetour = stmt.executeUpdate();
+			   if (lignesRetour > 0) {
+				   logger.info("Mise à jour du client: {}", client);
+				   return true;
+			   } else {
+				   logger.warn("Aucun client trouvé pour mise à jour avec l'ID: {}", client.getId());
+			   }
+		   } catch (SQLException e) {
+			   logger.error("Erreur lors de la mise à jour du client: {}", client.getId(), e);
+		   }
+		   return false;
 	}
 
 	/*-------------------------------*/
@@ -397,33 +349,25 @@ public class UtilisateurRepository implements IUtilisateurRepository
 
 		String sql = "SELECT mg.groupe_id,g.nom FROM membres_groupes mg JOIN groupes g ON mg.groupe_id = g.id WHERE mg.client_id = ? ;";
 
-		try (PreparedStatement stmt = this.connexionBD.getConnection().prepareStatement(sql)) 
-		{
-			stmt.setInt(1, idClient);
-
-			ResultSet rs = stmt.executeQuery();
-			System.out.println(rs);
-
-			while (rs.next()) 
-			{
-				int    idchannel  = rs.getInt   ("groupe_id");
-				String nomChannel = rs.getString("nom"      );
-
-				permChannel.put(idchannel, nomChannel);
-			}
-			
-			if (permChannel.isEmpty())
-			{
-				System.out.println("Aucun groupe trouvé pour le client id: " + idClient);
-			}
-
-		} catch (SQLException e) 
-		{
-			System.err.println("Erreur lors de la reche des permission de idclient: " + idClient);
-			e.printStackTrace();
-		}
-
-		return permChannel;
+		   try (PreparedStatement stmt = this.connexionBD.getConnection().prepareStatement(sql)) {
+			   stmt.setInt(1, idClient);
+			   ResultSet rs = stmt.executeQuery();
+			   int count = 0;
+			   while (rs.next()) {
+				   int idchannel = rs.getInt("groupe_id");
+				   String nomChannel = rs.getString("nom");
+				   permChannel.put(idchannel, nomChannel);
+				   count++;
+			   }
+			   if (count == 0) {
+				   logger.info("Aucun groupe trouvé pour le client id: {}", idClient);
+			   } else {
+				   logger.debug("{} groupes trouvés pour le client id: {}", count, idClient);
+			   }
+		   } catch (SQLException e) {
+			   logger.error("Erreur lors de la recherche des permissions du client id: {}", idClient, e);
+		   }
+		   return permChannel;
 	}
 
 	/*-------------------------------*/
@@ -462,30 +406,24 @@ public class UtilisateurRepository implements IUtilisateurRepository
 	 */
 	public byte[] getAvatarById(int clientId) 
 	{
-		try 
-		{
-			// La magie opère ici : 
-			// 1. On joint la table 'clients' avec 'default_images'
-			// 2. On sélectionne l'image perso, SINON l'image par défaut
-			String sql = "SELECT COALESCE(c.custom_img_data, d.img_data) as avatar_final " +
-						"FROM clients c " +
-						"LEFT JOIN default_images d ON c.default_image_id = d.id " +
-						"WHERE c.id = ?";
-
-			PreparedStatement st = this.connexionBD.getConnection().prepareStatement(sql);
-			st.setInt(1, clientId);
-			
-			ResultSet rs = st.executeQuery();
-
-			if (rs.next()) {
-				// On récupère la colonne virtuelle qu'on a nommée "avatar_final"
-				return rs.getBytes("avatar_final");
-			}
-
-		} catch (Exception e) { 
-			e.printStackTrace(); 
-		}
-
-		return null;
+		   try {
+			   String sql = "SELECT COALESCE(c.custom_img_data, d.img_data) as avatar_final " +
+							"FROM clients c " +
+							"LEFT JOIN default_images d ON c.default_image_id = d.id " +
+							"WHERE c.id = ?";
+			   PreparedStatement st = this.connexionBD.getConnection().prepareStatement(sql);
+			   st.setInt(1, clientId);
+			   ResultSet rs = st.executeQuery();
+			   if (rs.next()) {
+				   logger.debug("Avatar récupéré pour le client id: {}", clientId);
+				   return rs.getBytes("avatar_final");
+			   } else {
+				   logger.info("Aucun avatar trouvé pour le client id: {}", clientId);
+			   }
+		   } catch (Exception e) {
+			   logger.error("Erreur lors de la récupération de l'avatar pour le client id: {}", clientId, e);
+		   }
+		   return null;
 	}
+
 }

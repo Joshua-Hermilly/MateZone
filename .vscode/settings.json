@@ -4,7 +4,7 @@
     ],
     "java.project.outputPath": "bin",
     "java.project.referencedLibraries": [
-        "lib/**/*.jar"
+        "lib/*.jar"
     ]
     // Configure workspace to use JDK 25 (installed at C:\\Program Files\\Java\\jdk-25)
     ,

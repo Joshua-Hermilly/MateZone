@@ -9,6 +9,9 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import server.bd.ConnexionBD;
 import server.bd.repository.*;
 
@@ -37,11 +40,12 @@ import server.metier.service.*;
  */
 public class MainServer
 {
+	private static final Logger logger = LoggerFactory.getLogger(MainServer.class);
 
 	/** Paramètres des Serveurs */
-		private static int PORTMESS;
-		private static int PORTWEB;
-	
+	private static int PORTMESS;
+	private static int PORTWEB;
+
 	/** Chargement statique de la configuration */
 	static 
 	{
@@ -51,20 +55,16 @@ public class MainServer
 			FileInputStream fis = new FileInputStream("src/server/config.properties");
 			props.load(fis);
 			fis.close();
-			
 			PORTMESS = Integer.parseInt(props.getProperty("server.port"));
 			PORTWEB  = Integer.parseInt(props.getProperty("web.port"   ));
-			
+			logger.info("Configuration de la base de données chargée avec succès !");
 		} 
 		catch (IOException e) 
 		{
-			System.err.println("ERREUR : Impossible de charger le fichier config.properties du serveur!");
-			e.printStackTrace();
+			logger.error("ERREUR : Impossible de charger le fichier config.properties du serveur!", e);
 			System.exit(1);
 		}
 	}
-
-
 
 	/**
 	 * Méthode principale du serveur MateZone.
@@ -81,18 +81,19 @@ public class MainServer
 		/* 1) Connexion BD                            */
 		/*--------------------------------------------*/
 		ConnexionBD bd = ConnexionBD.getInstance();
-		System.out.println("✅ Connexion BD établie.");
+		logger.info("Connexion BD établie.");
 
 		/*--------------------------------------------*/
 		/* 2) Repository                              */
 		/*--------------------------------------------*/
-		IMessageRepository     messageRepo = new MessageRepository();
+		IMessageRepository     messageRepo = new MessageRepository    ();
 		IUtilisateurRepository userRepo    = new UtilisateurRepository();
+		IChannelRepository     ChanRepo    = new ChannelRepository    ();
 
 		/*--------------------------------------------*/
 		/* 3) Services Métier                         */
 		/*--------------------------------------------*/
-		ClientService userService = new ClientService(userRepo, messageRepo);
+		ClientService userService = new ClientService(userRepo, messageRepo, ChanRepo);
 		// MessageService messageService = new MessageService(messageRepo); // si besoin
 
 		/*--------------------------------------------*/
@@ -108,7 +109,7 @@ public class MainServer
 		/*--------------------------------------------*/
 		MainServer.startAvatarServer(userRepo);
 
-			System.out.println("Serveur WebSocket démarré sur ws://127.0.0.1:" + MainServer.PORTMESS + " et WebServer démarré sur http://127.0.0.1:" + MainServer.PORTWEB);
+		logger.info("Serveur WebSocket démarré sur ws://127.0.0.1:{} et WebServer démarré sur http://127.0.0.1:{}", MainServer.PORTMESS, MainServer.PORTWEB);
 	}
 
 	/**
@@ -122,7 +123,6 @@ public class MainServer
 	 */
 	public static void startAvatarServer(IUtilisateurRepository repo) throws Exception 
 	{
-
 		HttpServer http = HttpServer.create(new InetSocketAddress(MainServer.PORTWEB), 0);
 
 		http.createContext("/avatar", (HttpExchange exchange) -> 
@@ -139,6 +139,7 @@ public class MainServer
 				if (img == null) 
 				{
 					exchange.sendResponseHeaders(404, -1);
+					logger.warn("Avatar non trouvé pour l'id {}", id);
 					return;
 				}
 
@@ -147,10 +148,13 @@ public class MainServer
 				{
 					os.write(img);
 				}
-
-			} catch (Exception e) { exchange.sendResponseHeaders(500, -1); }
+			} catch (Exception e) {
+				exchange.sendResponseHeaders(500, -1);
+				logger.error("Erreur lors de la récupération de l'avatar.", e);
+			}
 		});
 
 		http.start();
+		logger.info("Serveur HTTP d'avatar démarré sur le port {}", MainServer.PORTWEB);
 	}
 }

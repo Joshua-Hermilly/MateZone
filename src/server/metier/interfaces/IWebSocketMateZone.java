@@ -37,4 +37,15 @@ public interface IWebSocketMateZone
 	 * @param idChannel l'identifiant du canal auquel associer le client
 	 */
 	void setClientChannel(WebSocket client, int idChannel);
+	
+	/**
+	 * Récupère la connexion WebSocket associée à un identifiant client, si elle existe.
+	 * @param idClient l'identifiant du client
+	 * @return la connexion WebSocket du client, ou null si non connecté
+	 */
+	WebSocket getWebSocketByClientId(int idClient);
+
+	void registerClientSocket(int idClient, WebSocket socket);
+
+
 }

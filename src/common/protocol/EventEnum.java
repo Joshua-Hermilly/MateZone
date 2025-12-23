@@ -21,9 +21,10 @@ import java.util.List;
  * @version V1
  * @date 08/11/25
  */
-public enum EventEnum {
+public enum EventEnum 
+{
 	/*--------------------------*/
-	/* Constantes */
+	/* Constantes               */
 	/*--------------------------*/
 
 	/**
@@ -107,11 +108,16 @@ public enum EventEnum {
 	/**
 	 * Événement représentant le changement d'un canal côté client.
 	 */
-	CHANGER_CHANNEL(List.of("idChannel"));
+	CHANGER_CHANNEL(List.of("idChannel")),
 
+	/**
+	 * Événement de demande de création d'un canal de messagerie privée entre deux utilisateurs.
+	 * Clés requises : identifiant du client a mp
+	 */
+	DEMANDER_CHANNEL_MP(List.of("idClient1", "idClient2"));
 
 	/*--------------------------*/
-	/* Attribut */
+	/* Attribut                 */
 	/*--------------------------*/
 	/**
 	 * Liste des clés de données requises pour ce type d'événement.
@@ -120,7 +126,7 @@ public enum EventEnum {
 	private final List<String> composants;
 
 	/*--------------------------*/
-	/* Constructeur */
+	/* Constructeur             */
 	/*--------------------------*/
 	/**
 	 * Constructeur de l'énumération EventEnum.
@@ -128,12 +134,13 @@ public enum EventEnum {
 	 * 
 	 * @param composants la liste des noms de clés requis pour ce type d'événement
 	 */
-	EventEnum(List<String> composants) {
+	EventEnum(List<String> composants) 
+	{
 		this.composants = composants;
 	}
 
 	/*--------------------------*/
-	/* Getter */
+	/* Getter                   */
 	/*--------------------------*/
 	/**
 	 * Récupère la liste complète des clés de données requises pour ce type
@@ -141,7 +148,8 @@ public enum EventEnum {
 	 * 
 	 * @return la liste des noms de clés requis dans l'ordre défini
 	 */
-	public List<String> getRequiredKeys() {
+	public List<String> getRequiredKeys() 
+	{
 		return this.composants;
 	}
 
@@ -152,7 +160,8 @@ public enum EventEnum {
 	 * @param index l'index de la clé dans la liste des clés requises
 	 * @return le nom de la clé à cet index, ou null si l'index est invalide
 	 */
-	public String getKeyIndex(int index) {
+	public String getKeyIndex(int index) 
+	{
 		if (index >= this.getRequiredKeys().size())
 			return null;
 
