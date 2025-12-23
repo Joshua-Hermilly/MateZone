@@ -21,10 +21,9 @@ import java.util.List;
  * @version V1
  * @date 08/11/25
  */
-public enum EventEnum
-{
+public enum EventEnum {
 	/*--------------------------*/
-	/* Constantes               */
+	/* Constantes */
 	/*--------------------------*/
 
 	/**
@@ -38,18 +37,6 @@ public enum EventEnum
 	 * Clés requises : pseudo, mot de passe
 	 */
 	SIGNUP(List.of("pseudo", "mdp")),
-	
-	/**
-	 * Événement 
-	 * Clés requises : idChannel, nomChannel
-	 */
-	PERM_CHANNEL(List.of("idChannel", "nomChannel")),
-
-	/**
-	 * Événement 
-	 * Clés requises : liste d'event 
-	 */
-	PERMS_CHANNELS(List.of()),
 
 	/**
 	 * Événement de succès de connexion.
@@ -93,11 +80,6 @@ public enum EventEnum
 	 */
 	NEW_MESSAGE_IMG(List.of("IdGroupe", "idClient", "byte")),
 
-	 /**
-     * Événement représentant le changement d'un canal côté client.
-     */
-    CHANGER_CHANNEL(List.of("idChannel")),
-
 	/**
 	 * Événement de succès général avec message.
 	 * Clés requises : message de succès
@@ -108,10 +90,28 @@ public enum EventEnum
 	 * Événement d'erreur avec message explicatif.
 	 * Clés requises : message d'erreur
 	 */
-	ERROR(List.of("message"));
+	ERROR(List.of("message")),
+
+	/**
+	 * Événement contenant la liste des canaux disponibles pour l'utilisateur.
+	 * Aucune clé requise (utilise la liste d'événements)
+	 */
+	PERMS_CHANNELS(List.of()),
+
+	/**
+	 * Événement représentant un canal spécifique avec ses permissions.
+	 * Clés requises : identifiant du canal, nom du canal
+	 */
+	PERM_CHANNEL(List.of("idChannel", "nomChannel")),
+
+	/**
+	 * Événement représentant le changement d'un canal côté client.
+	 */
+	CHANGER_CHANNEL(List.of("idChannel"));
+
 
 	/*--------------------------*/
-	/* Attribut                 */
+	/* Attribut */
 	/*--------------------------*/
 	/**
 	 * Liste des clés de données requises pour ce type d'événement.
@@ -120,7 +120,7 @@ public enum EventEnum
 	private final List<String> composants;
 
 	/*--------------------------*/
-	/* Constructeur             */
+	/* Constructeur */
 	/*--------------------------*/
 	/**
 	 * Constructeur de l'énumération EventEnum.
@@ -128,13 +128,12 @@ public enum EventEnum
 	 * 
 	 * @param composants la liste des noms de clés requis pour ce type d'événement
 	 */
-	EventEnum(List<String> composants) 
-	{
+	EventEnum(List<String> composants) {
 		this.composants = composants;
 	}
 
 	/*--------------------------*/
-	/* Getter                   */
+	/* Getter */
 	/*--------------------------*/
 	/**
 	 * Récupère la liste complète des clés de données requises pour ce type
@@ -142,8 +141,7 @@ public enum EventEnum
 	 * 
 	 * @return la liste des noms de clés requis dans l'ordre défini
 	 */
-	public List<String> getRequiredKeys()
-	{
+	public List<String> getRequiredKeys() {
 		return this.composants;
 	}
 
@@ -154,11 +152,10 @@ public enum EventEnum
 	 * @param index l'index de la clé dans la liste des clés requises
 	 * @return le nom de la clé à cet index, ou null si l'index est invalide
 	 */
-	public String getKeyIndex(int index) 
-	{
+	public String getKeyIndex(int index) {
 		if (index >= this.getRequiredKeys().size())
 			return null;
-	
+
 		return this.getRequiredKeys().get(index);
 	}
 }
