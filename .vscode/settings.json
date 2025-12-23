@@ -4,22 +4,7 @@
     ],
     "java.project.outputPath": "bin",
     "java.project.referencedLibraries": [
-        "c:\\Program Files\\JavaFX\\javafx-sdk-25.0.1\\lib\\javafx.base.jar",
-        "c:\\Program Files\\JavaFX\\javafx-sdk-25.0.1\\lib\\javafx.controls.jar",
-        "c:\\Program Files\\JavaFX\\javafx-sdk-25.0.1\\lib\\javafx.fxml.jar",
-        "c:\\Program Files\\JavaFX\\javafx-sdk-25.0.1\\lib\\javafx.graphics.jar",
-        "c:\\Program Files\\JavaFX\\javafx-sdk-25.0.1\\lib\\javafx.media.jar",
-        "c:\\Program Files\\JavaFX\\javafx-sdk-25.0.1\\lib\\javafx.swing.jar",
-        "c:\\Program Files\\JavaFX\\javafx-sdk-25.0.1\\lib\\javafx.web.jar",
-        "c:\\Program Files\\JavaFX\\javafx-sdk-25.0.1\\lib\\javafx-swt.jar",
-        "c:\\Program Files\\JavaFX\\javafx-sdk-25.0.1\\lib\\jdk.jsobject.jar",
-        "c:\\Program Files\\JavaFX\\javafx-sdk-25.0.1\\lib\\jfx.incubator.input.jar",
-        "c:\\Program Files\\JavaFX\\javafx-sdk-25.0.1\\lib\\jfx.incubator.richtext.jar",
-        "e:\\Perso\\Mate\\MateZone\\lib\\gson-2.13.2.jar",
-        "e:\\Perso\\Mate\\MateZone\\lib\\slf4j-api-2.0.7.jar",
-        "e:\\Perso\\Mate\\MateZone\\lib\\mysql-connector-j-8.2.0.jar",
-        "e:\\Perso\\Mate\\MateZone\\lib\\Java-WebSocket-1.6.0.jar",
-        "lib/jbcrypt-0.4.jar"
+        "lib/**/*.jar"
     ]
     // Configure workspace to use JDK 25 (installed at C:\\Program Files\\Java\\jdk-25)
     ,
