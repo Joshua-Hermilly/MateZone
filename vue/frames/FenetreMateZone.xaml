@@ -1,0 +1,29 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MateZone.vue.frames"
+        xmlns:panels="clr-namespace:MateZone.vue.panels" x:Class="MateZone.vue.frames.FenetreMateZone"
+        mc:Ignorable="d"
+        Title="MateZone" Height="450" Width="1000">
+
+    <Grid Background="#2F3136">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="44.004"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="9*"/>
+        </Grid.ColumnDefinitions>
+
+        <ContentControl x:Name="GroupeDiscussionContainer" Margin="2,0,0,0" Grid.RowSpan="2" Grid.Column="1"/>
+        <ListBox ItemsSource="{Binding LstGroupeItem}" 
+                 Margin="0,44,0,0" 
+                 Grid.RowSpan="2"
+                 Background="Transparent"
+                 BorderThickness="0"/>
+
+    </Grid>
+</Window>
