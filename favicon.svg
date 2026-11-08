@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+	<g transform="translate(-42 -34)">
+		<rect x="42" y="34" width="120" height="120" rx="28" fill="#E8261B"/>
+		<g transform="skewX(-8) translate(14 0)">
+			<rect x="56" y="60" width="92" height="56" rx="16" fill="#111111"/>
+		</g>
+		<path d="M118 112 L128 136 L136 112 Z" fill="#111111"/>
+		<text x="102" y="101" font-family="'Segoe UI',Arial,sans-serif" font-size="36" font-weight="900" font-style="italic" fill="#FFFFFF" text-anchor="middle" textLength="62" lengthAdjust="spacingAndGlyphs">MZ</text>
+	</g>
+</svg>
